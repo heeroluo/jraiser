@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * jquery - v1.9.1 (2013-02-13T16:44:09+0800)
+ * jquery - v1.9.1 (2013-03-12T11:35:54+0800)
  * http://jraiser.org/ | Released under MIT license
  *
  * Include jQuery (http://jquery.com/)
@@ -37,7 +37,7 @@ var
 	location = window.location,
 
 	// Map over jQuery in case of overwrite
-	_jQuery = window.jQuery,
+	//_jQuery = window.jQuery,
 
 	// Map over the $ in case of overwrite
 	//_$ = window.$,
