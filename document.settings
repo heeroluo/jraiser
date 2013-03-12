@@ -1,0 +1,12 @@
+{
+	"category_order": [
+		"Loader",
+		"Infrastructure",
+		"Utility",
+		"Widget",
+		""
+	],
+	"template_path": "../_doc_template_",
+	"output_path": "F:\\Websites\\HTML\\doc.jRaiser.org",
+	"ignored_paths": ["_examples_"]
+}

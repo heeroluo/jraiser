@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Examples Of ui-draggable 1.0.x</title>
+<style type="text/css">
+body { margin: 0; }
+.layer {
+	width: 200px;
+	height: 200px;
+	padding: 10px;
+	color: white;
+}
+.ui-draggable-trigger {
+	border: 1px solid #ccc;
+	padding: 4px;
+}
+</style>
+</head>
+
+<body>
+<div id="layer1" class="layer" style="background: red;">Layer 1</div>
+<div id="layer2" class="layer" style="background: blue;">
+	<div class="ui-draggable-trigger">click here to drag</div>
+	Layer 2 不能移出页面范围
+</div>
+<div style="position: absolute; right: 10px; top: 10px; width: 500px; height: 500px; border: 2px solid red;">
+	<div id="layer3" class="layer" style="background: green;">
+		Layer 3 不能移除父元素范围
+	</div>
+</div>
+<script src="../../../jraiser2-debug.js"></script>
+<script src="../../config.js"></script>
+<script>
+require(['dom/1.0.x/', 'draggable/1.0.x/'], function($, Draggable) {
+
+new Draggable({
+	wrapper: $('#layer1')
+});
+
+new Draggable({
+	wrapper: $('#layer2'),
+	boundary: 'window'
+});
+
+new Draggable({
+	wrapper: $('#layer3'),
+	boundary: 'parent'
+});
+
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Examples of ui-fixedlayer 1.0.x</title>
+<style type="text/css">
+.layer { width: 200px; height: 200px; padding: 10px; position: absolute; color: white; }
+</style>
+</head>
+
+<body>
+<div style="width: 2000px; height: 2000px"></div>
+<div id="layer1" class="layer" style="bottom: 0; right: 0; background: red;">
+layer1<br />在支持的浏览器上使用position:fixed
+</div>
+<div id="layer2" class="layer" style="bottom: 0; left: 0; background: green;">
+layer2<br />不使用position:fixed
+</div>
+<script src="../../../jraiser2-debug.js"></script>
+<script src="../../config.js"></script>
+<script>
+require(['dom/1.0.x/', 'fixedlayer/1.0.x/'], function($, FixedLayer) {
+
+$(function() {
+	new FixedLayer({
+		wrapper: $('#layer1')
+	});
+
+	new FixedLayer({
+		wrapper: $('#layer2'),
+		useFixed: false
+	});
+});
+
+});
+</script>
+</body>
+</html>

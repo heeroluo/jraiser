@@ -1,0 +1,3 @@
+jraiser.config({
+	libPath: '/'
+});

@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Example of waterfall 1.0.x</title>
+<style type="text/css">
+body { background: #ececec; margin: 0; }
+.wrapper { position: relative; width: 900px; margin: 20px auto; }
+	.wrapper .grid {
+		width: 180px;
+		padding: 10px;
+		border: 1px solid #bbb;
+		background: #fefefe;
+		padding: 10px;
+		right: 0;
+		top: 0;
+		position: absolute;
+		box-shadow: 3px 3px 3px #ddd;
+	}
+		.wrapper .grid img { width: 100%; }
+
+.loading { text-align: center; margin-top: 20px; font-size: 1.2em; }
+.more { text-align: center; margin-top: 20px; display: none; }
+	.more input { width: 120px; height: 50px; font-size: 1.2em; }
+</style>
+</head>
+
+<body>
+<div id="wrapper" class="wrapper">
+	<div class="grid">
+		<p><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/144x90/1360978011487.jpg" /></p>
+		<p>壁纸1</p>
+	</div>
+	<div class="grid">
+		<p><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/144x90/1360977997510.jpg" /></p>
+		<p>壁纸2</p>
+	</div>
+	<div class="grid">
+		<p><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/144x90/1360978030990.jpg" /></p>
+		<p>壁纸3</p>
+	</div>
+	<div class="grid">
+		<p><img src="http://pic.yesky.com/uploadImages/2013/011/7B00R7IKWG4A_140x105.jpg" /></p>
+		<p>壁纸4</p>
+	</div>
+	<div class="grid">
+		<p><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/144x90/1360978066529.jpg" /></p>
+		<p>壁纸5</p>
+	</div>
+	<div class="grid">
+		<p><img src="http://pic.yesky.com/uploadImages/2012/339/OAY95M0LP350_3.jpg" /></p>
+		<p>壁纸6</p>
+	</div>
+	<div class="grid">
+		<p><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/144x90/1360978097711.jpg" /></p>
+		<p>壁纸7</p>
+	</div>
+	<div class="grid">
+		<p><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/144x90/1360978112736.jpg" /></p>
+		<p>壁纸8</p>
+	</div>
+	<div class="grid">
+		<p><img src="http://pic.yesky.com/uploadImages/2013/051/FLI956E34835.jpg" /></p>
+		<p>壁纸9</p>
+	</div>
+	<div class="grid">
+		<p><img src="http://pic.yesky.com/uploadImages/2012/339/VE9HZCTW6UOU_3.jpg" /></p>
+		<p>壁纸10</p>
+	</div>
+</div>
+<div id="loading" class="loading">加载中...</div>
+<div id="more" class="more"><input type="button" value="更 多" id="clear" /></div>
+<script src="../../../jraiser2-debug.js"></script>
+<script src="../../config.js"></script>
+<script>
+require(['dom/1.0.x/', 'ajax/1.0.x/', 'waterfall/1.0.x/'], function($, ajax, Waterfall) {
+	var waterfall = new Waterfall({
+		wrapper: $('#wrapper'),
+		template: '<% for (var i = 0; i < data.length; i++) { %>' +
+		'<div class="grid">' +
+			'<p><img src="<%=data[i].img%>" /></p>' +
+			'<p><%-data[i].text%></p>' +
+		'</div>' +
+		'<% } %>',
+		load: function(page) {
+			var t = this;
+			ajax.send({
+				url: 'data.js',
+				dataType: 'json',
+				data: {
+					page: page
+				},
+				onsuccess: function(ret) {
+					t.completeLoading(ret);
+				}
+			});
+		},
+		rowSpacing: 30,
+		fixedImgSize: false,
+		prefetch: '20%'
+	});
+
+	waterfall.on('load', function() {
+		$('#loading').hide();
+	});
+
+
+	// 限制同时展示的页数
+	var loadCounter = 1;
+	waterfall.on('beforeload', function(e) {
+		if (loadCounter >= 5) {
+			e.preventDefault();
+			$('#more').show();
+			$('#loading').hide();
+		} else {
+			loadCounter++;
+			$('#more').hide();
+			$('#loading').show();
+		}
+	});
+
+	$('#clear').click(function() {
+		loadCounter = 0;
+		waterfall.clear();
+		waterfall.next();
+	});
+});
+</script>
+</body>
+</html>

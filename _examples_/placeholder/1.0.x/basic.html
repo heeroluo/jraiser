@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Example Of ui-placeholder 1.0.x</title>
+<style type="text/css">
+/* 样式一定要分开写，不能三个写一起 */
+.ui-placeholder-on { color: gray; }
+input:-moz-placeholder { color: gray; }
+input::-webkit-placeholder { color: gray; }
+</style>
+</head>
+
+<body>
+<input placeholder="input here" type="text" />
+<script src="../../../jraiser2-debug.js"></script>
+<script src="../../config.js"></script>
+<script>
+require(['dom/1.0.x/', 'placeholder/1.0.x/'], function($, PlaceHolder) {
+	new PlaceHolder({
+		inputs: $('input')
+	})
+});
+</script>
+</body>
+</html>

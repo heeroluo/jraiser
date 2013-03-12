@@ -1,0 +1,12 @@
+{
+	"appPath": "./app/",
+	"libPath": "./",
+	"excepts": ["^base/.*"],
+	"list": [
+		{ "target": "^ajax/.*/(index(.js)?)?$" },
+		{ "target": "^base/.*/(index(.js)?)?$" },
+		{ "target": "^dom/.*/(index(.js)?)?$" },
+		{ "target": "^widget/.*/(index(.js)?)?$" }
+	],
+	"ignored_paths": ["_examples_"]
+}
