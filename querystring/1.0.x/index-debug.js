@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * querystring - v1.0.0 (2013-03-08T14:38:22+0800)
+ * querystring - v1.0.0 (2013-03-13T15:37:14+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -75,7 +75,7 @@ return {
 	 * @return {String} 处理后的URL
 	 */
 	append: function(url, data, o) {
-		if (!data) { return url; }
+		if ( !data || base.isEmptyObject(data) ) { return url; }
 
 		if (typeof data !== 'string') {
 			data = this.stringify(data, o);

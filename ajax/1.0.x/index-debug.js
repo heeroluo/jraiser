@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * ajax - v1.0.0 (2013-01-21T14:19:04+0800)
+ * ajax - v1.0.0 (2013-03-13T15:48:12+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -34,7 +34,12 @@ function loadFile(url, opts) {
 	}
 
 	// 添加get参数
-	if (opts.data) { url = qs.append(url, opts.data); }
+	if (opts.data) {
+		var temp = url.indexOf('?'),
+			data = temp !== -1 ? qs.parse( url.substr(temp + 1) ) : { };
+
+		url = qs.append( url.substr(0, temp), base.extend(data, opts.data) );
+	}
 
 	// 添加timestamp防止缓存
 	if (opts.nocache) { url = qs.append(url, { _: +new Date }); }
@@ -53,6 +58,18 @@ function loadFile(url, opts) {
 	} else {
 		head.insertBefore(node, head.firstChild);
 	}
+}
+
+// JSONP回调函数计数器
+var jsonpCallbackCounter = 0;
+// 生成JSONP回调函数名
+function generateJSONPCallbackName() {
+	var callbackName;
+	do {
+		callbackName = 'jsonp_callback_' + (++jsonpCallbackCounter);
+	} while(window[callbackName]);
+
+	return callbackName;
 }
 
 
@@ -156,42 +173,44 @@ return {
 	 * 发送JSONP请求
 	 * @method jsonp
 	 * @param {String} url URL
-	 * @param {String} callback 回调函数名
-	 */
-	/**
-	 * 发送JSONP请求
-	 * @method jsonp
-	 * @param {String} url URL
 	 * @param {Object} [opts] 其他参数
-	 *   @param {String} [opts.callback] 回调函数名
-	 *   @param {Boolean} [opts.removeCallback] 加载完成后是否移除全局回调函数
+	 *   @param {String} [opts.callback] 回调函数名，如不指定则自动生成
+	 *   @param {Function} [opts.onsuccess] 请求成功后的回调函数
 	 *   @param {String} [opts.charset] 文件编码，当页面编码与样式表编码不同时指定
 	 *   @param {Object} [opts.data] 附加到URL的GET参数
 	 *   @param {Boolean} [opts.nocache=true] 是否在URL中添加timestamp参数（参数名为“_”）以防止缓存
 	 */
 	jsonp: function(url, opts) {
-		if (typeof opts === 'string') {
-			opts = { callback: opts };
-		} else if (!opts) {
-			opts = { };
+		opts = opts || { };
+
+		var callback = opts.callback, isSpecifiedCallback = true;
+		if (!callback) {
+			if ( /[?|&]callback=(.*?)(&|$)/.test(url) ) {
+				// 匹配URL中的callback
+				callback = RegExp.$1;
+			} else {
+				// 自动生成callback
+				callback = generateJSONPCallbackName();
+				isSpecifiedCallback = false;
+			}
 		}
 
-		if (opts.callback) {
-			opts.data = opts.data || { };
-			opts.data.callback = opts.callback;
-			if (opts.removeCallback !== false) {
-				opts.onload = function() {
-					if (window[opts.callback]) {
-						try {
-							delete window[opts.callback];
-						} catch(e) {
-							window[opts.callback] = null;
-						}
+		opts.data = opts.data || { };
+		opts.data.callback = callback;
+
+		if (isSpecifiedCallback) {
+			delete opts.onload;
+		} else {
+			window[callback] = opts.onsuccess;
+			opts.onload = function() {
+				if (window[callback]) {
+					try {
+						delete window[callback];
+					} catch(e) {
+						window[callback] = null;
 					}
-				};
-			} else {
-				delete opts.onload;
-			}
+				}
+			};
 		}
 
 		this.getScript(url, opts);
@@ -213,8 +232,8 @@ return {
 	 *   @param {String} [opts.dataType='text'] 返回的数据格式，json、xml或text
 	 *   @param {Function(xhr,opts)} [opts.onbeforesend] 发送数据前执行的操作
 	 *   @param {Function(xhr,statusText)} [opts.onload] 请求完成（不论成功与否）后执行的操作
-	 *   @param {Function(result,xhr,statusText)} [opts.onsuccess] 请求成功时执行的操作
-	 *   @param {Function(xhr,statusText)} [opts.onerror] 请求失败时执行的操作
+	 *   @param {Function(result,xhr,statusText)} [opts.onsuccess] 请求成功后执行的操作
+	 *   @param {Function(xhr,statusText)} [opts.onerror] 请求失败后执行的操作
 	 *   @param {Function(xhr,statusText)} [opts.onend] 回调处理结束（不论成功与否）后执行的操作
 	 * @return {XMLHttpRequest} 进行请求的XMLHttpRequest对象
 	 */
