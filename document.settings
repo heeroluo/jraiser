@@ -6,7 +6,7 @@
 		"Widget",
 		""
 	],
-	"template_path": "../_doc_template_",
+	"template_path": "F:\\Websites\\HTML\\_doc_template_",
 	"output_path": "F:\\Websites\\HTML\\doc.jRaiser.org",
 	"ignored_paths": ["_examples_"]
 }
