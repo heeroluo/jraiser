@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * ajax - v1.0.0 (2013-03-13T15:48:12+0800)
+ * ajax - v1.0.0 (2013-03-13T22:58:55+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -61,12 +61,12 @@ function loadFile(url, opts) {
 }
 
 // JSONP回调函数计数器
-var jsonpCallbackCounter = 0;
+var jsonpCallbackCounter = 0, randomNum = parseInt(Math.random() * 100000);
 // 生成JSONP回调函数名
 function generateJSONPCallbackName() {
 	var callbackName;
 	do {
-		callbackName = 'jsonp_callback_' + (++jsonpCallbackCounter);
+		callbackName = 'jsonp_callback' + randomNum + '_' + (++jsonpCallbackCounter);
 	} while(window[callbackName]);
 
 	return callbackName;
@@ -185,7 +185,7 @@ return {
 
 		var callback = opts.callback, isSpecifiedCallback = true;
 		if (!callback) {
-			if ( /[?|&]callback=(.*?)(&|$)/.test(url) ) {
+			if ( /[?|&]callback=(.+?)(&|$)/.test(url) ) {
 				// 匹配URL中的callback
 				callback = RegExp.$1;
 			} else {
