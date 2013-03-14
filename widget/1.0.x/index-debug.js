@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * widget - v1.0.0 (2013-01-09T18:04:43+0800)
+ * widget - v1.0.0 (2013-03-14T16:47:36+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -71,6 +71,8 @@ var WidgetBase = base.createClass(function() {
 
 	/**
 	 * 修改部件设置（此操作会导致部件销毁并重新初始化）
+	 * @method options
+	 * @for WidgetBase
 	 * @param {Object} newOptions 新设置
 	 */
 	options: function(newOptions) {
