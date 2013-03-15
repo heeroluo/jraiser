@@ -1,12 +1,12 @@
 /*!
  * jRaiser 2 Javascript Library
- * paginator - v1.0.0 (2013-03-15T09:31:03+0800)
+ * paginator - v1.0.0 (2013-03-15T15:13:43+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
 
 /**
- * paginator模块提供分页条组件
+ * 分页条组件
  * @module paginator/1.0.x/
  * @category Widget
  */
@@ -15,7 +15,7 @@ var widget = require('widget/1.0.x/'), tmpl = require('tmpl/1.0.x/');
 
 
 /**
- * 分页条组件
+ * 分页条组件类
  * @class Paginator
  * @extends widget/1.0.x/{WidgetBase}
  * @constructor
