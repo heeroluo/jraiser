@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * moment - v2.0.0 (2013-03-15T10:28:20+0800)
+ * moment - v2.0.0 (2013-03-15T10:33:34+0800)
  * http://jraiser.org/ | Released under MIT license
  *
  * Include moment.js (http://momentjs.com/)
