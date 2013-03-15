@@ -1,12 +1,12 @@
 /*!
  * jRaiser 2 Javascript Library
- * fixedlayer - v1.0.0 (2013-03-15T14:14:47+0800)
+ * fixedlayer - v1.0.0 (2013-03-15T14:52:34+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
 
 /**
- * 本部件提供兼容ie6的fixed效果
+ * 兼容IE6的固定定位组件
  * @module fixedlayer/1.0.x/
  * @category Widget
  */
@@ -26,12 +26,12 @@ if (/MSIE\s(\d+)/.test(window.navigator.userAgent) && parseInt(RegExp.$1, 10) < 
 
 
 /**
- * 固定定位部件
+ * 固定定位组件类
  * @class FixedLayer
  * @extends widget/1.0.x/{WidgetBase}
  * @exports
  * @constructor
- * @param {Object} [options] 部件设置
+ * @param {Object} [options] 组件设置
  *   @param {NodeList} options.wrapper 目标容器
  *   @param {Object} [options.position] 容器位置
  *   @param {String} [options.effect='move'] 过渡效果，可以是'move'或者'none'

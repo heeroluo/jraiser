@@ -1,12 +1,12 @@
 /*!
  * jRaiser 2 Javascript Library
- * tabs - v1.0.0 (2013-01-09T18:15:31+0800)
+ * tabs - v1.0.0 (2013-03-15T14:54:40+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
 
 /**
- * tabs模块提供选项卡功能部件
+ * 选项卡功能组件
  * @module tabs/1.0.x/
  * @category Widget
  */
@@ -15,25 +15,25 @@ var base = require('base/1.0.x/'), widget = require('widget/1.0.x/');
 
 
 /**
- * 选项卡部件
+ * 选项卡组件类
  * @class Tabs
  * @extends widget/1.0.x/{WidgetBase}
  * @constructor
  * @exports
- * @param {Object} options 部件设置
+ * @param {Object} options 组件设置
  *   @param {NodeList} [options.wrapper] 选项卡元素容器。
  *     如不指定，则必须在tabs和panels参数中直接指定节点
- *   @param {NodeList|String} [options.tabs='.ui-tabs-nav > *'] 选项卡节点。
+ *   @param {NodeList|String} [options.tabs='.tabs-nav > *'] 选项卡节点。
  *     可以是节点集合或者以wrapper为上下文的选择器
- *   @param {NodeList|String} [options.panels='.ui-tabs-panels > *'] 内容面板节点。
+ *   @param {NodeList|String} [options.panels='.tabs-panels > *'] 内容面板节点。
  *     可以是节点集合或者以wrapper为上下文的选择器
  *   @param {Number} [options.active=0] 初始化激活项
  *   @param {showWhen} [options.showWhen] 选项卡触发内容显示的事件，
  *     默认为mouseover（触摸屏下为click）
  *   @param {Boolean} [options.isPreventDefault=false] 是否阻止showWhen动作的默认事件
  *   @param {Boolean} [options.useHashStorage=false] 是否通过hash记录当前所在选项卡
- *   @param {String} [options.activeTabClass='ui-tabs-tab-active'] 选项卡在激活状态下的CSS类
- *   @param {String} [options.activePanelClass='ui-tabs-panel-active'] 内容在激活状态下的CSS类
+ *   @param {String} [options.activeTabClass='tabs-tab-active'] 选项卡在激活状态下的CSS类
+ *   @param {String} [options.activePanelClass='tabs-panel-active'] 内容在激活状态下的CSS类
  *   @param {Object} [options.activePanelStyle] 内容在激活状态下的样式，默认为display:block
  *   @param {Object} [options.inactivePanelStyle] 内容在非激活状态下的样式，默认为display:none
  *   @param {Function(current,total)} [options.next] 返回下一个序号的函数，默认为当前序号加一
@@ -230,14 +230,14 @@ return widget.create(function(options) {
 		delete t._active;
 	}
 }, {
-	tabs: '.ui-tabs-nav > *',
-	panels: '.ui-tabs-panels > *',
+	tabs: '.tabs-nav > *',
+	panels: '.tabs-panels > *',
 	active: 0,
 	showWhen: 'ontouchstart' in document ? 'click' : 'mouseover',
 	isPreventDefault: false,
 	useHashStorage: false,
-	activeTabClass: 'ui-tabs-tab-active',
-	activePanelClass: 'ui-tabs-panel-active',
+	activeTabClass: 'tabs-tab-active',
+	activePanelClass: 'tabs-panel-active',
 	activePanelStyle: { display: 'block' },
 	inactivePanelStyle: { display: 'none' },
 	next: function(current, total) {

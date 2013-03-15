@@ -1,12 +1,12 @@
 /*!
  * jRaiser 2 Javascript Library
- * waterfall - v1.0.0 (2013-02-26T22:52:07+0800)
+ * waterfall - v1.0.0 (2013-03-15T14:55:51+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
 
 /**
- * waterfall模块提供瀑布流布局部件
+ * 瀑布流布局组件
  * @module waterfall/1.0.x/
  * @category Widget
  */
@@ -63,12 +63,12 @@ function onEachImageLoad(imgs, callback) {
 
 
 /**
- * 瀑布流布局部件
+ * 瀑布流布局组件类
  * @class Waterfall
  * @extends widget/1.0.x/{WidgetBase}
  * @constructor
  * @exports
- * @param {Object} options 部件设置
+ * @param {Object} options 组件设置
  *   @param {NodeList} options.wrapper 瀑布流容器
  *   @param {Function} options.load 加载数据的函数
  *   @param {Number} [options.page=1] 初始页码

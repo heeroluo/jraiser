@@ -1,12 +1,12 @@
 /*!
  * jRaiser 2 Javascript Library
- * widget - v1.0.0 (2013-03-14T16:47:36+0800)
+ * widget - v1.0.0 (2013-03-15T14:58:31+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
 
 /**
- * widget模块提供创建部件接口
+ * widget模块提供创建组件接口
  * @module widget/1.0.x/
  * @category Infrastructure
  */
@@ -15,7 +15,7 @@ var base = require('base/1.0.x/'), EventDriven = require('event-driven/1.0.x/');
 
 
 /**
- * 部件基类
+ * 组件基类
  * @class WidgetBase
  * @constructor
  * @extends EventDriven
@@ -24,7 +24,7 @@ var WidgetBase = base.createClass(function() {
 	
 }, {
 	/**
-	 * 初始化部件
+	 * 初始化组件
 	 * @method init
 	 * @for WidgetBase
 	 */
@@ -36,18 +36,18 @@ var WidgetBase = base.createClass(function() {
 	},
 
 	/**
-	 * 初始化部件主体。此方法由init方法调用
+	 * 初始化组件主体。此方法由init方法调用
 	 * @method _init
 	 * @protected
 	 * @for WidgetBase
-	 * @param {Object} 部件设置
+	 * @param {Object} 组件设置
 	 */
 	_init: function(options) {
 
 	},
 
 	/**
-	 * 销毁部件
+	 * 销毁组件
 	 * @method destroy
 	 * @for WidgetBase
 	 */
@@ -59,18 +59,18 @@ var WidgetBase = base.createClass(function() {
 	},
 
 	/**
-	 * 销毁部件主体。此方法由destroy方法调用
+	 * 销毁组件主体。此方法由destroy方法调用
 	 * @method _destroy
 	 * @protected
 	 * @for WidgetBase
-	 * @param {Object} 部件设置
+	 * @param {Object} 组件设置
 	 */
 	_destroy: function(options) {
 
 	},
 
 	/**
-	 * 修改部件设置（此操作会导致部件销毁并重新初始化）
+	 * 修改组件设置（此操作会导致组件销毁并重新初始化）
 	 * @method options
 	 * @for WidgetBase
 	 * @param {Object} newOptions 新设置
@@ -85,13 +85,13 @@ var WidgetBase = base.createClass(function() {
 }, EventDriven);
 
 /**
- * 创建部件
+ * 创建组件
  * @method create
  * @param {Function} body 构造函数
  * @param {Object} [methods] 方法
- * @param {Object} [defaultOptions] 默认部件配置
+ * @param {Object} [defaultOptions] 默认组件配置
  * @param {Function} [parentClass] 父类，默认为WidgetBase
- * @return {Function} 部件类
+ * @return {Function} 组件类
  */
 function create(body, methods, defaultOptions, parentClass) {
 	parentClass = parentClass || WidgetBase;

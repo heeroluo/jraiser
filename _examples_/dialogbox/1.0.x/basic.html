@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<title>Example of ui-dialogbox 1.0.x</title>
+<title>Example of dialogbox 1.0.x</title>
 <style type="text/css">
 .dialogbox {
 	width: 500px;
@@ -13,22 +13,22 @@
 	visibility: hidden;
 	overflow: hidden;
 }
-	.dialogbox .ui-draggable-trigger {
+	.dialogbox .draggable-trigger {
 		background: green;
 		color: #fff;
 		overflow: hidden;
 		height: 30px;
 		line-height: 30px;
 	}
-		.dialogbox .ui-draggable-trigger .ui-dialogbox-close { float: right; }
+		.dialogbox .draggable-trigger .dialogbox-close { float: right; }
 </style>
 </head>
 
 <body>
 <div id="toggle">点击显示</div>
 <div id="dialogbox" class="dialogbox">
-	<div class="ui-draggable-trigger">
-		<span class="ui-dialogbox-close">关闭</span>
+	<div class="draggable-trigger">
+		<span class="dialogbox-close">关闭</span>
 		点击此处开始拖动
 	</div>
 </div>

@@ -1,12 +1,12 @@
 /*!
  * jRaiser 2 Javascript Library
- * draggable - v1.0.0 (2013-01-10T10:21:12+0800)
+ * draggable - v1.0.0 (2013-03-15T14:41:12+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
 
 /**
- * 本模块提供拖动功能部件
+ * 拖动功能组件
  * @module draggable/1.0.x/
  * @category Widget
  */
@@ -34,12 +34,12 @@ if ('ontouchstart' in document) {
 
 
 /**
- * 拖动功能部件
+ * 拖动功能组件类
  * @class Draggable
  * @constructor
  * @extends widget/1.0.x/{WidgetBase}
  * @exports
- * @param {Object} options 部件设置
+ * @param {Object} options 组件设置
  *   @param {NodeList} options.wrapper 拖动元素
  *   @param {NodeList|Object|String} [options.boundary] 拖动边界，
  *     'parent'时为父节点，'window'时为窗口
@@ -48,7 +48,7 @@ return widget.create(function(options) {
 	var t = this;
 
 	t._wrapper = options.wrapper;
-	t._dragTrigger = t._wrapper.find('.ui-draggable-trigger');
+	t._dragTrigger = t._wrapper.find('.draggable-trigger');
 
 	// 没有指定触发节点时，由wrapper进行触发
 	if (!t._dragTrigger.length) { t._dragTrigger = t._wrapper; }

@@ -1,12 +1,12 @@
 /*!
  * jRaiser 2 Javascript Library
- * dialogbox - v1.0.0 (2013-01-08T22:18:26+0800)
+ * dialogbox - v1.0.0 (2013-03-15T14:58:11+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
 
 /**
- * 本部件提供模拟对话框功能
+ * 模拟对话框组件
  * @module dialogbox/1.0.x/
  * @category Widget
  */
@@ -35,14 +35,14 @@ function alignCenter(wrapper, size, direction) {
 
 
 /**
- * 对话框UI部件
+ * 模拟对话框组件类
  * @class DialogBox
  * @extends popuplayer/1.0.x/
  * @constructor
  * @exports
- * @param {Object} [options] 部件设置，详见ui-popuplayer部件的设置
- *   @param {Object} [options.draggable] 拖动设置，详见draggable部件的设置
- *   @param {Object} [options.fixedLayer] 固定定位设置，详见fixedlayer部件的设置
+ * @param {Object} [options] 组件设置，详见popuplayer组件的设置
+ *   @param {Object} [options.draggable] 拖动设置，详见draggable组件的设置
+ *   @param {Object} [options.fixedLayer] 固定定位设置，详见fixedlayer组件的设置
  */
 return widget.create(function(options) {
 	var t = this, wrapper = t._wrapper = options.wrapper;
@@ -51,14 +51,14 @@ return widget.create(function(options) {
 	t._popupContent = wrapper;
 	delete t._popupTrigger;
 
-	// 创建固定定位部件
+	// 创建固定定位组件
 	if (options.fixedLayer) {
 		t._fixedLayer = new FixedLayer( base.mix({
 			wrapper: wrapper,
 			enable: false
 		}, options.fixedLayer, { overwrite: false }) );
 	}
-	// 创建拖动功能部件
+	// 创建拖动功能组件
 	if (options.draggable) {
 		t._draggable = new Draggable( base.mix({
 			wrapper: wrapper,
@@ -77,12 +77,12 @@ return widget.create(function(options) {
 }, {
 	_init: function() {
 		PopupLayer.prototype._init.apply(this, arguments);
-		this._wrapper.find('.ui-dialogbox-close').click(this.close);
+		this._wrapper.find('.dialogbox-close').click(this.close);
 	},
 
 	_destroy: function() {
 		PopupLayer.prototype._init.apply(this, arguments);
-		this._wrapper.find('.ui-dialogbox-close').off('click', this.close);
+		this._wrapper.find('.dialogbox-close').off('click', this.close);
 	},
 
 	_computeStyle: function(styleName) {
@@ -121,7 +121,6 @@ return widget.create(function(options) {
 		}
 	}
 }, {
-	popupClass: 'ui-dialogbox-popup',
 	popupWhen: '',
 	closeWhen: '',
 	popupStyle: {
