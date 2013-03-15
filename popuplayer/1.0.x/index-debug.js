@@ -1,12 +1,12 @@
 /*!
  * jRaiser 2 Javascript Library
- * popuplayer - v1.0.0 (2013-01-13T19:24:51+0800)
+ * popuplayer - v1.0.0 (2013-03-15T14:42:11+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
 
 /**
- * 本部件提供弹出层效果
+ * 弹出层组件
  * @module popuplayer/1.0.x/
  * @category Widget
  */
@@ -15,19 +15,18 @@ var base = require('base/1.0.x/'), widget = require('widget/1.0.x/');
 
 
 /**
- * 弹出层UI部件
+ * 弹出层组件类
  * @class PopupLayer
  * @constructor
  * @extends widget/1.0.x/{WidgetBase}
  * @exports
- * @param {Object} options 部件设置
+ * @param {Object} options 组件设置
  *   @param {NodeList} options.wrapper 弹出层所在容器
  *   @param {Boolean} [options.visible=false] 初始状态下是否可见
  *   @param {String} [options.popupWhen='mouseenter'] 触发显示的动作
  *   @param {String} [options.closeWhen='mouseleave'] 触发隐藏的动作
- *   @param {Object} [options.popupStyle] 显示状态下添加的样式，默认为display:block
- *   @param {Object} [options.closedStyle] 隐藏状态下添加的样式，默认为display:none
- *   @param {String} [options.popupClass='ui-popuplayer-popup'] 显示状态下添加的样式类
+ *   @param {Object} [options.popupStyle] 显示状态下的样式，默认为display:block
+ *   @param {Object} [options.closedStyle] 隐藏状态下的样式，默认为display:none
  *   @param {Object} [options.animation] 动画参数，为空时无动画效果
  *   @param {Number} [options.closeDelay=50] 关闭延时
  */
@@ -35,8 +34,8 @@ return widget.create(function(options) {
 	var t = this, wrapper = t._wrapper = options.wrapper;
 
 	// 找出弹出触发元素以及弹出内容
-	t._popupTrigger = wrapper.find('.ui-popup-trigger');
-	t._popupContent = wrapper.find('.ui-popup-content');
+	t._popupTrigger = wrapper.find('.popup-trigger');
+	t._popupContent = wrapper.find('.popup-content');
 
 	// 默认触发元素为外层容器
 	if (!t._popupTrigger.length) { t._popupTrigger = wrapper; }
@@ -230,10 +229,6 @@ return widget.create(function(options) {
 	 * @param {Boolean} 是否弹出
 	 */
 	_actionDone: function(isPopup) {
-		var className = this._options.popupClass;
-		if (className) {
-			this._wrapper[isPopup ? 'addClass' : 'removeClass'](className);
-		}
 		this._visible = isPopup;
 
 		/**
@@ -263,7 +258,6 @@ return widget.create(function(options) {
 		height: 0,
 		visibility : 'hidden'
 	},
-	popupClass: 'ui-popuplayer-popup',
 	animation: null,
 	closeDelay: 50
 });
