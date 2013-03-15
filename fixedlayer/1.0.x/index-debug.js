@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * fixedlayer - v1.0.0 (2013-03-15T09:43:07+0800)
+ * fixedlayer - v1.0.0 (2013-03-15T14:14:47+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -215,8 +215,8 @@ var FixedLayer = widget.create(function(options) {
 		['Top', 'Left'].forEach(function(direction, i) {
 			var val = wrapper.css( direction.toLowerCase() );
 			if (val) {
-				newPosition[direction.toLowerCase()] =
-					parseFloat(val) - $window['scroll' + direction]();
+				newPosition[direction.toLowerCase()] = parseFloat(val) -
+					( supportFixed && t._options.useFixed ? 0 : $window['scroll' + direction]() );
 			}
 		});
 
