@@ -12,7 +12,7 @@ define(function(require, exports, module) { 'use strict';
  * @ignore
  */
 
-var Sizzle = require('sizzle/1.8.x/');
+var Sizzle = require('sizzle/1.9.x/');
 
 
 // 根据选择器过滤节点

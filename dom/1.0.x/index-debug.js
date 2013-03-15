@@ -19,7 +19,7 @@ define(function(require, exports, module) { 'use strict';
  *   ./dom-traversal-debug.js
  */
 
-var base = require('base/1.0.x/'), Sizzle = require('sizzle/1.8.x/'),
+var base = require('base/1.0.x/'), Sizzle = require('sizzle/1.9.x/'),
 	$base = require('./dom-base'),
 	$data = require('./dom-data'),
 	$attr = require('./dom-attr'),

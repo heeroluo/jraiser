@@ -12,7 +12,7 @@ define(function(require, exports, module) { 'use strict';
  * @ignore
  */
 
-var Sizzle = require('sizzle/1.8.x/'),
+var Sizzle = require('sizzle/1.9.x/'),
 	$base = require('./dom-base'),
 	$style = require('./dom-style');
 
