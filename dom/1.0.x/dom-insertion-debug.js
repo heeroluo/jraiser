@@ -15,7 +15,7 @@ define(function(require, exports, module) { 'use strict';
 var $base = require('./dom-base'),
 	$data = require('./dom-data'),
 	$event = require('./dom-event'),
-	Sizzle = require('sizzle/1.9.x/');
+	Sizzle = require('sizzle/1.8.x/');
 
 
 /**
