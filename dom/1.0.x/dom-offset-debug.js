@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-offset - v1.0.0 (2013-01-09T09:58:25+0800)
+ * dom-offset - v1.0.0 (2013-03-15T10:29:37+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -12,7 +12,7 @@ define(function(require, exports, module) { 'use strict';
  * @ignore
  */
 
-var Sizzle = require('sizzle/1.8.x/'),
+var Sizzle = require('sizzle/1.9.x/'),
 	$base = require('./dom-base'),
 	$style = require('./dom-style');
 
