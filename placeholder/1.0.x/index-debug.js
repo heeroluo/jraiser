@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * placeholder - v1.0.0 (2013-01-09T18:21:55+0800)
+ * placeholder - v1.0.0 (2013-03-15T09:44:57+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -15,7 +15,7 @@ var $ = require('dom/1.0.x/'), widget = require('widget/1.0.x/');
 
 
 // 检测是否原生支持placeholder
-var isSupportPlaceholder = 'placeholder' in document.createElement('input');	
+var supportPlaceholder = 'placeholder' in document.createElement('input');	
 
 
 /**
@@ -29,12 +29,12 @@ var isSupportPlaceholder = 'placeholder' in document.createElement('input');
  *   @param {NodeList} options.inputs 目标输入框
  *   @param {NodeList} [options.classWhenOn='ui-placeholder-on'] 占位符处于显示状态时添加的样式类
  */
-return widget.create(function(options) {
+var Placeholder = widget.create(function(options) {
 
 }, {
 	_init: function(options) {
 		// 如果原生支持placeholder，就不用折腾了
-		if (isSupportPlaceholder) { return; }
+		if (supportPlaceholder) { return; }
 
 		var t = this, inputs = options.inputs;
 
@@ -78,7 +78,7 @@ return widget.create(function(options) {
 	},
 
 	_destroy: function(options) {
-		if (isSupportPlaceholder && options.usePlaceholder) { return; }
+		if (supportPlaceholder && options.usePlaceholder) { return; }
 
 		var t = this, inputs = t._options.inputs;
 		
@@ -95,5 +95,17 @@ return widget.create(function(options) {
 }, {
 	classWhenOn: 'ui-placeholder-on'
 });
+
+/**
+ * 当前浏览器是否原生支持placeholder
+ * @property nativeSupport
+ * @for Placeholder
+ * @static
+ * @type {Boolean}
+ */
+Placeholder.nativeSupport = supportPlaceholder;
+
+
+return Placeholder;
 
 });
