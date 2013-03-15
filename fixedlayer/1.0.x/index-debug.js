@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * fixedlayer - v1.0.0 (2013-02-21T15:01:09+0800)
+ * fixedlayer - v1.0.0 (2013-03-15T09:43:07+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -19,9 +19,9 @@ var base = require('base/1.0.x/'),
 
 
 // 检查浏览器是否支持position:fixed
-var isSupportFixed = true;
+var supportFixed = true;
 if (/MSIE\s(\d+)/.test(window.navigator.userAgent) && parseInt(RegExp.$1, 10) < 7) {
-	isSupportFixed = false;
+	supportFixed = false;
 }
 
 
@@ -39,7 +39,7 @@ if (/MSIE\s(\d+)/.test(window.navigator.userAgent) && parseInt(RegExp.$1, 10) < 
  *   @param {Number} [options.redrawInterval=80] 重绘延时
  *   @param {Boolean} [options.useFixed=true] 是否在支持position:fixed的浏览器中使用此样式 
  */
-return widget.create(function(options) {
+var FixedLayer = widget.create(function(options) {
 	// 从元素的style属性读取样式值
 	var position = base.extend({ }, options.position), wrapper = options.wrapper.get(0);
 	['top', 'bottom', 'left', 'right'].forEach(function(direction) {
@@ -57,7 +57,7 @@ return widget.create(function(options) {
 		var t = this, wrapper = options.wrapper, reCenter = /^center$/i;
 		t._originalPosition = wrapper.css('position');
 
-		if (isSupportFixed && options.useFixed) {
+		if (supportFixed && options.useFixed) {
 			wrapper.css('position', 'fixed');
 
 			// 检查是否有居中对齐的需求
@@ -180,7 +180,7 @@ return widget.create(function(options) {
 
 			t.moveToPosition();
 
-			if (!isSupportFixed || !options.useFixed) {
+			if (!supportFixed || !options.useFixed) {
 				$window.on('scroll', t.moveToPosition);
 			}
 			$window.on('resize', t.moveToPosition);
@@ -229,5 +229,17 @@ return widget.create(function(options) {
 	redrawDelay: 80,
 	useFixed: true
 });
+
+/**
+ * 当前浏览器是否原生支持position:fixed
+ * @property nativeSupport
+ * @static
+ * @for FixedLayer
+ * @type {Boolean}
+ */
+FixedLayer.nativeSupport = supportFixed;
+
+
+return FixedLayer;
 
 });
