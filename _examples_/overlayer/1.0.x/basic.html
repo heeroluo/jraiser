@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Examples of overlayer 1.0.x</title>
+</head>
+
+<body>
+<p>OverLayer 1.0.x</p>
+<script src="../../../jraiser2-debug.js"></script>
+<script src="../../config.js"></script>
+<script>
+require(['dom/1.0.x/', 'overlayer/1.0.x/'], function($, Overlayer) {
+
+var overlayer = new Overlayer({
+	wrapper: $('body'),
+	visible: true
+});
+
+// 3s后隐藏
+setTimeout(function() {
+	overlayer.hide();
+}, 3000);
+
+});
+</script>
+</body>
+</html>
