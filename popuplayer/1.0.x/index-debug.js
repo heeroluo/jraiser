@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * popuplayer - v1.0.0 (2013-03-15T14:42:11+0800)
+ * popuplayer - v1.0.0 (2013-03-16T18:44:13+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -184,7 +184,7 @@ return widget.create(function(options) {
 	 * @method _doAction
 	 * @protected
 	 * @for PopupLayer
-	 * @param {Boolean} 是否弹出
+	 * @param {Boolean} isPopup 是否弹出
 	 */
 	_doAction: function(isPopup) {
 		/**
@@ -226,7 +226,7 @@ return widget.create(function(options) {
 	 * @method _actionDone
 	 * @protected
 	 * @for PopupLayer
-	 * @param {Boolean} 是否弹出
+	 * @param {Boolean} isPopup 是否弹出
 	 */
 	_actionDone: function(isPopup) {
 		this._visible = isPopup;

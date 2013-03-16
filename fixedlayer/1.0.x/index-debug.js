@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * fixedlayer - v1.0.0 (2013-03-15T14:52:34+0800)
+ * fixedlayer - v1.0.0 (2013-03-16T19:41:36+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -19,10 +19,8 @@ var base = require('base/1.0.x/'),
 
 
 // 检查浏览器是否支持position:fixed
-var supportFixed = true;
-if (/MSIE\s(\d+)/.test(window.navigator.userAgent) && parseInt(RegExp.$1, 10) < 7) {
-	supportFixed = false;
-}
+var supportFixed = !(/MSIE\s(\d+)/.test(window.navigator.userAgent) &&
+	parseInt(RegExp.$1, 10) < 7);
 
 
 /**
@@ -31,7 +29,7 @@ if (/MSIE\s(\d+)/.test(window.navigator.userAgent) && parseInt(RegExp.$1, 10) < 
  * @extends widget/1.0.x/{WidgetBase}
  * @exports
  * @constructor
- * @param {Object} [options] 组件设置
+ * @param {Object} options 组件设置
  *   @param {NodeList} options.wrapper 目标容器
  *   @param {Object} [options.position] 容器位置
  *   @param {String} [options.effect='move'] 过渡效果，可以是'move'或者'none'
