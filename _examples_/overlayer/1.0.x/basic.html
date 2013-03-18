@@ -7,6 +7,9 @@
 
 <body>
 <p>OverLayer 1.0.x</p>
+<select>
+	<option>测试下拉框</option>
+</select>
 <script src="../../../jraiser2-debug.js"></script>
 <script src="../../config.js"></script>
 <script>
@@ -17,10 +20,9 @@ var overlayer = new Overlayer({
 	visible: true
 });
 
-// 3s后隐藏
-setTimeout(function() {
-	overlayer.hide();
-}, 3000);
+overlayer.on('click', function() {
+	this.hide();
+});
 
 });
 </script>

@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * overlayer - v1.0.0 (2013-03-16T19:47:18+0800)
+ * overlayer - v1.0.0 (2013-03-18T10:05:15+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -16,9 +16,9 @@ var base = require('base/1.0.x/'),
 	$ = require('dom/1.0.x/');
 
 
-// 检查浏览器是否支持position:fixed
-var supportFixed = !(/MSIE\s(\d+)/.test(window.navigator.userAgent) &&
-	parseInt(RegExp.$1, 10) < 7);
+// 检查浏览器是否IE<7
+var isOldIE = /MSIE\s(\d+)/.test(window.navigator.userAgent) &&
+	parseInt(RegExp.$1, 10) < 7;
 
 
 /**
@@ -43,7 +43,8 @@ return widget.create(function(options) {
 	_init: function(options) {
 		var t = this,
 			wrapper = options.wrapper,
-			useFixed = wrapper.prop('tagName') === 'BODY' && supportFixed;
+			isBody = wrapper.prop('tagName') === 'BODY',
+			useFixed = isBody && !isOldIE;
 
 		// 如果是body的覆盖层，可使用fixed定位，
 		// 这样窗口大小变化的时候，不用重设宽高
@@ -51,7 +52,15 @@ return widget.create(function(options) {
 			top: 0,
 			left: 0,
 			position: useFixed ? 'fixed' : 'absolute',
-			display: 'none'
+			display: 'none',
+			zIndex: options.zIndex
+		}).on('click', function() {
+			/**
+			 * 点击覆盖层时触发
+			 * @event click
+			 * @for Overlayer
+			 */
+			t.trigger('click');
 		});
 		if (useFixed) {
 			overlayer.css({
@@ -59,10 +68,16 @@ return widget.create(function(options) {
 				height: '100%'
 			});
 		}
-		['backgroundColor', 'zIndex'].forEach(function(styleName) {
-			overlayer.css(styleName, options[styleName]);
-		});
-		if (options.className) { overlayer.addClass(options.className); }
+
+		var styleLayer;
+		if (isOldIE) {
+			styleLayer = $('<div style="width: 100%; height: 100%;"></div>');
+		} else {
+			styleLayer = overlayer;
+		}
+
+		styleLayer.css('backgroundColor', options.backgroundColor);
+		if (options.className) { styleLayer.addClass(options.className); }
 
 		/**
 		 * 根据父层尺寸重设覆盖层尺寸
@@ -76,8 +91,15 @@ return widget.create(function(options) {
 			t.adjustSize = function() {
 				if (t._visible === false) { return; }
 
-				var width = wrapper.get(0).scrollWidth,
+				var width, height;
+				if (isBody) {
+					var docElt = document.documentElement;
+					width = Math.max(docElt.clientWidth, docElt.scrollWidth);
+					height = Math.max(docElt.clientHeight, docElt.scrollHeight);
+				} else {
+					width = wrapper.get(0).scrollWidth,
 					height = wrapper.get(0).scrollHeight;
+				}
 
 				if (t._layerWidth !== width) {
 					overlayer.css('width', width);
@@ -90,12 +112,22 @@ return widget.create(function(options) {
 			};
 		}
 
-		if (wrapper.prop('tagName') !== 'BODY') {
+		if (!isBody) {
 			wrapper.css('position', 'relative');
 		}
 
 		t.adjustSize();
 		if (!useFixed) { $(window).on('resize', t.adjustSize); }
+
+		// IE6下需以iframe挡住select
+		if (isOldIE) {
+			var iframe = $('<iframe' +
+				' style="width: 100%; height: 100%; position: absolute; left: 0; top: 0; z-index: -1;"' +
+				' src="javascript:false;" frameborder="0" scrolling="no"></iframe>'
+			);
+			overlayer.append(iframe);
+			overlayer.append(styleLayer);
+		}
 
 		wrapper.append(overlayer);
 
