@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-event - v1.0.0 (2013-03-15T10:29:54+0800)
+ * dom-event - v1.0.0 (2013-03-20T14:42:40+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -150,8 +150,24 @@ var removeEvent = function(node, type, handler) {
 // 存放回调函数
 var eventSpace = { };
 
-// 是否阻止所有回调函数执行，用于调用trigger时防止回调函数重复执行
-var isPreventAllHandlers = false;
+// 记录阻止哪些回调函数执行，用于调用trigger时防止回调函数重复执行
+var handlerBlocker = {
+	_data: { },
+	add: function(nodeId, eventType) {
+		this._data[nodeId] = this._data[nodeId] || { };
+		this._data[nodeId][eventType] = true;
+	},
+	remove: function(nodeId, eventType) {
+		var data = this._data[nodeId];
+		if (data) { delete data[eventType]; }
+		if ( base.isEmptyObject(data) ) {
+			delete this._data[nodeId];
+		}
+	},
+	isBlocked: function(nodeId, eventType) {
+		return Boolean( (this._data[nodeId] || { })[eventType] );
+	}
+};
 
 // 存放各节点的globalHandler
 var globalHandlers = { };
@@ -178,10 +194,10 @@ base.each({
 
 // 全局处理函数，用于调用某节点某事件类型下的处理函数
 function globalHandler(e, namespace) {
-	if (isPreventAllHandlers) { return; }
+	var self = this, nodeId = $base.uniqueId(self);
+	if ( handlerBlocker.isBlocked(nodeId, e.type) ) { return; }
 
-	var self = this, space = (eventSpace[$base.uniqueId(self)] || { })[e.type];
-
+	var space = (eventSpace[nodeId] || { })[e.type];
 	if (space) {
 		if (namespace && typeof namespace !== 'string') { namespace = null; }
 
@@ -416,9 +432,10 @@ function trigger(node, type, options) {
 	
 	if ( defaultActions[ type[0] ] && !e.isDefaultPrevented() ) {
 		// 防止重复执行事件处理函数
-		isPreventAllHandlers = true;
+		var nodeId = $base.uniqueId(originalNode);
+		handlerBlocker.add(nodeId, type[0]);
 		originalNode[ type[0] ]();
-		isPreventAllHandlers = false;
+		handlerBlocker.remove(nodeId, type[0]);
 	}
 }
 
