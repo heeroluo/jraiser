@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-insertion - v1.0.0 (2013-03-15T10:29:46+0800)
+ * dom-insertion - v1.0.0 (2013-03-22T14:58:53+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -12,7 +12,8 @@ define(function(require, exports, module) { 'use strict';
  * @ignore
  */
 
-var $base = require('./dom-base'),
+var base = require('base/1.0.x/'),
+	$base = require('./dom-base'),
 	$data = require('./dom-data'),
 	$event = require('./dom-event'),
 	Sizzle = require('sizzle/1.9.x/');
@@ -49,9 +50,10 @@ function createNodes(html, ownerDocument) {
  */
 function buildFragment(nodes, ownerDocument) {
 	var frag = (ownerDocument || document).createDocumentFragment();
-	nodes.forEach(function(node) {
-		frag.appendChild(node);
-	});
+	nodes = base.toArray(nodes);
+	for (var i = 0; i < nodes.length; i++) {
+		frag.appendChild(nodes[i]);
+	}
 
 	return frag;
 }
@@ -165,20 +167,45 @@ function replaceWith(targetNodes, refNode, isPass) {
 
 // 对指定节点进行操作
 function doWithGivenNodes(nodes, givenNodes, fn, condition) {
-	var targetNodes;
+	var targetNodes, refNode;
 
-	nodes.forEach(function(refNode, i) {
-		if (!condition || condition.apply(nodes, arguments) !== false) {
+	for (var i = 0; i < nodes.length; i++) {
+		if (!condition || condition.call(nodes, nodes[i], i) !== false) {
 			if (!targetNodes) { targetNodes = explainNodes(givenNodes); }
 			fn.call(nodes,
-				i < nodes.length - 1 ? targetNodes.cloneNode(true) : targetNodes, refNode
+				i < nodes.length - 1 ? targetNodes.cloneNode(true) : targetNodes, nodes[i]
 			);
 		}
-	});
+	}
 
 	targetNodes = null;
 
 	return nodes;
+}
+
+// 对当前节点进行操作
+function doWithCurrentNodes(nodes, currentNodes, fn, condition) {
+	var result = [ ], targetNodes;
+
+	if (typeof nodes === 'string') {
+		nodes = Sizzle(nodes);
+	} else if ( $base.isNode(nodes) ) {
+		nodes = [nodes];
+	} else {
+		nodes = base.toArray(nodes);
+	}
+
+	for (var i = 0; i < nodes.length; i++) {
+		if (!condition || condition.call(nodes, nodes[i], i) !== false) {
+			targetNodes = i < nodes.length - 1 ? currentNodes.clone() : currentNodes;
+			targetNodes.forEach(function(node) {
+				result.push(node);
+			});
+			fn.call(nodes, buildFragment(targetNodes), nodes[i]);
+		}
+	}
+
+	return Sizzle.uniqueSort(result);
 }
 
 // 清理节点数据
@@ -190,33 +217,33 @@ function clearData(node) {
 
 
 return {
-	// See line 21
+	// See line 22
 	create: createNodes,
 
-	// See line 43
+	// See line 44
 	buildFragment: buildFragment,
 
-	// See line 72
+	// See line 74
 	appendChild: appendChild,
 
-	// See line 89
+	// See line 91
 	prependChild: prependChild,
 
-	// See line 111
+	// See line 113
 	insertBefore: insertBefore,
 
-	// See line 128
+	// See line 130
 	insertAfter: insertAfter,
 
-	// See line 151
+	// See line 153
 	replaceWith: replaceWith,
 
 	shortcuts: {
 		/**
-		 * 把目标节点（或其克隆节点）插入为当前所有节点的最后一个子节点
-		 * @method appendChild
+		 * 在当前所有节点的最后一个子节点后插入目标节点（或其克隆节点）
+		 * @method append
 		 * @for NodeList
-		 * @param {String|Element|Array<Element>|DocumentFragment} 目标节点
+		 * @param {String|Element|Array<Element>|DocumentFragment} nodes 目标节点
 		 * @return {NodeList} 当前节点集合
 		 */
 		append: function(nodes) {
@@ -228,10 +255,27 @@ return {
 		},
 
 		/**
-		 * 把目标节点（或其克隆节点）插入为当前所有节点的第一个子节点
-		 * @method prependChild
+		 * 在目标节点的最后一个子节点后插入当前所有节点（或其克隆节点）
+		 * @method appendTo
 		 * @for NodeList
-		 * @param {String|Element|Array<Element>|DocumentFragment} 目标节点
+		 * @param {String|Element|Array<Element>|DocumentFragment} nodes 目标节点
+		 * @return {NodeList} 当前节点集合
+		 */
+		appendTo: function(nodes) {
+			return new this.constructor(
+				doWithCurrentNodes(nodes, this, function(targetNodes, refNode) {
+					appendChild(targetNodes, refNode, true);
+				}, function(refNode) {
+					return refNode.nodeType === 1;
+				})
+			);
+		},
+
+		/**
+		 * 在当前所有节点的第一个子节点前插入目标节点（或其克隆节点）
+		 * @method prepend
+		 * @for NodeList
+		 * @param {String|Element|Array<Element>|DocumentFragment} nodes 目标节点
 		 * @return {NodeList} 当前节点集合
 		 */
 		prepend: function(nodes) {
@@ -243,10 +287,27 @@ return {
 		},
 
 		/**
+		 * 在目标节点的第一个子节点前插入当前所有节点（或其克隆节点）
+		 * @method prependTo
+		 * @for NodeList
+		 * @param {String|Element|Array<Element>|DocumentFragment} nodes 目标节点
+		 * @return {NodeList} 当前节点集合
+		 */
+		prependTo: function(nodes) {
+			return new this.constructor(
+				doWithCurrentNodes(nodes, this, function(targetNodes, refNode) {
+					prependChild(targetNodes, refNode, true);
+				}, function(refNode) {
+					return refNode.nodeType === 1;
+				})
+			);
+		},
+
+		/**
 		 * 在当前所有节点之后插入目标节点（或其克隆节点）
 		 * @method after
 		 * @for NodeList
-		 * @param {String|Element|Array<Element>|DocumentFragment} 目标节点
+		 * @param {String|Element|Array<Element>|DocumentFragment} nodes 目标节点
 		 * @return {NodeList} 当前节点集合
 		 */
 		after: function(nodes) {
@@ -259,26 +320,22 @@ return {
 		 * 把当前节点插入到目标节点之后
 		 * @method insertAfter
 		 * @for NodeList
-		 * @param {String|Element|Array<Element>|DocumentFragment} 目标节点
+		 * @param {String|Element|Array<Element>|DocumentFragment} nodes 目标节点
 		 * @return {NodeList} 当前节点集合
 		 */
-		insertAfter: function(target) {
-			if (typeof target === 'string') {
-				target = Sizzle(target);
-			} else if ( $base.isNode(target) ) {
-				target = [target];
-			}
-
-			return doWithGivenNodes(target, this, function(targetNodes, refNode) {
-				insertAfter(targetNodes, refNode, true);
-			});
+		insertAfter: function(nodes) {
+			return new this.constructor(
+				doWithCurrentNodes(nodes, this, function(targetNodes, refNode) {
+					insertAfter(targetNodes, refNode, true);
+				})
+			);
 		},
 
 		/**
 		 * 在当前所有节点之前插入目标节点（或其克隆节点）
 		 * @method before
 		 * @for NodeList
-		 * @param {String|Element|Array<Element>|DocumentFragment} 目标节点
+		 * @param {String|Element|Array<Element>|DocumentFragment} nodes 目标节点
 		 * @return {NodeList} 当前节点集合
 		 */
 		before: function(nodes) {
@@ -291,32 +348,43 @@ return {
 		 * 把当前节点插入到目标节点之前
 		 * @method insertBefore
 		 * @for NodeList
-		 * @param {String|Element|Array<Element>|DocumentFragment} 目标节点
+		 * @param {String|Element|Array<Element>|DocumentFragment} nodes 目标节点
 		 * @return {NodeList} 当前节点集合
 		 */
-		insertBefore: function(target) {
-			if (typeof target === 'string') {
-				target = Sizzle(target);
-			} else if ( $base.isNode(target) ) {
-				target = [target];
-			}
-
-			return doWithGivenNodes(target, this, function(targetNodes, refNode) {
-				insertBefore(targetNodes, refNode, true);
-			});
+		insertBefore: function(nodes) {
+			return new this.constructor(
+				doWithCurrentNodes(nodes, this, function(targetNodes, refNode) {
+					insertBefore(targetNodes, refNode, true);
+				})
+			);
 		},
 
 		/**
-		 * 把当前所有节点替换为目标节点（或其克隆节点）
+		 * 把当前节点替换为目标节点（或其克隆节点）
 		 * @method replaceWith
 		 * @for NodeList
-		 * @param {String|Element|Array<Element>|DocumentFragment} 目标节点
+		 * @param {String|Element|Array<Element>|DocumentFragment} nodes 目标节点
 		 * @return {NodeList} 当前节点集合
 		 */
 		replaceWith: function(nodes) {
 			return doWithGivenNodes(this, nodes, function(targetNodes, refNode) {
 				replaceWith(targetNodes, refNode, true);
 			});
+		},
+
+		/**
+		 * 把目标节点替换为当前节点（或其克隆节点）
+		 * @method replaceAll
+		 * @for NodeList
+		 * @param {String|Element|Array<Element>|DocumentFragment} nodes 目标节点
+		 * @return {NodeList} 当前节点集合
+		 */
+		replaceAll: function(nodes) {
+			return new this.constructor(
+				doWithCurrentNodes(nodes, this, function(targetNodes, refNode) {
+					replaceWith(targetNodes, refNode, true);
+				})
+			);
 		},
 
 		/**
@@ -381,6 +449,20 @@ return {
 			});
 
 			return this;
+		},
+
+		/**
+		 * 返回当前所有节点的克隆副本
+		 * @for NodeList
+		 * @return {NodeList} 当前所有节点的克隆副本
+		 */
+		clone: function() {
+			var copy = [ ];
+			this.forEach(function(node, i) {
+				copy[i] = node.cloneNode(true);
+			});
+
+			return new this.constructor(copy);
 		}
 	}
 };
