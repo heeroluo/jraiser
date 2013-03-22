@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-traversal - v1.0.0 (2013-03-15T10:29:04+0800)
+ * dom-traversal - v1.0.0 (2013-03-21T17:37:40+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -12,7 +12,7 @@ define(function(require, exports, module) { 'use strict';
  * @ignore
  */
 
-var Sizzle = require('sizzle/1.9.x/');
+var $base = require('./dom-base'), Sizzle = require('sizzle/1.9.x/');
 
 
 // 根据选择器过滤节点
@@ -63,6 +63,47 @@ function nodesAll(nodes, position, selector, onlyFirst) {
 
 return {
 	shortcuts: {
+		/**
+		 * 获取当前第一个节点是父节点的第几个子节点
+		 * @method index
+		 * @for NodeList
+		 * @return {Number} 节点位置
+		 */
+		/**
+		 * 获取当前第一个节点在指定选择器匹配的节点集合中的位置
+		 * @method index
+		 * @for NodeList
+		 * @param {String} selector 选择器
+		 * @return {Number} 节点位置
+		 */
+		/**
+		 * 获取当前第一个节点在指定集合中的位置
+		 * @method index
+		 * @for NodeList
+		 * @param {NodeList|Array} nodes 指定集合
+		 * @return {Number} 节点位置
+		 */
+		index: function(selector) {
+			if (this.length) {
+				var node = this.get(0);
+
+				if (selector == null) {
+					// 在父节点的子节点集合中的位置
+					return Sizzle('> *', node.parentNode).indexOf(node);
+				} else if (typeof selector === 'string') {
+					// 在指定选择器匹配出的节点集合中的位置
+					return Sizzle(selector).indexOf(node);
+				} else if ( $base.isNode(selector) ) {
+					return selector === node ? 0 : -1;
+				} else if (selector.indexOf) {
+					// 在指定集合中的位置
+					return selector.indexOf(node);
+				}
+			}
+
+			return -1;
+		},
+
 		/**
 		 * 获取当前所有节点的子节点
 		 * @method children
