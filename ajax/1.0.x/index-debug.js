@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * ajax - v1.0.0 (2013-03-13T22:58:55+0800)
+ * ajax - v1.0.0 (2013-03-26T16:25:34+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -35,10 +35,14 @@ function loadFile(url, opts) {
 
 	// 添加get参数
 	if (opts.data) {
-		var temp = url.indexOf('?'),
-			data = temp !== -1 ? qs.parse( url.substr(temp + 1) ) : { };
-
-		url = qs.append( url.substr(0, temp), base.extend(data, opts.data) );
+		var temp = url.indexOf('?'), data;
+		if (temp === -1) {
+			data = opts.data;
+		} else {
+			url = url.substr(0, temp);
+			data = base.extend(qs.parse( url.substr(temp + 1) ), opts.data);
+		}
+		url = qs.append(url, data);
 	}
 
 	// 添加timestamp防止缓存
