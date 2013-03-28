@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * popuplayer - v1.0.0 (2013-03-16T18:44:13+0800)
+ * popuplayer - v1.0.0 (2013-03-28T15:43:03+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -187,6 +187,9 @@ return widget.create(function(options) {
 	 * @param {Boolean} isPopup 是否弹出
 	 */
 	_doAction: function(isPopup) {
+		// 防止重复操作
+		if (isPopup === this._visible) { return; }
+
 		/**
 		 * 弹出前触发
 		 * @event beforepopup

@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * overlayer - v1.0.0 (2013-03-18T10:05:15+0800)
+ * overlayer - v1.0.0 (2013-03-28T15:43:09+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -184,6 +184,9 @@ return widget.create(function(options) {
 	 * @param {Boolean} visible 是否可见
 	 */
 	_doAction: function(visible) {
+		// 防止重复操作
+		if (visible === this._visible) { return; }
+
 		/**
 		 * 显示前触发
 		 * @event beforeshow
