@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-attr - v1.0.0 (2013-01-09T09:43:13+0800)
+ * dom-attr - v1.0.0 (2013-03-29T15:35:30+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -24,11 +24,11 @@ var attrMap = !document.documentElement.hasAttribute ? {
 	'className': 'class'
 };
 
-// 特殊属性获取
+// 特殊属性访问
 var attrHooks = { };
 if ('cssText' in document.documentElement.style) {
 	attrHooks.style = {
-		get: function(node) { return node.style.cssText.toLowerCase(); },
+		get: function(node) { return node.style.cssText; },
 		set: function(node, val) { node.style.cssText = val; }
 	};
 }

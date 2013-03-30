@@ -91,5 +91,5 @@ return {
 		return val == null || val.length === 0 ? null : val;
 	}
 };
-	
+
 });

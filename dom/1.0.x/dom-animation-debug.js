@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-animation - v1.0.0 (2013-02-17T22:43:53+0800)
+ * dom-animation - v1.0.0 (2013-03-29T16:07:27+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -64,7 +64,7 @@ var rNumber = /^[+-]?\d+(?:\.\d+)?[^\s]*$/,
 function parseStyleValue(val) {
 	if (typeof val === 'string') {
 		if ( rNumber.test(val) ) {
-			val = parseFloat(val) || 0;
+			val = parseFloat(val, 10) || 0;
 		} else if ( rSharpColor.test(val) ) {
 			// #开头的16进制颜色值转10进制
 			val = [
@@ -75,9 +75,9 @@ function parseStyleValue(val) {
 		} else if ( rRGBColor.test(val) ) {
 			// rgb开头的10进制颜色值转为数字
 			val = [
-				parseInt(RegExp.$1),
-				parseInt(RegExp.$2),
-				parseInt(RegExp.$3)
+				parseInt(RegExp.$1, 10),
+				parseInt(RegExp.$2, 10),
+				parseInt(RegExp.$3, 10)
 			];
 		} else {
 			val = val.toLowerCase();
@@ -130,12 +130,12 @@ function calculateVal(cVal, fVal, easing, progress) {
 	var nVal;
 
 	if (typeof cVal === 'number') {
-		// 相对数值
+		// 相对数值，如 '+5'
 		if ( typeof fVal === 'string' && rRelNumber.test(fVal) ) {
-			fVal = cVal + parseFloat(fVal);
+			fVal = cVal + parseFloat(fVal, 10);
 		}
 
-		if (typeof cVal === 'number') {
+		if (typeof fVal === 'number') {
 			nVal = cVal + (fVal - cVal) * easing(0, 1, progress);
 			// 防止超出界限值
 			if ( (fVal > cVal && nVal > fVal) || (fVal < cVal && nVal < fVal) ) {
@@ -145,13 +145,11 @@ function calculateVal(cVal, fVal, easing, progress) {
 	} else if ( base.isArray(cVal) && base.isArray(fVal) ) {
 		nVal = [ ];
 		cVal.forEach(function(v, i) {
-			nVal[i] = parseInt( calculateVal(v, fVal[i], easing, progress) );
+			nVal[i] = parseInt(calculateVal(v, fVal[i], easing, progress), 10);
 		});
-	} else {
-		nVal = fVal;
 	}
 
-	return nVal;
+	return nVal || fVal;
 }
 
 
@@ -211,18 +209,18 @@ function startAnimation(node, finalStyles, options, isPass) {
 	var nodeId = $base.uniqueId(node), startTime = +new Date;
 	var actionId = doAnimation(function() {
 		// 计算动画进度
-		var escapedTime = +new Date - startTime, progress = escapedTime / options.duration;
+		var escapedTime = new Date - startTime, progress = escapedTime / options.duration;
 
 		var cVal,	// 当前样式值
 			fVal,	// 最终样式值
 			nVal;	// 新样式值
 		for (var n in finalStyles) {
+			if (n === 'visibility' || n === 'display') { continue; }
+
 			cVal = curStyles[n];
 			fVal = finalStyles[n];
-
-			if (n === 'visibility' || n === 'display') { continue; }
-			nVal = calculateVal(cVal, fVal, easing, progress);
-			if (cVal !== fVal) {
+			if (cVal != fVal) {
+				nVal = calculateVal(cVal, fVal, easing, progress);
 				if ( rScroll.test(n) ) {
 					$style.setScroll(node, n.replace(rScroll, ''), nVal);
 				} else {
@@ -264,10 +262,10 @@ function stopAnimation(node) {
 }
 
 
-// See line 161
+// See line 159
 exports.start = startAnimation;
 
-// See line 251
+// See line 249
 exports.stop = stopAnimation;
 
 exports.shortcuts = {

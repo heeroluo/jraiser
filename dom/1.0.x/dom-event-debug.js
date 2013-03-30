@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-event - v1.0.0 (2013-03-20T14:42:40+0800)
+ * dom-event - v1.0.0 (2013-03-29T16:26:52+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -219,6 +219,7 @@ function globalHandler(e, namespace) {
 			e.data = obj.data;
 			var result = obj.handle ?
 				obj.handle.call(thisObj, obj, e) : obj.handler.call(thisObj, e);
+
 			if (result === false) { e.preventDefault(); }
 			if (e.cancelBubble === true) { e.stopPropagation(); }
 		});
@@ -441,13 +442,13 @@ function trigger(node, type, options) {
 
 
 module.exports = {
-	// See line 271
+	// See line 288
 	on: on,
 
-	// See line 303
+	// See line 320
 	off: off,
 
-	// See line 388
+	// See line 405
 	trigger: trigger,
 
 	shortcuts: {
