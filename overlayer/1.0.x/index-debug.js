@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * overlayer - v1.0.0 (2013-03-28T15:43:09+0800)
+ * overlayer - v1.0.0 (2013-04-09T11:00:48+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -89,8 +89,6 @@ return widget.create(function(options) {
 			t.adjustSize = function() { };
 		} else {
 			t.adjustSize = function() {
-				if (t._visible === false) { return; }
-
 				var width, height;
 				if (isBody) {
 					var docElt = document.documentElement;
@@ -154,7 +152,7 @@ return widget.create(function(options) {
 	 * @method show
 	 * @for Overlayer
 	 */
-	show: function() { this._doAction(true); },
+	show: function() { this.adjustSize(); this._doAction(true); },
 
 	/**
 	 * 隐藏覆盖层
