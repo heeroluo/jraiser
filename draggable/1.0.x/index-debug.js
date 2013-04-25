@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * draggable - v1.0.0 (2013-03-15T14:41:12+0800)
+ * draggable - v1.0.0 (2013-04-25T17:48:44+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -68,23 +68,30 @@ return widget.create(function(options) {
 			if (!startPos || e.pageX == null || e.pageY == null) { return; }
 
 			var newPos = {
-				left: e.pageX - startPos.left -
-					(t._wrapperPosition === 'fixed' ? $window.scrollLeft() : 0),
-				top: e.pageY - startPos.top -
-					(t._wrapperPosition === 'fixed' ? $window.scrollTop() : 0)
+				left: e.pageX - startPos.left,
+				top: e.pageY - startPos.top
 			};
+
+			if (t._isFixedPosition) {
+				newPos.left -= $(window).scrollLeft();
+				newPos.top -= $(window).scrollTop();
+			}
 
 			var boundary = t._boundary;
 			if (boundary) {
 				// 计算是否超出边界
-				var size = t._wrapperSize,
-					newOffset = t._wrapper.offset(),
-					parentOffset = t._wrapper.offsetParent().offset() || { top: 0, left: 0 };
-
-				newOffset.left += (newPos.left - t._oldPos.left);
-				newOffset.top += (newPos.top - t._oldPos.top);
+				var size = t._wrapperSize, newOffset, parentOffset;
+				if (t._isFixedPosition) {
+					newOffset = base.extend({ }, newPos);
+				} else {
+					newOffset = t._wrapper.offset();
+					newOffset.left += (newPos.left - t._oldPos.left);
+					newOffset.top += (newPos.top - t._oldPos.top)
+					parentOffset = t._wrapper.offsetParent().offset();
+				}
 				newOffset.right = newOffset.left + size.width;
 				newOffset.bottom = newOffset.top + size.height;
+				parentOffset = parentOffset || { top: 0, left: 0 };
 
 				if (boundary.right != null && newOffset.right > boundary.right) {
 					newPos.left = boundary.right - size.width - parentOffset.left;
@@ -144,7 +151,7 @@ return widget.create(function(options) {
 			delete t._oldPos;
 			delete t._wrapperSize;
 			delete t._boundary;
-			delete t._wrapperPosition;
+			delete t._isFixedPosition;
 
 			/**
 			 * 拖动结束后触发
@@ -182,7 +189,7 @@ return widget.create(function(options) {
 				cssPosition = 'absolute';
 				wrapper.css('position', cssPosition);
 			}
-			t._wrapperPosition = cssPosition;
+			t._isFixedPosition = cssPosition === 'fixed';
 
 			// 计算方式：newWrapperLeft = newPageX - oldPageX + wrapperLeft
 			//                          = newPageX - (oldPageX - wrapperLeft)
@@ -198,13 +205,18 @@ return widget.create(function(options) {
 			if (boundary) {
 				if (boundary === 'window') {	// 窗口范围
 					var doc = document.documentElement;
-					t._boundary = {
+					t._boundary = t._isFixedPosition ? {
+						left: 0,
+						top: 0,
+						right: doc.clientWidth,
+						bottom: doc.clientHeight
+					} : {
 						left: 0,
 						top: 0,
 						right: Math.max(doc.scrollWidth, doc.clientWidth),
 						bottom: Math.max(doc.scrollHeight, doc.clientHeight)
 					};
-				} else if (boundary === 'parent') {		// 父节点范围
+				} else if (boundary === 'parent' && !t._isFixedPosition) {	// 父节点范围
 					var offsetParent = t._wrapper.offsetParent();
 					if (offsetParent.length) {
 						t._boundary = {

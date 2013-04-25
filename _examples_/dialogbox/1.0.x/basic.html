@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <title>Example of dialogbox 1.0.x</title>
 <style type="text/css">
+body { margin: 0; }
 .dialogbox {
 	width: 500px;
 	height: 300px;
@@ -42,7 +43,10 @@ var dialogbox = new Dialogbox({
 	wrapper: $('#dialogbox'),
 	animation: {
 		duration: 220
-	}
+	},
+	draggable: {
+		boundary: 'window'
+	} 
 });
 
 $('#toggle').click(function() {
