@@ -1,3 +1,3 @@
 jraiser.config({
-	libPath: '/'
+	libPath: '../../../'
 });
