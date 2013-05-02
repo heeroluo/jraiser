@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * tabs - v1.0.0 (2013-03-15T14:54:40+0800)
+ * tabs - v1.0.0 (2013-05-02T10:05:58+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -121,7 +121,7 @@ return widget.create(function(options) {
 				}
 
 				/**
-				 * 显示某个内容面板后触发，可以阻止show动作
+				 * 显示某个内容面板后触发
 				 * @event aftershow
 				 * @for Tabs
 				 */
