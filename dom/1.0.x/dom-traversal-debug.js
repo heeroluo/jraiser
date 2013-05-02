@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-traversal - v1.0.0 (2013-03-21T17:37:40+0800)
+ * dom-traversal - v1.0.0 (2013-04-27T17:35:38+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -22,7 +22,7 @@ function filterBySelector(nodes, selector) {
 
 // 按照相对位置查找节点，直到遇到符合selector的节点为止
 function nodesUntil(nodes, position, selector, filter) {
-	var stopNodes = Sizzle(selector), ret = [ ];
+	var stopNodes = $base.isNode(selector) ? [selector] : Sizzle(selector), ret = [ ];
 
 	nodes.forEach(function(node) {
 		while (node = node[position]) {
@@ -221,7 +221,7 @@ return {
 		 * 获取当前节点之后的同级节点，直到遇到匹配指定选择器规则的节点为止
 		 * @method nextUntil
 		 * @for NodeList
-		 * @param {String} selector 截止选择器
+		 * @param {String|Element} selector 截止节点
 		 * @param {String} [filter] 过滤结果集的选择器
 		 * @return {NodeList} 结果集
 		 */
@@ -233,7 +233,7 @@ return {
 		 * 获取当前节点之前的同级节点，直到遇到匹配指定选择器规则的节点为止
 		 * @method prevUntil
 		 * @for NodeList
-		 * @param {String} selector 截止选择器
+		 * @param {String|Element} selector 截止节点
 		 * @param {String} [filter] 过滤结果集的选择器
 		 * @return {NodeList} 结果集
 		 */
@@ -245,7 +245,7 @@ return {
 		 * 获取当前节点的祖先节点，直到遇到匹配指定选择器规则的节点为止
 		 * @method parentsUntil
 		 * @for NodeList
-		 * @param {String} selector 截止选择器
+		 * @param {String|Element} selector 截止节点
 		 * @param {String} [filter] 过滤结果集的选择器
 		 * @return {NodeList} 结果集
 		 */
