@@ -1,0 +1,142 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Example of slideshow 1.0.x</title>
+<style type="text/css">
+body { margin: 0; }
+ul { list-style-type: none; margin: 0; padding: 0; }
+img { border: none; }
+
+.slideshow {
+	width: 720px;
+	height: 360px;
+	margin: 30px auto;
+	position: relative;
+}
+	.slideshow img { vertical-align: top; }
+	.slideshow-panels {
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		position: relative;
+	}
+		.slideshow-panels ul {
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
+			.slideshow-panels li { float: left; }
+	.slideshow-controls {
+		background: rgba(0, 0, 0, 0.6);
+		position: absolute;
+		bottom: 0;
+		height: 50px;
+		width: 100%;
+		color: #fff;
+	}
+		.slideshow-next, .slideshow-prev {
+			font-size: 14px;
+			float: right;
+			padding: 0 15px;
+			line-height: 50px;
+			cursor: pointer;
+		}
+		.slideshow-navs {
+			width: 242px;
+			height: 32px;
+			overflow: hidden;
+			float: right;
+			margin-top: 10px;
+			position: relative;
+		}
+			.slideshow-navs ul {
+				position: absolute;
+				left: 0;
+				top: 0;
+			}
+				.slideshow-navs li {
+					width: 50px;
+					height: 32px;
+					margin-left: 9px;
+					float: left;
+					_display: inline;
+					text-align: center;
+				}
+					.slideshow-navs img { margin-top: 1px; }
+					.slideshow-nav-current img {
+						margin-top: 0;
+						border: 1px solid red !important;
+					}
+</style>
+</head>
+
+<body>
+<div id="slideshow" class="slideshow">
+	<div class="slideshow-panels">
+		<ul>
+			<li><a href="#"><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/720x360/1365649233988.jpg" alt="photo 1" /></a></li>
+			<li><a href="#"><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/720x360/1364543136200.jpg" alt="photo 2" /></a></li>
+			<li><a href="#"><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/720x360/1363592366339.jpg" alt="photo 3" /></a></li>
+			<li><a href="#"><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/720x360/1359423902207.jpg" alt="photo 4" /></a></li>
+			<li><a href="#"><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/720x360/1365732384992.jpg" alt="photo 5" /></a></li>
+			<li><a href="#"><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/720x360/1364972100688.jpg" alt="photo 6" /></a></li>
+		</ul>
+	</div>
+	<div class="slideshow-controls">
+		<div class="slideshow-next">下一页</div>
+		<div class="slideshow-navs">
+			<ul id="slideshow-navs-body">
+				<li><a href="#"><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/48x30/1365649233988.jpg" alt="photo 1" /></a></li>
+				<li><a href="#"><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/48x30/1364543136200.jpg" alt="photo 2" /></a></li>
+				<li><a href="#"><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/48x30/1363592366339.jpg" alt="photo 3" /></a></li>
+				<li><a href="#"><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/48x30/1359423902207.jpg" alt="photo 4" /></a></li>
+				<li><a href="#"><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/48x30/1365732384992.jpg" alt="photo 5" /></a></li>
+				<li><a href="#"><img src="http://b.zol-img.com.cn/desk/bizhi/image/2/48x30/1364972100688.jpg" alt="photo 6" /></a></li>
+			</ul>
+		</div>
+		<div class="slideshow-prev">上一页</div>
+	</div>
+</div>
+<script src="../../../jraiser2-debug.js"></script>
+<script src="../../config.js"></script>
+<script>
+require([
+	'dom/1.0.x/',
+	'slideshow/1.0.x/',
+	'slideshow/1.0.x/pager'
+], function($, SlideShow, SlideShowPager) {
+	var slideShowPager = new SlideShowPager({
+		wrapper: $('#slideshow-navs-body')
+	});
+	slideShowPager.on('select', function(e) {
+		slideShow.show(e.newIndex);
+	});
+	$('#slideshow .slideshow-next').click(function() {
+		slideShowPager.next(2);
+	}).mouseover(function(e) {
+		e.stopPropagation();
+	});
+	$('#slideshow .slideshow-prev').click(function() {
+		slideShowPager.prev(2);
+	}).mouseover(function(e) {
+		e.stopPropagation();
+	});
+
+	var slideShow = new SlideShow({
+		wrapper: $('#slideshow'),
+		playInterval: 5000,
+		navs: null,
+		prevButton: null,
+		nextButton: null,
+		effect: 'fade',
+		enable: false
+	});
+	slideShow.on('aftershow', function(e) {
+		slideShowPager.activate(e);
+	});
+	slideShow.init();
+});
+</script>
+</body>
+</html>
