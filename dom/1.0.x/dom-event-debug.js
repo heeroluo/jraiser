@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-event - v1.0.0 (2013-03-29T16:26:52+0800)
+ * dom-event - v1.0.0 (2013-05-03T11:15:25+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -26,8 +26,6 @@ function isSupportEvent(node) {
 
 // 识别事件类型中的事件名和名字空间
 function normalizeType(type) {
-	type = type.toLowerCase();
-
 	var pos = type.indexOf('.'), namespace;
 	if (pos !== -1) {
 		namespace = type.substr(pos + 1);
@@ -132,20 +130,14 @@ var eventArgNormalizer = {
 
 
 // 根据特征判断初始化不同浏览器下的事件监听函数
-var _addEvent, _removeEvent;
+var addEvent, removeEvent;
 if (document.addEventListener) {
-	_addEvent = function(node, type, handler) { node.addEventListener(type, handler, false); };
-	_removeEvent = function(node, type, handler) { node.removeEventListener(type, handler, false); };
+	addEvent = function(node, type, handler) { node.addEventListener(type, handler, false); };
+	removeEvent = function(node, type, handler) { node.removeEventListener(type, handler, false); };
 } else if (document.attachEvent) {
-	_addEvent = function(node, type, handler) { node.attachEvent('on' + type, handler); };
-	_removeEvent = function(node, type, handler) { node.detachEvent('on' + type, handler); };
+	addEvent = function(node, type, handler) { node.attachEvent('on' + type, handler); };
+	removeEvent = function(node, type, handler) { node.detachEvent('on' + type, handler); };
 }
-var addEvent = function(node, type, handler) {
-	if ( ('on' + type) in node ) { _addEvent.apply(this, arguments); }
-};
-var removeEvent = function(node, type, handler) {
-	if ( ('on' + type) in node ) { _removeEvent.apply(this, arguments); }
-};
 
 // 存放回调函数
 var eventSpace = { };
@@ -209,9 +201,17 @@ function globalHandler(e, namespace) {
 			var thisObj;
 			// 事件代理
 			if (obj.delegator) {
-				var delegator = Sizzle(obj.delegator, self);
-				if (delegator.indexOf(e.target) === -1) { return; }
-				thisObj = e.target;
+				var delegator = Sizzle(obj.delegator, self), tempTarget = e.target;
+				do {
+					if (delegator.indexOf(tempTarget) === -1) {
+						tempTarget = tempTarget.parentNode;
+					} else {
+						thisObj = tempTarget;
+						e.delegateTarget = self;
+						break;
+					}
+				} while(tempTarget && tempTarget !== self);
+				if (!thisObj) { return; }
 			} else {
 				thisObj = self;
 			}
