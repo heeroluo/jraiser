@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-traversal - v1.0.0 (2013-04-27T17:35:38+0800)
+ * dom-traversal - v1.0.0 (2013-05-03T14:09:49+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -77,7 +77,7 @@ return {
 		 * @return {Number} 节点位置
 		 */
 		/**
-		 * 获取当前第一个节点在指定集合中的位置
+		 * 获取指定节点在当前集合中的位置
 		 * @method index
 		 * @for NodeList
 		 * @param {NodeList|Array} nodes 指定集合
@@ -85,19 +85,15 @@ return {
 		 */
 		index: function(selector) {
 			if (this.length) {
-				var node = this.get(0);
-
 				if (selector == null) {
 					// 在父节点的子节点集合中的位置
-					return Sizzle('> *', node.parentNode).indexOf(node);
+					return Sizzle('> *', this[0].parentNode).indexOf(this[0]);
 				} else if (typeof selector === 'string') {
-					// 在指定选择器匹配出的节点集合中的位置
-					return Sizzle(selector).indexOf(node);
-				} else if ( $base.isNode(selector) ) {
-					return selector === node ? 0 : -1;
-				} else if (selector.indexOf) {
-					// 在指定集合中的位置
-					return selector.indexOf(node);
+					// 当前第一个节点在指定选择器匹配出的节点集合中的位置
+					return Sizzle(selector).indexOf(this[0]);
+				} else {
+					// 指定节点在当前集合中的位置
+					return this.indexOf($base.isNode(selector) ? selector : selector[0]);
 				}
 			}
 
