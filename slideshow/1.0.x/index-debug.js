@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * slideshow - v1.0.0 (2013-04-28T16:52:55+0800)
+ * slideshow - v1.0.0 (2013-05-03T18:04:52+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -85,16 +85,19 @@ var effects = {
 					opacity: i ? 0 : 1,
 					left: 0,
 					top: 0,
-					position: 'absolute'
+					position: 'absolute',
+					display: i ? 'none' : 'block'
 				});
 			}
 		} else {
 			t._showing = true;
 			panelItems.eq(t._current).animate({
-				opacity: 0
+				opacity: 0,
+				display: 'none'
 			}, genAnimateOptions.call(t));
 			panelItems.eq(i).animate({
-				opacity: 1
+				opacity: 1,
+				display: 'block'
 			}, genAnimateOptions.call(t, e));
 		}
 	}
