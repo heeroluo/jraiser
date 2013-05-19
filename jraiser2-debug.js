@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * module loader - v1.0.0 (2013-02-27T09:55:06+0800)
+ * module loader - v1.0.0 (2013-05-09T09:23:59+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 !function(window, undefined) { 'use strict';
@@ -384,13 +384,20 @@ extend(Module.prototype, {
 
 		if (typeof self._factory === 'function') {
 			module.exports = { };
-			var require = function(id, callback) {
-				return Module.require(id, self._dirname, callback);
+			var _require = function(id) {
+				return Module.require(id, self._dirname);
 			};
-			require.resolve = function(id) {
+			_require.async = function(ids, callback) {
+				if (typeof ids === 'string') { ids = [ids]; }
+				for (var i = ids.length - 1; i >= 0; i--) {
+					ids[i] = idToURL(ids[i], self._dirname);
+				}
+				require(ids, callback);
+			};
+			_require.resolve = function(id) {
 				return idToURL(id, self._dirname);
 			};
-			var result = self._factory.call(window, require, module.exports, module);
+			var result = self._factory.call(window, _require, module.exports, module);
 
 			// 如果工厂函数的执行结果的布尔值为true，则module.exports为该执行结果
 			if (!!result) { module.exports = result; }
@@ -406,18 +413,13 @@ extend(Module.prototype, {
 // Module类静态方法
 extend(Module, {
 	// 请求模块
-	require: function(id, ref, callback) {
+	require: function(id, ref) {
 		id = idToURL(id, ref);
-		if (callback || typeof id !== 'string') {
-			// 有callback的情况下为异步请求
-			require(id, callback);
+		var module = Module.all[trimURL(id)];
+		if (module) {
+			return module.exports();
 		} else {
-			var module = Module.all[trimURL(id)];
-			if (module) {
-				return module.exports();
-			} else {
-				throw new Error('module ' + id + ' is not loaded');
-			}
+			throw new Error('module ' + id + ' is not loaded');
 		}
 	},
 
