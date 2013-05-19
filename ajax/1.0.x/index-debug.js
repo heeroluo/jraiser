@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * ajax - v1.0.0 (2013-03-26T16:25:34+0800)
+ * ajax - v1.0.0 (2013-05-08T16:29:14+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -39,8 +39,8 @@ function loadFile(url, opts) {
 		if (temp === -1) {
 			data = opts.data;
 		} else {
-			url = url.substr(0, temp);
 			data = base.extend(qs.parse( url.substr(temp + 1) ), opts.data);
+			url = url.substr(0, temp);
 		}
 		url = qs.append(url, data);
 	}
