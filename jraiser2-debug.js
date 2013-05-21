@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * module loader - v1.0.0 (2013-05-09T09:23:59+0800)
+ * module loader - v1.0.0 (2013-05-21T15:25:11+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 !function(window, undefined) { 'use strict';
@@ -255,6 +255,10 @@ var dependentChain = {
 };
 
 
+// 记录无需加载依赖的模块
+var withoutDeps = { };
+
+
 // 模块类（模块id，构造函数，依赖的模块）
 function Module(id, factory, deps) {
 	this._factory = factory;
@@ -292,6 +296,13 @@ extend(Module.prototype, {
 
 		var deps = t._deps;
 		if (deps) {
+			// 编译器把所有依赖都提到顶层后，会在末尾添加一个null的依赖项进行标识
+			var hasExtractedAllDeps;
+			if (deps[deps.length - 1] === null) {
+				hasExtractedAllDeps = true;
+				deps.length -= 1;
+			}
+
 			var readyStates = t._readyStates = { }, dep;
 			for (var i = 0; i < deps.length; i++) {
 				deps[i] = idToURL(deps[i], t._dirname);
@@ -305,14 +316,18 @@ extend(Module.prototype, {
 					dependentChain.add(id, deps[i]);
 					// 记录此模块尚未就绪
 					readyStates[ deps[i] ] = temp;
+
+					if (hasExtractedAllDeps) { withoutDeps[ deps[i] ] = true; }
 				}
 			}
 
 			if ( isEmptyObject(readyStates) ) {
 				delete t._readyStates;
 			} else {
-				for (dep in readyStates) {
-					Module.load(readyStates[dep]);
+				if (!withoutDeps[t._id]) {
+					for (dep in readyStates) {
+						Module.load(readyStates[dep]);
+					}
 				}
 			}
 		}
