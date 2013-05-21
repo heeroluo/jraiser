@@ -121,6 +121,7 @@ require(['dom/1.0.x/', 'ajax/1.0.x/', 'waterfall/1.0.x/'], function($, ajax, Wat
 
 	$('#clear').click(function() {
 		loadCounter = 0;
+		window.scrollTo(0, 0);
 		waterfall.clear();
 		waterfall.next();
 	});

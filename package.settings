@@ -1,12 +1,17 @@
 {
-	"appPath": "./app/",
+	"appPath": "./test/",
 	"libPath": "./",
-	"excepts": ["^base/.*"],
 	"list": [
-		{ "target": "^ajax/.*/(index(.js)?)?$" },
 		{ "target": "^base/.*/(index(.js)?)?$" },
 		{ "target": "^dom/.*/(index(.js)?)?$" },
-		{ "target": "^widget/.*/(index(.js)?)?$" }
+		{
+			"target": "^ajax/.*/(index(.js)?)?$",
+			"excepts": ["^base/.*"]
+		},
+		{
+			"target": "^widget/.*/(index(.js)?)?$",
+			"excepts": ["^base/.*", "^dom/.*"]
+		}
 	],
 	"ignored_paths": ["_examples_"]
 }
