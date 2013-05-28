@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * micro-templating - v1.0.0 (2013-02-06T10:10:13+0800)
+ * micro-templating - v1.0.0 (2013-05-28T11:40:50+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -24,7 +24,23 @@ function loadTemplateFromHTML() {
 }
 
 
-var escape = require('underscore/1.4.x/').escape;
+var entityMap = {
+	'&': '&amp;',
+	'<': '&lt;',
+	'>': '&gt;',
+	'"': '&quot;',
+	"'": '&#x27;',
+	'/': '&#x2F;'
+}, entityKeys = [ ];
+for (var key in entityMap) {
+	entityKeys.push(key);
+}
+var re_entity = new RegExp('[' + entityKeys.join('') + ']', 'g');
+function escape(content) {
+	return content.replace(re_entity, function(match) {
+		return entityMap[match];
+	});
+}
 
 
 function factory(settings) {
