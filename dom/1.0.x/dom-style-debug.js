@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-style - v1.0.0 (2013-02-23T23:13:54+0800)
+ * dom-style - v1.0.0 (2013-05-28T14:29:35+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -23,6 +23,9 @@ function isSupportStyle(node) {
 
 // 特性测试元素
 var testElt = document.documentElement;
+
+// 探测是否支持classList
+var supportClassList = 'classList' in testElt;
 
 // 特殊属性名
 var cssProps = {
@@ -139,16 +142,68 @@ function setStyle(node, name, val) {
 	}
 }
 
- 
-// 检查是否包含以空格隔开的子字符串
-function hasString(value, input) {
-	var i = value.indexOf(input);
-	return i != -1 &&
-		(value.charCodeAt(i - 1) || 32) === 32 &&
-		(value.charCodeAt(i + input.length) || 32) === 32;
-}
 
 var explainClassName = $base.splitBySpace;
+
+var _hasClass, _addClass, _hasClass, _removeClass, _toggleClass;
+if (supportClassList) {
+	_hasClass = function(node, className) { return node.classList.contains(className); };
+	_addClass = function(node, classes) {
+		var i = -1, len = classes.length;
+		while (++i < len) { node.classList.add(classes[i]); }
+	};
+	_removeClass = function(node, classes) {
+		var i = -1, len = classes.length;
+		while (++i < len) { node.classList.remove(classes[i]); }
+	};
+	_toggleClass = function(node, classes) {
+		var i = -1, len = classes.length;
+		while (++i < len) {
+			if ( node.classList.contains(classes[i]) ) {
+				node.classList.remove(classes[i]);
+			} else {
+				node.classList.add(classes[i]);
+			}
+		}
+	};
+} else {
+	// 检查是否包含以空格隔开的子字符串
+	var hasString = function(value, input) {
+		var i = value.indexOf(input);
+		return i != -1 &&
+			(value.charCodeAt(i - 1) || 32) === 32 &&
+			(value.charCodeAt(i + input.length) || 32) === 32;
+	};
+	_hasClass = function(node, className) { return hasString(node, className); };
+	_addClass = function(node, classes) {
+		var className = node.className, i = -1, len = classes.length;
+		while (++i < len) {
+			if ( !hasString(className, classes[i]) ) {
+				className += (' ' + classes[i]);
+			}
+		}
+		node.className = className.trim();
+	};
+	_removeClass = function(node, classes) {
+		var className = ' ' + node.className + ' ', i = -1, len = classes.length;
+		while (++i < len) {
+			className = className.replace(' ' + classes[i] + ' ', ' ');
+		}
+		node.className = className.trim();
+	};
+	_toggleClass = function(node, classes) {
+		var className = ' ' + node.className + ' ', i = -1, len = classes.length, temp;
+		while (++i < len) {
+			temp = ' ' + classes[i] + ' ';
+			if ( -1 === className.indexOf(temp) ) {
+				className += (classes[i] + ' ');
+			} else {
+				className = className.replace(temp, ' ');
+			}
+		}
+		node.className = className.trim();
+	};
+}
 
 /**
  * 检查节点是否包含指定样式类
@@ -159,7 +214,7 @@ var explainClassName = $base.splitBySpace;
  */
 function hasClass(node, className) {
 	if (!className) { throw new Error('classname is not specified'); }
-	return isSupportStyle(node) ? hasString(node.className, className) : false;
+	return isSupportStyle(node) ? _hasClass(node.className, className) : false;
 }
 
 /**
@@ -173,19 +228,8 @@ function addClass(node, classes, isPass) {
 	if ( !isSupportStyle(node) ) { return; }
 
 	if (!isPass) { classes = explainClassName(classes); }
-	if (!classes) { return; }
 
-	if ('' === node.className) {
-		node.className = classes.join(' ');
-	} else {
-		var className = node.className, i = -1, len = classes.length;
-		while (++i < len) {
-			if ( !hasString(className, classes[i]) ) {
-				className += (' ' + classes[i]);
-			}
-		}
-		node.className = className.trim();
-	}
+	if (classes) { _addClass(node, classes); }
 }
 
 /**
@@ -202,11 +246,7 @@ function removeClass(node, classes, isPass) {
 
 	if (node.className) {
 		if (classes) {
-			var className = ' ' + node.className + ' ', i = -1, len = classes.length;
-			while (++i < len) {
-				className = className.replace(' ' + classes[i] + ' ', ' ');
-			}
-			node.className = className.trim();
+			_removeClass(node, classes);
 		} else {
 			node.className = '';
 		}
@@ -225,18 +265,7 @@ function toggleClass(node, classes, isPass) {
 
 	if (!isPass) { classes = explainClassName(classes); }
 
-	if (classes) {
-		var className = ' ' + node.className + ' ', i = -1, len = classes.length, temp;
-		while (++i < len) {
-			temp = ' ' + classes[i] + ' ';
-			if ( -1 === className.indexOf(temp) ) {
-				className += (classes[i] + ' ');
-			} else {
-				className = className.replace(temp, ' ');
-			}
-		}
-		node.className = className.trim();
-	}
+	if (classes) { _toggleClass(node, classes) }
 }
 
 
@@ -372,25 +401,25 @@ return {
 	// See line 118
 	setStyle: setStyle,
 
-	// See line 153
+	// See line 208
 	hasClass: hasClass,
 
-	// See line 165
+	// See line 220
 	addClass: addClass,
 
-	// See line 191
+	// See line 235
 	removeClass: removeClass,
 
-	// See line 216
+	// See line 256
 	toggleClass: toggleClass,
 
-	// See line 243
+	// See line 272
 	getSize: getSize,
 
-	// See line 303
+	// See line 332
 	getScroll: getScroll,
 
-	// See line 320
+	// See line 349
 	setScroll: setScroll,
 
 	shortcuts: {
