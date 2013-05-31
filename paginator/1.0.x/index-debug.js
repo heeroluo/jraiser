@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * paginator - v1.0.0 (2013-03-15T15:13:43+0800)
+ * paginator - v1.0.0 (2013-05-31T17:29:28+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -77,15 +77,13 @@ return widget.create(function(options) {
 			startOverflow = start - 1,
 			endOverflow = totalPages - end;
 
-		if (endOverflow < 0 && startOverflow > 0) {
-			end = totalPages;
-			start = Math.max(1, start + endOverflow);
-		} else if (endOverflow > 0 && startOverflow < 0) {
+		if (startOverflow < 0) {
 			start = 1;
 			end = Math.min(totalPages, end - startOverflow);
-		} else if (endOverflow < 0 && startOverflow < 0) {
-			start = 1;
+		}
+		if (endOverflow < 0) {
 			end = totalPages;
+			if (startOverflow > 0) { start = Math.max(1, start + endOverflow); }
 		}
 
 		// 处理 numberOfPagesToShow 为双数，减一后除不尽的情况
