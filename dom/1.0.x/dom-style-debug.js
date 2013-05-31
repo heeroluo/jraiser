@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-style - v1.0.0 (2013-05-28T14:29:35+0800)
+ * dom-style - v1.0.0 (2013-05-31T13:09:55+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -145,7 +145,7 @@ function setStyle(node, name, val) {
 
 var explainClassName = $base.splitBySpace;
 
-var _hasClass, _addClass, _hasClass, _removeClass, _toggleClass;
+var _hasClass, _addClass, _removeClass, _toggleClass;
 if (supportClassList) {
 	_hasClass = function(node, className) { return node.classList.contains(className); };
 	_addClass = function(node, classes) {
@@ -174,7 +174,7 @@ if (supportClassList) {
 			(value.charCodeAt(i - 1) || 32) === 32 &&
 			(value.charCodeAt(i + input.length) || 32) === 32;
 	};
-	_hasClass = function(node, className) { return hasString(node, className); };
+	_hasClass = function(node, className) { return hasString(node.className, className); };
 	_addClass = function(node, classes) {
 		var className = node.className, i = -1, len = classes.length;
 		while (++i < len) {
@@ -214,7 +214,7 @@ if (supportClassList) {
  */
 function hasClass(node, className) {
 	if (!className) { throw new Error('classname is not specified'); }
-	return isSupportStyle(node) ? _hasClass(node.className, className) : false;
+	return isSupportStyle(node) ? _hasClass(node, className) : false;
 }
 
 /**
