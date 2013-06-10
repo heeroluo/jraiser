@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * moment - v1.7.2 (2013-01-09T18:22:27+0800)
+ * moment - v1.7.2 (2013-06-10T16:46:30+0800)
  * http://jraiser.org/ | Released under MIT license
  *
  * Include moment.js (http://momentjs.com/)
@@ -12,6 +12,7 @@ define(function(require, exports, module) {
  * @module moment/1.7.x/
  * @category Utility
  * @see http://momentjs.com/docs/
+ * @ignore
  */
 
 (function (undefined) {

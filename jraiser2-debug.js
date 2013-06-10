@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * module loader - v1.0.0 (2013-05-21T15:25:11+0800)
+ * module loader - v1.0.0 (2013-06-10T16:16:12+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 !function(window, undefined) { 'use strict';
@@ -598,6 +598,7 @@ function fixPathCfg(path) {
  *   @param {String} [newConfig.appPath] 应用路径
  *   @param {Boolean} [newConfig.debug] 是否调试模式
  *   @param {Array} [newConfig.map] URL映射
+ *   @param {String} [newConfig.charset] 编码
  */
 jr.config = function(newConfig) {
 	for (var c in newConfig) {
