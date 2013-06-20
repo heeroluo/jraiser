@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-attr - v1.0.0 (2013-03-29T15:35:30+0800)
+ * dom-attr - v1.0.0 (2013-06-20T12:59:25+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -113,9 +113,10 @@ var propMap = {
 	'colspan': 'colSpan',
 	'usemap': 'useMap',
 	'frameborder': 'frameBorder',
-	'contenteditable': 'contentEditable'
+	'contenteditable': 'contentEditable',
+	'for': 'htmlFor',
+	'class': 'className'
 };
-base.extend(propMap, attrMap);
 
 // 是否支持特性访问
 function isSupportProp(node) { return !$base.isXMLNode(node) && node.nodeType === 1; }
