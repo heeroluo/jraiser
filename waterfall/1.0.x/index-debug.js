@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * waterfall - v1.0.0 (2013-03-15T14:55:51+0800)
+ * waterfall - v1.0.0 (2013-07-07T17:05:54+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -78,6 +78,7 @@ function onEachImageLoad(imgs, callback) {
  *   @param {Number} [options.gridWidth] 格子宽度，如不指定，则取现有第一个格子的宽度
  *   @param {String|Number} [options.prefetch] 当前屏底部距离容器底部多长距离时启用预加载。
  *     可以传入像素值（数字）或百分率（字符串）；不指定即不启用预加载
+ *   @param {Boolean} [options.loadFirstPageOnInit=true] 初始化之后是否自动加载第一页数据
  */
 return widget.create(function(options) {
 
@@ -131,7 +132,7 @@ return widget.create(function(options) {
 			if (t._isDataLoading || t._isImgLoading || t._isEnd) { return; }
 
 			var docElt = document.documentElement,
-				currentPos = (docElt.scrollTop || window.pageYOffset) + docElt.clientHeight,
+				currentPos = (docElt.scrollTop || window.pageYOffset || 0) + docElt.clientHeight,
 				wrapperTop = wrapper.offset().top,
 				wrapperHeight = wrapper.outerHeight();
 
@@ -171,6 +172,9 @@ return widget.create(function(options) {
 			}
 		} else {
 			t._renderingPage = 0;
+			if (options.loadFirstPageOnInit) {
+				t.next();
+			}
 		}
 	},
 
@@ -461,6 +465,7 @@ return widget.create(function(options) {
 	}
 }, {
 	fixedImgSize: true,
+	loadFirstPageOnInit: true,
 	isEnd: function(result) {
 		return !result.data || !result.data.length;
 	}
