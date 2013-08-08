@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * overlayer - v1.0.0 (2013-04-09T11:00:48+0800)
+ * overlayer - v1.0.0 (2013-08-08T10:14:24+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -36,6 +36,7 @@ var isOldIE = /MSIE\s(\d+)/.test(window.navigator.userAgent) &&
  *   @param {Boolean} [options.visible=true] 初始状态下是否可见
  *   @param {Object|Boolean} [options.fade] 渐显渐隐动画参数，默认为按动画默认参数，
  *     false时为不使用动画
+ *   @param {Boolean} [options.useIframe=false] 是否强制使用iframe遮挡
  */
 return widget.create(function(options) {
 
@@ -70,7 +71,7 @@ return widget.create(function(options) {
 		}
 
 		var styleLayer;
-		if (isOldIE) {
+		if (isOldIE || options.useIframe) {
 			styleLayer = $('<div style="width: 100%; height: 100%;"></div>');
 		} else {
 			styleLayer = overlayer;
@@ -117,8 +118,8 @@ return widget.create(function(options) {
 		t.adjustSize();
 		if (!useFixed) { $(window).on('resize', t.adjustSize); }
 
-		// IE6下需以iframe挡住select
-		if (isOldIE) {
+		// 以iframe挡住select
+		if (isOldIE || options.useIframe) {
 			var iframe = $('<iframe' +
 				' style="width: 100%; height: 100%; position: absolute; left: 0; top: 0; z-index: -1;"' +
 				' src="javascript:false;" frameborder="0" scrolling="no"></iframe>'
