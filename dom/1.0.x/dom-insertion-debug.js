@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-insertion - v1.0.0 (2013-03-22T14:58:53+0800)
+ * dom-insertion - v1.0.0 (2013-08-08T15:14:23+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -415,7 +415,7 @@ return {
 				}
 
 				clearData(node);
-				node.parentNode.removeChild(node);
+				if (node.parentNode) { node.parentNode.removeChild(node); }
 			});
 
 			return this;
