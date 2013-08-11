@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * widget - v1.0.0 (2013-03-15T14:58:31+0800)
+ * widget - v1.0.0 (2013-08-11T15:43:11+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -54,6 +54,7 @@ var WidgetBase = base.createClass(function() {
 	destroy: function() {
 		if (this._inited) {
 			this._destroy(this._options);
+			this.off();
 			delete this._inited;
 		}
 	},
