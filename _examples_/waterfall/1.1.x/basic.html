@@ -73,7 +73,7 @@ body { background: #ececec; margin: 0; }
 <script src="../../../jraiser2-debug.js"></script>
 <script src="../../config.js"></script>
 <script>
-require(['dom/1.0.x/', 'ajax/1.0.x/', 'waterfall/1.1.x/'], function($, ajax, Waterfall) {
+require(['dom/1.0.x/', 'waterfall/1.1.x/'], function($, Waterfall) {
 	var waterfall = new Waterfall({
 		wrapper: $('#wrapper'),
 		template: '<% for (var i = 0; i < data.length; i++) { %>' +
