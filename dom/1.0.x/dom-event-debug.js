@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-event - v1.0.0 (2013-05-03T11:15:25+0800)
+ * dom-event - v1.0.0 (2013-08-16T11:13:56+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -419,6 +419,7 @@ function trigger(node, type, options) {
 	var e = eventArgNormalizer.fix(
 			base.extend({
 				type: type[0],
+				target: node,
 				isTrigger: true
 			}, defaultEventArgs[ eventTypes[ type[0] ] ])
 		),
