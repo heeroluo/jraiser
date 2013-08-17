@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * sizzle - v1.9.1 (2013-03-15T10:07:24+0800)
+ * sizzle - v1.9.1 (2013-08-17T18:07:33+0800)
  * http://jraiser.org/ | Released under MIT license
  *
  * Include sizzle (http://sizzlejs.com/)

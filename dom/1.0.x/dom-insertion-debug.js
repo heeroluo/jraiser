@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-insertion - v1.0.0 (2013-08-08T15:14:23+0800)
+ * dom-insertion - v1.0.0 (2013-08-17T18:08:34+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -16,7 +16,7 @@ var base = require('base/1.0.x/'),
 	$base = require('./dom-base'),
 	$data = require('./dom-data'),
 	$event = require('./dom-event'),
-	Sizzle = require('sizzle/1.9.x/');
+	Sizzle = require('sizzle/1.10.x/');
 
 
 /**
