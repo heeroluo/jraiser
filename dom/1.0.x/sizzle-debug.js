@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * sizzle - v1.10.5 (2013-08-17T18:07:02+0800)
+ * sizzle - v1.10.5 (2013-08-17T21:27:23+0800)
  * http://jraiser.org/ | Released under MIT license
  *
  * Include sizzle (http://sizzlejs.com/)
@@ -12,6 +12,7 @@ define(function(require, exports, module) {
  * @module sizzle/1.10.x/
  * @category Infrastructure
  * @see https://github.com/jquery/sizzle/wiki/Sizzle-Documentation
+ * @ignore
  */
 
 //(function( window ) {

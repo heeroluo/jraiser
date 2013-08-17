@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-event - v1.0.0 (2013-08-17T18:08:29+0800)
+ * dom-event - v1.0.0 (2013-08-17T21:27:48+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -13,7 +13,7 @@ define(function(require, exports, module) { 'use strict';
  */
 
 var base = require('base/1.0.x/'),
-	Sizzle = require('sizzle/1.10.x/'),
+	Sizzle = require('./sizzle'),
 	$base = require('./dom-base'),
 	EventArg = require('./dom-event-arg');
 

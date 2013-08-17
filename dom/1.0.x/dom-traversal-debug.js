@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-traversal - v1.0.0 (2013-08-17T18:08:46+0800)
+ * dom-traversal - v1.0.0 (2013-08-17T21:28:23+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -12,7 +12,7 @@ define(function(require, exports, module) { 'use strict';
  * @ignore
  */
 
-var $base = require('./dom-base'), Sizzle = require('sizzle/1.10.x/');
+var $base = require('./dom-base'), Sizzle = require('./sizzle');
 
 
 // 根据选择器过滤节点
