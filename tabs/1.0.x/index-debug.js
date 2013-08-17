@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * tabs - v1.0.0 (2013-05-02T10:05:58+0800)
+ * tabs - v1.0.0 (2013-08-17T16:39:26+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -23,9 +23,9 @@ var base = require('base/1.0.x/'), widget = require('widget/1.0.x/');
  * @param {Object} options 组件设置
  *   @param {NodeList} [options.wrapper] 选项卡元素容器。
  *     如不指定，则必须在tabs和panels参数中直接指定节点
- *   @param {NodeList|String} [options.tabs='.tabs-nav > *'] 选项卡节点。
+ *   @param {NodeList|String} [options.tabs='.tabs-nav>*'] 选项卡节点。
  *     可以是节点集合或者以wrapper为上下文的选择器
- *   @param {NodeList|String} [options.panels='.tabs-panels > *'] 内容面板节点。
+ *   @param {NodeList|String} [options.panels='.tabs-panels>*'] 内容面板节点。
  *     可以是节点集合或者以wrapper为上下文的选择器
  *   @param {Number} [options.active=0] 初始化激活项
  *   @param {showWhen} [options.showWhen] 选项卡触发内容显示的事件，
