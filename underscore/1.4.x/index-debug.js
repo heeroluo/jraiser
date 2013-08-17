@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * underscore - v1.4.4 (2013-02-05T09:39:42+0800)
+ * underscore - v1.4.4 (2013-08-17T18:00:49+0800)
  * http://jraiser.org/ | Released under MIT license
  *
  * Include underscore.js (http://underscorejs.org/)
@@ -12,6 +12,7 @@ define(function(require, exports, module) {
  * @module underscore/1.4.x/
  * @category Utility
  * @see http://underscorejs.org/
+ * @ignore
  */
 
 //(function() {
