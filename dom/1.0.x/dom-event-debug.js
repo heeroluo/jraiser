@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-event - v1.0.0 (2013-08-16T11:13:56+0800)
+ * dom-event - v1.0.0 (2013-08-17T11:00:10+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -187,7 +187,11 @@ base.each({
 // 全局处理函数，用于调用某节点某事件类型下的处理函数
 function globalHandler(e, namespace) {
 	var self = this, nodeId = $base.uniqueId(self);
-	if ( handlerBlocker.isBlocked(nodeId, e.type) ) { return; }
+	if ( handlerBlocker.isBlocked(nodeId, e.type) ||
+		( e.target && handlerBlocker.isBlocked($base.uniqueId(e.target), e.type) )
+	) {
+		return;
+	}
 
 	var space = (eventSpace[nodeId] || { })[e.type];
 	if (space) {
@@ -431,7 +435,7 @@ function trigger(node, type, options) {
 		globalHandler.call(node, e, type[1]);
 		node = node.parentNode;
 	} while ( bubbles && node && !e.isPropagationStopped() );
-	
+
 	if ( defaultActions[ type[0] ] && !e.isDefaultPrevented() ) {
 		// 防止重复执行事件处理函数
 		var nodeId = $base.uniqueId(originalNode);
@@ -443,13 +447,13 @@ function trigger(node, type, options) {
 
 
 module.exports = {
-	// See line 288
+	// See line 292
 	on: on,
 
-	// See line 320
+	// See line 324
 	off: off,
 
-	// See line 405
+	// See line 409
 	trigger: trigger,
 
 	shortcuts: {

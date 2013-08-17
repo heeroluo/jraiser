@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom - v1.0.0 (2013-03-15T10:29:18+0800)
+ * dom - v1.0.0 (2013-08-17T12:14:08+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -112,7 +112,8 @@ var NodeList = base.createClass(function(nodes) {
 	 * @return {NodeList} 由指定节点组成的NodeList集合
 	 */
 	eq: function(i) {
-		return new this.constructor( [this.get.apply(this, arguments)] );
+		var node = this.get.apply(this, arguments);
+		return new this.constructor(node ? [node] : null);
 	},
 
 	/**
