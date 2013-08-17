@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * base - v1.0.0 (2013-01-08T21:56:12+0800)
+ * base - v1.0.0 (2013-08-17T13:12:19+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -90,7 +90,7 @@ function access(elems, key, value, isExec, fns) {
 
 // 类继承
 function inherit(sub, parent, parentArgs) {
-	var trueClass = parentArgs ? function() {
+	var $class = parentArgs ? function() {
 		parent.apply(this, isFunction(parentArgs) ? parentArgs.apply(this, arguments) : parentArgs);
 		sub.apply(this, arguments);
 	} : function() {
@@ -98,14 +98,14 @@ function inherit(sub, parent, parentArgs) {
 		sub.apply(this, arguments);
 	};
 
-	extend(trueClass.prototype, parent.prototype, sub.prototype);
+	extend($class.prototype, parent.prototype, sub.prototype);
 
 	// 记录父类
-	trueClass.parentClass = parent;
+	$class.parentClass = parent;
 	// 记录超类
-	trueClass.superClass = parent.superClass || parent;
+	$class.superClass = parent.superClass || parent;
 
-	return trueClass;
+	return $class;
 }
 
 
