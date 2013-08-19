@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * overlayer - v1.0.0 (2013-08-08T10:14:24+0800)
+ * overlayer - v1.0.0 (2013-08-19T17:19:56+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -122,7 +122,7 @@ return widget.create(function(options) {
 		if (isOldIE || options.useIframe) {
 			var iframe = $('<iframe' +
 				' style="width: 100%; height: 100%; position: absolute; left: 0; top: 0; z-index: -1;"' +
-				' src="javascript:false;" frameborder="0" scrolling="no"></iframe>'
+				' frameborder="0" scrolling="no"></iframe>'
 			);
 			overlayer.append(iframe);
 			overlayer.append(styleLayer);
