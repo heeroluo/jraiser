@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * widget - v1.0.0 (2013-08-11T15:43:11+0800)
+ * widget - v1.0.1 (2013-08-25T10:12:39+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -31,6 +31,12 @@ var WidgetBase = base.createClass(function() {
 	init: function() {
 		if (!this._inited) {
 			this._init(this._options);
+			var events = this._options.events;
+			if (events) {
+				for (var e in events) {
+					this.on(e, events[e]);
+				}
+			}
 			this._inited = true;
 		}
 	},
@@ -42,9 +48,7 @@ var WidgetBase = base.createClass(function() {
 	 * @for WidgetBase
 	 * @param {Object} 组件设置
 	 */
-	_init: function(options) {
-
-	},
+	_init: function(options) { },
 
 	/**
 	 * 销毁组件
@@ -66,9 +70,7 @@ var WidgetBase = base.createClass(function() {
 	 * @for WidgetBase
 	 * @param {Object} 组件设置
 	 */
-	_destroy: function(options) {
-
-	},
+	_destroy: function(options) { },
 
 	/**
 	 * 修改组件设置（此操作会导致组件销毁并重新初始化）
