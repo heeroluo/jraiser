@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * ajax - v1.0.0 (2013-05-08T16:29:14+0800)
+ * ajax - v1.0.0 (2013-08-26T10:57:25+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -16,6 +16,10 @@ var base = require('base/1.0.x/'),
 	JSON = require('json/1.0.x/');
 
 
+// IE10同时支持两种事件，但是当JS有缓存的时候，会先触发onreadystatechange再执行JS程序
+var scriptOnloadEvent = 'onload' in document.createElement('script') ?
+	'onload' : 'onreadystatechange';
+
 // 加载js或css文件统一接口
 function loadFile(url, opts) {
 	var head = document.getElementsByTagName('head')[0] || document.documentElement, node;
@@ -23,7 +27,7 @@ function loadFile(url, opts) {
 	function onload() {
 		var readyState = this.readyState;
 		if (!readyState || readyState === 'loaded' || readyState === 'complete') {
-			this.onload = this.onreadystatechange = null;
+			this[scriptOnloadEvent] = null;
 			// 执行回调
 			opts.onload && opts.onload.call(this);
 			// 加载js后可以移除节点，但加载css后不可以
@@ -54,7 +58,7 @@ function loadFile(url, opts) {
 	});
 	node[opts.urlAttrName] = url;
 
-	node.onload = node.onreadystatechange = onload;
+	node[scriptOnloadEvent] = onload;
 
 	// 插入到页面中使其生效
 	if (document.body) {
@@ -94,7 +98,7 @@ var createXHR = window.ActiveXObject ? function() {
 
 
 return {
-	// See line 61
+	// See line 84
 	createXHR: createXHR,
 	
 	/**

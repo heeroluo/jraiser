@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * ajax - v1.1.0 (2013-08-10T22:54:48+0800)
+ * ajax - v1.1.0 (2013-08-26T10:56:30+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -16,6 +16,10 @@ var base = require('base/1.0.x/'),
 	JSON = require('json/1.0.x/');
 
 
+// IE10同时支持两种事件，但是当JS有缓存的时候，会先触发onreadystatechange再执行JS程序
+var scriptOnloadEvent = 'onload' in document.createElement('script') ?
+	'onload' : 'onreadystatechange';
+
 // 加载js或css文件统一接口
 function loadFile(url, opts) {
 	var head = document.getElementsByTagName('head')[0] || document.documentElement, node;
@@ -23,7 +27,7 @@ function loadFile(url, opts) {
 	function onload() {
 		var readyState = this.readyState;
 		if (!readyState || readyState === 'loaded' || readyState === 'complete') {
-			this.onload = this.onreadystatechange = null;
+			this[scriptOnloadEvent] = null;
 			// 执行回调
 			opts.onload && opts.onload.call(this);
 			
@@ -46,7 +50,7 @@ function loadFile(url, opts) {
 	});
 	node[opts.urlAttrName] = url;
 
-	node.onload = node.onreadystatechange = onload;
+	node[scriptOnloadEvent] = onload;
 
 	// 插入到页面中使其生效
 	if (document.body) {
@@ -100,7 +104,7 @@ return {
 
 		var data = [ ], elements = form.elements;
 		for (var i = 0, elt; elt = elements[i]; i++) {
-			if (elt.disabled) { continue; }
+			if (elt.disabled || !elt.name) { continue; }
 			if (elt.tagName === 'INPUT' &&
 				(elt.type === 'radio' || elt.type === 'checkbox') && !elt.checked) {
 				continue;

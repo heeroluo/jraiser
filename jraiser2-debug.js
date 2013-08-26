@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * module loader - v1.0.0 (2013-06-10T16:16:12+0800)
+ * module loader - v1.0.0 (2013-08-26T10:51:39+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 !function(window, undefined) { 'use strict';
@@ -23,7 +23,8 @@ var jr = window.jraiser = { };
 var config = { };
 
 var isOpera = window.opera != null && window.opera.toString() === '[object Opera]',
-	useInteractive = window.attachEvent && !isOpera;
+	useInteractive = window.attachEvent && !isOpera,
+	document = window.document;
 
 
 // 去掉代码中的注释
@@ -166,6 +167,10 @@ function idToURL(id, ref) {
 }
 
 
+// IE10同时支持两种事件，但是当JS有缓存的时候，会先触发onreadystatechange再执行JS程序
+var scriptOnloadEvent = 'onload' in document.createElement('script') ?
+	'onload' : 'onreadystatechange';
+
 // 脚本读取器
 var scriptLoader = {
 	// script的父节点
@@ -214,14 +219,14 @@ var scriptLoader = {
 					script.setAttribute(key, attrs[key]);
 				}
 			}
-			script.onload = script.onreadystatechange = script.onerror = function() {			
+			script[scriptOnloadEvent] = script.onerror = function() {			
 				if (!script.readyState ||
 					'loaded' === script.readyState || 'complete' === script.readyState
 				) {
 					self._loaded[src] = 2;
 					self._executingScript = null;
 				
-					script.onload = script.onreadystatechange = script.onerror = null;
+					script[scriptOnloadEvent] = script.onerror = null;
 					onload && onload(script);
 					script.parentNode.removeChild(script);
 					script = null;

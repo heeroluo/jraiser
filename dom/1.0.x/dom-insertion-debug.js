@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-insertion - v1.0.0 (2013-08-17T21:27:59+0800)
+ * dom-insertion - v1.0.0 (2013-08-21T17:23:38+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -18,6 +18,28 @@ var base = require('base/1.0.x/'),
 	$event = require('./dom-event'),
 	Sizzle = require('./sizzle');
 
+
+// 检测克隆节点的时候是否会克隆扩展属性
+var willCloneExpando = (function() {
+	var span = document.createElement('span');
+	span._expando_ = 1;
+	var result = '_expando_' in span.cloneNode(false);
+	span = null;
+
+	return result;
+})();
+
+// 如果会克隆扩展属性，就要通过outerHTML克隆，以避免克隆节点编号
+var cloneNode = willCloneExpando ? function(node) {
+	var div = document.createElement('div');
+	div.innerHTML = node.outerHTML;
+	var result = div.firstChild;
+
+	div.removeChild(div.firstChild);
+	div = null;
+
+	return result;
+} : function(node) { return node.cloneNode(true) };
 
 /**
  * 根据HTML创建节点
@@ -173,7 +195,7 @@ function doWithGivenNodes(nodes, givenNodes, fn, condition) {
 		if (!condition || condition.call(nodes, nodes[i], i) !== false) {
 			if (!targetNodes) { targetNodes = explainNodes(givenNodes); }
 			fn.call(nodes,
-				i < nodes.length - 1 ? targetNodes.cloneNode(true) : targetNodes, nodes[i]
+				i < nodes.length - 1 ? cloneNode(targetNodes) : targetNodes, nodes[i]
 			);
 		}
 	}
@@ -217,25 +239,25 @@ function clearData(node) {
 
 
 return {
-	// See line 22
+	// See line 44
 	create: createNodes,
 
-	// See line 44
+	// See line 66
 	buildFragment: buildFragment,
 
-	// See line 74
+	// See line 96
 	appendChild: appendChild,
 
-	// See line 91
+	// See line 113
 	prependChild: prependChild,
 
-	// See line 113
+	// See line 135
 	insertBefore: insertBefore,
 
-	// See line 130
+	// See line 152
 	insertAfter: insertAfter,
 
-	// See line 153
+	// See line 175
 	replaceWith: replaceWith,
 
 	shortcuts: {
@@ -459,7 +481,7 @@ return {
 		clone: function() {
 			var copy = [ ];
 			this.forEach(function(node, i) {
-				copy[i] = node.cloneNode(true);
+				copy[i] = cloneNode(node);
 			});
 
 			return new this.constructor(copy);
