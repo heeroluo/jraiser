@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * ajax - v1.1.0 (2013-08-26T10:56:30+0800)
+ * ajax - v1.1.1 (2013-08-26T12:53:52+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -121,7 +121,7 @@ return {
 		return data;
 	},
 
-	// See line 73
+	// See line 77
 	createXHR: createXHR,
 	
 	/**

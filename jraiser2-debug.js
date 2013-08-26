@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * module loader - v1.0.0 (2013-08-26T10:51:39+0800)
+ * module loader - v1.0.1 (2013-08-26T11:02:57+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 !function(window, undefined) { 'use strict';

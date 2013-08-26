@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * ajax - v1.0.0 (2013-08-26T10:57:25+0800)
+ * ajax - v1.0.1 (2013-08-26T10:58:25+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
