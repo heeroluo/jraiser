@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-event - v1.0.0 (2013-08-17T21:27:48+0800)
+ * dom-event - v1.0.0 (2013-08-30T16:25:36+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -174,10 +174,11 @@ base.each({
 		bindType: fix,
 		handle: function(obj, e) {
 			var related = e.relatedTarget, ret;
-			if ( !e || ( related !== this && !Sizzle.contains(this, related) ) ) {
+			if ( !e || !related || ( related !== this && !Sizzle.contains(this, related) ) ) {
+				var temp = e.type;
 				e.type = orig;
 				ret = obj.handler.call(this, e);
-				e.type = fix;
+				e.type = temp;
 			}
 			return ret;
 		}
@@ -193,7 +194,8 @@ function globalHandler(e, namespace) {
 		return;
 	}
 
-	var space = (eventSpace[nodeId] || { })[e.type];
+	var bindType = eventHooks[e.type] ? eventHooks[e.type].bindType : e.type,
+		space = (eventSpace[nodeId] || { })[bindType];
 	if (space) {
 		if (namespace && typeof namespace !== 'string') { namespace = null; }
 
@@ -201,6 +203,9 @@ function globalHandler(e, namespace) {
 		space.forEach(function(obj) {
 			// 检查名字空间
 			if (namespace && obj.namespace !== namespace) { return; }
+
+			// 检查是否要触发的事件类型
+			if (e.isTrigger && obj.bindType !== e.type) { return; }
 
 			var thisObj;
 			// 事件代理
@@ -416,19 +421,20 @@ var bubbleEvents = {
  */
 function trigger(node, type, options) {
 	if ( !isSupportEvent(node) || !type ) { return; }
-	
+
 	type = normalizeType(type);
 	options = options || { };
-	
+
 	var e = eventArgNormalizer.fix(
 			base.extend({
 				type: type[0],
-				target: node,
-				isTrigger: true
+				target: node
 			}, defaultEventArgs[ eventTypes[ type[0] ] ])
 		),
 		originalNode = node,
 		bubbles = options.bubbles != null ? options.bubbles : bubbleEvents[ type[0] ];
+
+	e.isTrigger = true;
 
 	// 触发事件并冒泡
 	do {
@@ -447,13 +453,13 @@ function trigger(node, type, options) {
 
 
 module.exports = {
-	// See line 292
+	// See line 297
 	on: on,
 
-	// See line 324
+	// See line 329
 	off: off,
 
-	// See line 409
+	// See line 414
 	trigger: trigger,
 
 	shortcuts: {
