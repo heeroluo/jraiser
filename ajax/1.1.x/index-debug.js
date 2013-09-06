@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * ajax - v1.1.1 (2013-08-26T12:53:52+0800)
+ * ajax - v1.1.1 (2013-09-06T21:12:33+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -222,7 +222,7 @@ return {
 				value: callback
 			});
 		} else {
-			opts.data[callback] = callback;
+			opts.data.callback = callback;
 		}
 
 		// 创建全局回调函数
