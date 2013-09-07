@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * ajax - v1.0.1 (2013-08-26T10:58:25+0800)
+ * ajax - v1.0.1 (2013-09-07T21:45:47+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -83,7 +83,7 @@ function generateJSONPCallbackName() {
 
 /**
  * 创建XMLHttpRequest对象
- * @method createXhr
+ * @method createXHR
  * @return {XMLHttpRequest} XMLHttpRequest对象
  */
 var createXHR = window.ActiveXObject ? function() {
