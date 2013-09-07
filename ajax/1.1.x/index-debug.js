@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * ajax - v1.1.1 (2013-09-06T21:12:33+0800)
+ * ajax - v1.1.1 (2013-09-07T12:10:17+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -204,6 +204,7 @@ return {
 	 * @method jsonp
 	 * @param {String} url URL
 	 * @param {Object} [opts] 其他参数
+	 *   @param {String} [opts.callbackName] 回调函数名，如不指定则随机生成
 	 *   @param {Function} [opts.onsuccess] 回调函数
 	 *   @param {Function} [opts.oncomplete] 请求完成后的执行的函数
 	 *   @param {Object} [opts.data] 发送的数据
@@ -214,7 +215,8 @@ return {
 		opts = opts || { };
 		opts.data = opts.data || { };
 
-		var callback = generateCallbackName(), oncomplete = opts.oncomplete;
+		var callback = opts.callbackName || generateCallbackName(),
+			oncomplete = opts.oncomplete;
 
 		if ( base.isArray(opts.data) ) {
 			opts.data.push({
@@ -253,6 +255,7 @@ return {
 	 *   @param {String} [opts.dataType='text'] 返回的数据格式，json、jsonp、xml或text
 	 *   @param {String} [opts.method='GET'] 请求方式，GET、POST或HEAD，dataType为jsonp时只能为GET
 	 *   @param {Object} [opts.data] 发送的数据
+	 *   @param {String} [opts.callbackName] jsonp回调函数名，如不指定则随机生成，仅当dataType为jsonp时有效
 	 *   @param {Boolean} [opts.nocache=true] 是否在URL中添加timestamp参数（参数名为“_”）以防止缓存
 	 *   @param {Object} [opts.headers] 要设置的HTTP头，dataType为jsonp时无效
 	 *   @param {Boolean} [opts.async=true] 是否使用异步方式请求，dataType为jsonp时只能为true
@@ -281,7 +284,7 @@ return {
 
 		if (opts.dataType === 'jsonp') {
 			return this.jsonp( url, base.mix({ }, opts, {
-				whiteList: ['onsuccess', 'oncomplete', 'data', 'charset', 'nocache'],
+				whiteList: ['callbackName', 'onsuccess', 'oncomplete', 'data', 'charset', 'nocache'],
 				ignoreNull: true
 			}) );
 		}
