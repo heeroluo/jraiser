@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * module loader - v1.0.1 (2013-08-26T11:02:57+0800)
+ * module loader - v1.0.2 (2013-09-10T09:48:26+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 !function(window, undefined) { 'use strict';
@@ -136,7 +136,7 @@ function idToURL(id, ref) {
 	var filename = id.pop() || 'index';
 
 	// 解析出文件名和扩展名
-	var temp = filename.indexOf('.');
+	var temp = filename.lastIndexOf('.');
 	var basename, extname;
 	if (temp === -1) {
 		basename = filename;
@@ -146,8 +146,13 @@ function idToURL(id, ref) {
 	}
 	extname = extname || 'js';
 
-	// 添加调试后缀
-	if ( config.debug && !/-debug$/.test(basename) ) { basename += '-debug'; }
+	// 处理调试后缀
+	var re_debug = /-debug$/;
+	if ( config.debug && !re_debug.test(basename) ) {
+		basename += '-debug';
+	} else if ( !config.debug && re_debug.test(basename) ) {
+		basename = basename.replace(re_debug, '');
+	}
 
 	id.push(basename + '.' + extname);
 	var url = id.join('/');
