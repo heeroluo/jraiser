@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dialogbox - v1.0.0 (2013-03-15T14:58:11+0800)
+ * dialogbox - v1.0.0 (2013-10-01T22:51:57+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -55,14 +55,14 @@ return widget.create(function(options) {
 	if (options.fixedLayer) {
 		t._fixedLayer = new FixedLayer( base.mix({
 			wrapper: wrapper,
-			enable: false
+			disabled: true
 		}, options.fixedLayer, { overwrite: false }) );
 	}
 	// 创建拖动功能组件
 	if (options.draggable) {
 		t._draggable = new Draggable( base.mix({
 			wrapper: wrapper,
-			enable: false
+			disabled: true
 		}, options.draggable, { overwrite: false }) );
 
 		if (t._fixedLayer) {
@@ -111,7 +111,7 @@ return widget.create(function(options) {
 					position: base.mix({ }, this._popupStyle, {
 						whiteList: ['top', 'bottom', 'left', 'right']
 					}),
-					enable: true
+					disabled: false
 				});
 			}
 			if (draggable) { draggable.init(); }

@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * widget - v1.0.2 (2013-10-01T22:53:15+0800)
+ * widget - v1.0.2 (2013-10-01T22:56:20+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -111,6 +111,7 @@ function create(body, methods, defaultOptions, parentClass) {
 	};
 
 	var trueClass = base.createClass(function(options) {
+		// disabled参数，兼容原来的enable
 		if ( options && ('enable' in options) ) {
 			options.disabled = !options.enable;
 			delete options.enable;
@@ -137,7 +138,7 @@ function create(body, methods, defaultOptions, parentClass) {
 
 // See line 17
 exports.WidgetBase = WidgetBase;
-// See line 85
+// See line 90
 exports.create = create;
 
 });
