@@ -11,6 +11,14 @@
 		{
 			"target": "^widget/.*/(index(.js)?)?$",
 			"excepts": ["^base/.*", "^dom/.*"]
+		},
+		{
+			"target": "^slideshow/.*/(index(.js)?)?$",
+			"excepts": ["^base/.*", "^dom/.*", "^widget/.*"]
+		},
+		{
+			"target": "^validator/.*/(index(.js)?)?$",
+			"excepts": ["^base/.*", "^dom/.*", "^ajax/.*", "^widget/.*"]
 		}
 	],
 	"ignored_paths": ["_examples_"]
