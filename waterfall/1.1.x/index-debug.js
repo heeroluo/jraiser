@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * waterfall - v1.1.0 (2013-08-11T12:15:36+0800)
+ * waterfall - v1.1.0 (2013-09-28T11:29:46+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -265,7 +265,7 @@ return widget.create(function(options) {
 				
 				/**
 				 * 加载完最后一页数据后触发
-				 * @event load
+				 * @event end
 				 * @for Waterfall
 				 */
 				t.trigger('end');

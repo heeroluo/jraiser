@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * widget - v1.0.1 (2013-08-25T10:12:39+0800)
+ * widget - v1.0.2 (2013-10-01T22:53:15+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -81,7 +81,7 @@ var WidgetBase = base.createClass(function() {
 	options: function(newOptions) {
 		this.destroy();
 		base.mix(this._options, newOptions);
-		if (this._options.enable) {
+		if (!this._options.disabled) {
 			this.init();
 		}
 	}
@@ -107,23 +107,26 @@ function create(body, methods, defaultOptions, parentClass) {
 	}
 
 	var extendOptions = function(options) {
-		return base.extend({
-			enable: true
-		}, defaultOptions, options);
+		return base.extend({ }, defaultOptions, options);
 	};
 
 	var trueClass = base.createClass(function(options) {
+		if ( options && ('enable' in options) ) {
+			options.disabled = !options.enable;
+			delete options.enable;
+		}
+
 		options = this._options = extendOptions(options);
 
 		body.call(this, options);
 
-		if (options.enable) {
+		if (!options.disabled) {
 			this.init();
 		}
 	}, methods, parentClass, function(options) {
 		options = extendOptions(options);
 		// 不初始化父类，子类初始化时才调用init方法
-		options.enable = false;
+		options.disabled = true;
 		return [options];
 	});
 
