@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Example of validator 1.0.x</title>
+<style type="text/css">
+body { font-size: 14px; }
+.form p { margin: 1em 0; line-height: 1.5; }
+.validate-icon { color: green; }
+.validate-icon-error { color: red; }
+</style>
+</head>
+
+<body>
+<form id="form" action="?" class="form">
+	<p>Email: <input type="text" name="email" /><span class="validate-icon"></span></p>
+	<p>密码：<input type="password" name="password" id="password" /><span class="validate-icon"></span></p>
+	<p>确认密码：<input type="password" name="password2" /><span class="validate-icon"></span></p>
+	<p>昵称: <input type="text" name="nickname" /><span class="validate-icon"></span></p>
+	<p>
+		性别: 
+		<input type="radio" name="gender" value="male" />男
+		<input type="radio" name="gender" value="female" />女
+		<span class="validate-icon"></span>
+	</p>
+	<p>年龄: <input type="text" name="age" />岁<span class="validate-icon"></span></p>
+	<p>
+		常用软件（至少选两种）：<br />
+		<input type="checkbox" name="softs" value="qq">QQ
+		<input type="checkbox" name="softs" value="chrome">Chrome
+		<input type="checkbox" name="softs" value="360safe">360安全卫士
+		<input type="checkbox" name="softs" value="xunlei">迅雷
+		<span class="validate-icon"></span>
+	</p>
+	<p><input type="submit" value="提 交" /></p>
+</form>
+<script src="../../../jraiser2-debug.js"></script>
+<script src="../../config.js"></script>
+<script>
+require(['dom/1.0.x/', 'validator/1.0.x/'], function($, Validator) {
+	var validator = new Validator({
+		form: $('#form'),
+		steps: [
+			{ fields: 'email', message: '请填写Email' },
+			{ fields: 'email', rule: 'isEmail', message: 'Email格式错误' },
+			{ fields: 'password', message: '密码不能为空' },
+			{
+				fields: 'password',
+				rule: 'minLength:6',
+				message: '密码不能少于6个字符'
+			},
+			{
+				fields: 'password password2',
+				eventElements: '[name=password2]',
+				rule: function(pwd, pwd2) {
+					return !pwd2[0] ? '请再次输入密码' : (
+						pwd[0] === pwd2[0] ? true : '密码不一致'
+					);
+				}
+			},
+			{ fields: 'nickname', message: '请填写昵称' },
+			{ fields: 'gender', message: '请选择性别', oneByOne: false },
+			{ fields: 'age', message: '请填写年龄' },
+			{ fields: 'age', rule: 'min:18&&max:99', message: '年龄必须在18-99之间' },
+			{
+				fields: 'softs',
+				rule: function(vals) {
+					return vals.filter(function(v) {
+						return v != null;
+					}).length >= 2;
+				},
+				oneByOne: false,
+				message: '请至少选择两种常用软件'
+			}
+		],
+		validateOnChange: true,
+		breakOnError: false,
+		ajaxSettings: {
+			dataType: 'json'
+		},
+		events: {
+			submiterror: function(e) {
+				alert( e.errorObjs.map(function(err) {
+					return err.message;
+				}).join('\r\n') );
+			},
+			steperror: function(e) {
+				$(e.elements).nextAll('.validate-icon')
+					.addClass('validate-icon-error')
+					.text('× ' + e.message);
+			},
+			stepcorrect: function(e) {
+				$(e.elements).nextAll('.validate-icon')
+					.removeClass('validate-icon-error')
+					.text('√');
+			}
+		}
+	});
+});
+</script>
+</body>
+</html>
