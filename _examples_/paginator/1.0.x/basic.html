@@ -53,14 +53,15 @@ require(['dom/1.0.x/', 'paginator/1.0.x/'], function($, Paginator) {
 
 var paginator = new Paginator({
 	wrapper: $('#paginator'),
-	totalPages: 20
-});
-
-paginator.on('click', function(e) {
-	this.options({
-		currentPage: e.page
-	});
-	$("#content").text('第' + e.page + '页');
+	totalPages: 20,
+	events: {
+		click: function(e) {
+			this.options({
+				currentPage: e.page
+			});
+			$("#content").text('第' + e.page + '页');
+		}
+	}
 });
 
 });

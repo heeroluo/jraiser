@@ -112,21 +112,23 @@ require(['dom/1.0.x/', 'calendar/1.0.x/'], function($, Calendar) {
 
 		if (!calendar) {
 			calendar = new Calendar({
-				wrapper: $('#calendar')
-			});
-			calendar.on('render', function(e) {
-				var data = e.calendarData;
-				if (data) {
-					calendarWrapper.find('span.calendar-nav-current-month')
-						.html(data.year + '年' + data.month + '月');
+				wrapper: $('#calendar'),
+				events: {
+					render: function(e) {
+						var data = e.calendarData;
+						if (data) {
+							calendarWrapper.find('span.calendar-nav-current-month')
+								.html(data.year + '年' + data.month + '月');
+						}
+					},
+					dayselect:function(e) {
+						var date = e.selectedDate;
+						dateInput.val(
+							date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate()
+						);
+						calendarWrapper.hide();
+					}
 				}
-			});
-			calendar.on('dayselect', function(e) {
-				var date = e.selectedDate;
-				dateInput.val(
-					date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate()
-				);
-				calendarWrapper.hide();
 			});
 		}
 		var value = this.value, dateNumbers = value.split('/');

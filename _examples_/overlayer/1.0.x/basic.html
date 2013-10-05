@@ -17,11 +17,12 @@ require(['dom/1.0.x/', 'overlayer/1.0.x/'], function($, Overlayer) {
 
 var overlayer = new Overlayer({
 	wrapper: $('body'),
-	visible: true
-});
-
-overlayer.on('click', function() {
-	this.hide();
+	visible: true,
+	events: {
+		click: function() {
+			this.hide();
+		}
+	}
 });
 
 });

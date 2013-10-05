@@ -83,6 +83,7 @@ require(['dom/1.0.x/', 'validator/1.0.x/'], function($, Validator) {
 				alert( e.errorObjs.map(function(err) {
 					return err.message;
 				}).join('\r\n') );
+				$(e.errorObjs[0].elements).focus();
 			},
 			steperror: function(e) {
 				$(e.elements).nextAll('.validate-icon')

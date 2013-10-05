@@ -107,10 +107,12 @@ require([
 	'slideshow/1.0.x/pager'
 ], function($, SlideShow, SlideShowPager) {
 	var slideShowPager = new SlideShowPager({
-		wrapper: $('#slideshow-navs-body')
-	});
-	slideShowPager.on('select', function(e) {
-		slideShow.show(e.newIndex);
+		wrapper: $('#slideshow-navs-body'),
+		events: {
+			select: function(e) {
+				slideShow.show(e.newIndex);
+			}
+		}
 	});
 	$('#slideshow .slideshow-next').click(function() {
 		slideShowPager.next(2);
@@ -130,12 +132,12 @@ require([
 		prevButton: null,
 		nextButton: null,
 		effect: 'fade',
-		enable: false
+		events: {
+			aftershow: function(e) {
+				slideShowPager.activate(e);
+			}
+		}
 	});
-	slideShow.on('aftershow', function(e) {
-		slideShowPager.activate(e);
-	});
-	slideShow.init();
 });
 </script>
 </body>
