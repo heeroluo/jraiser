@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * validator - v1.0.0 (2013-10-03T16:15:20+0800)
+ * validator - v1.0.0 (2013-10-05T15:15:24+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -143,10 +143,17 @@ return widget.create(function(options) {
 				 * @for Validator
 				 * @param {Object} e 事件对象
 				 *   @param {String} e.target 目标表单
+				 *   @param {Function} e.preventDefault() 可以调用此方法阻止表单提交
 				 */
-				t.trigger('beforesubmit', {
+				var isDefaultPrevented = t.trigger('beforesubmit', {
 					target: e.target
-				});
+				}).isDefaultPrevented();
+
+				if (isDefaultPrevented) {
+					e.preventDefault();
+					return;
+				}
+
 				if (options.submitProxy) {
 					e.preventDefault();
 					options.submitProxy.call(window, ajax.serializeForm(this), t._form);
