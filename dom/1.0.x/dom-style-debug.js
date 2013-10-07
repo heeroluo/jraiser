@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-style - v1.0.0 (2013-05-31T13:09:55+0800)
+ * dom-style - v1.0.0 (2013-10-07T10:12:42+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -62,10 +62,10 @@ if ( !('opacity' in testElt.style) ) {
 			
 			style.zoom = 1;
 
-			if ( (isNaN(val) || val >= 1) && filter.replace(ALPHA_FILTER, '').trim() === '' ) {
+			if (isNaN(val) && filter.replace(ALPHA_FILTER, '').trim() === '') {
 				style.removeAttribute('filter');
 			} else {
-				var opacity = 'alpha(opacity=' + val * 100 + ')';
+				var opacity = 'alpha(opacity=' + Math.min(1, val) * 100 + ')';
 				style.filter = ALPHA_FILTER.test(filter) ?
 					filter.replace(filter, opacity) : filter + ' ' + opacity;
 			}
