@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * validator-step - v1.0.0 (2013-10-03T15:50:13+0800)
+ * validator-step - v1.0.0 (2013-10-06T10:41:35+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -289,7 +289,17 @@ return widget.create(function(options) {
 				var errElements = [ ];
 				// 逐个值进行检查
 				values.every(function(val, i) {
-					var subResult = options.required === false || (val !== '' && val != null);
+					var subResult, isEmpty = val === '' || val == null;
+					if (options.required === false) {
+						if (isEmpty) {
+							return true;
+						} else {
+							subResult = true;
+						}
+					} else {
+						subResult = !isEmpty;
+					}
+
 					if (subResult && val != null && t._rule) {
 						subResult = t._rule.call(window, val, helpers);
 					}
