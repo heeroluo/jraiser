@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * widget - v1.0.2 (2013-10-01T22:56:20+0800)
+ * widget - v1.0.2 (2013-10-16T18:03:41+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -30,13 +30,13 @@ var WidgetBase = base.createClass(function() {
 	 */
 	init: function() {
 		if (!this._inited) {
-			this._init(this._options);
 			var events = this._options.events;
 			if (events) {
 				for (var e in events) {
 					this.on(e, events[e]);
 				}
 			}
+			this._init(this._options);
 			this._inited = true;
 		}
 	},
