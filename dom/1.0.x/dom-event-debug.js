@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-event - v1.0.0 (2013-08-30T16:25:36+0800)
+ * dom-event - v1.0.0 (2013-10-29T16:09:53+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -225,7 +225,8 @@ function globalHandler(e, namespace) {
 				thisObj = self;
 			}
 
-			e.data = obj.data;
+			if ( !e.hasOwnProperty('data') ) { e.data = obj.data; }
+			
 			var result = obj.handle ?
 				obj.handle.call(thisObj, obj, e) : obj.handler.call(thisObj, e);
 
@@ -418,6 +419,7 @@ var bubbleEvents = {
  * @param {String} type 事件类型
  * @param {Object} [options] 参数设置
  *   @param {Boolean} [options.bubbles] 是否冒泡
+ *   @param {Mixed} [options.data] 事件数据
  */
 function trigger(node, type, options) {
 	if ( !isSupportEvent(node) || !type ) { return; }
@@ -436,6 +438,8 @@ function trigger(node, type, options) {
 
 	e.isTrigger = true;
 
+	if (options.data != null) { e.data = options.data; }
+
 	// 触发事件并冒泡
 	do {
 		globalHandler.call(node, e, type[1]);
@@ -453,13 +457,13 @@ function trigger(node, type, options) {
 
 
 module.exports = {
-	// See line 297
+	// See line 298
 	on: on,
 
-	// See line 329
+	// See line 330
 	off: off,
 
-	// See line 414
+	// See line 415
 	trigger: trigger,
 
 	shortcuts: {
@@ -511,6 +515,7 @@ module.exports = {
 		 * @param {String} type 事件类型
 		 * @param {Object} [options] 参数设置
 		 *   @param {Boolean} [options.bubbles] 是否冒泡
+		 *   @param {Mixed} [options.data] 事件数据
 		 * @return {NodeList} 当前节点集合
 		 */
 		trigger: function(type, options) {
