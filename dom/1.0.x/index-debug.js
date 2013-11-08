@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom - v1.0.0 (2013-08-17T21:28:36+0800)
+ * dom - v1.0.0 (2013-11-07T09:21:46+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -70,7 +70,7 @@ function query(selector, context) {
 	} else if ( isNode(selector) || isWindow(selector) ) {
 		ret = [selector];
 	} else {
-		ret = selector;
+		ret = base.toArray(selector);
 	}
 
 	return ret;
@@ -166,7 +166,7 @@ var NodeList = base.createClass(function(nodes) {
 	add: function(selector, context) {
 		return new this.constructor(
 			Sizzle.uniqueSort(
-				arrProto.concat.apply( arrProto.slice.call(this), query(selector, context) )
+				arrProto.concat.call( arrProto.slice.call(this), query(selector, context) )
 			)
 		);
 	},
