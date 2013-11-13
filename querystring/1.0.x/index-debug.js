@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * querystring - v1.0.1 (2013-08-10T16:17:50+0800)
+ * querystring - v1.0.1 (2013-11-13T11:08:26+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -66,13 +66,19 @@ return {
 
 		qs = ( qs || window.location.search.substr(1) )
 			.replace(/(?:^|&)([^&]+)=([^&]+)/g, function($0, $1, $2) {
+				var value = $2;
+				try {
+					value = o.decode(value);
+				} catch (e) {
+
+				}
 				if (returnArray) {
 					data.push({
 						name: $1,
-						value: $2
+						value: value
 					});
 				} else {
-					data[$1] = o.decode($2);
+					data[$1] = value;
 				}
 				return '';
 			})
@@ -88,7 +94,6 @@ return {
 				} else {
 					data[ qs[i] ] = null;
 				}
-				
 			}
 		}
 
