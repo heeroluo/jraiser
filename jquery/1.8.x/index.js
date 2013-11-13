@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * jquery - v1.8.3 (2012-12-17T17:52:10+0800)
+ * jquery - v1.8.3 (2013-06-10T16:45:59+0800)
  * http://jraiser.org/ | Released under MIT license
  *
  * Include jQuery (http://jquery.com/)
