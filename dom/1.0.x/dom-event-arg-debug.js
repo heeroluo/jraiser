@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-event-arg - v1.0.0 (2013-03-29T16:17:39+0800)
+ * dom-event-arg - v1.0.0 (2013-11-23T10:49:54+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -34,8 +34,14 @@ return base.createClass(function(src, props) {
 		t.originalEvent = src;
 		t.type = src.type;
 
-		t.isDefaultPrevented = ( src.defaultPrevented || src.returnValue === false ||
-			src.getPreventDefault && src.getPreventDefault() ) ? returnTrue : returnFalse;
+		var undefined;
+		t.isDefaultPrevented = src.defaultPrevented ||
+			src.defaultPrevented === undefined && (
+			// Support: IE < 9
+			src.returnValue === false ||
+			// Support: Android < 4.0
+			src.getPreventDefault && src.getPreventDefault()
+		) ? returnTrue : returnFalse;
 	} else {
 		t.type = src;
 	}
@@ -81,9 +87,9 @@ return base.createClass(function(src, props) {
 
 		if (e.stopPropagation) {
 			e.stopPropagation();
+		} else {
+			e.cancelBubble = true;
 		}
-
-		e.cancelBubble = true;
 	},
 
 	/**

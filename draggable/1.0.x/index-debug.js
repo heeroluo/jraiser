@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * draggable - v1.0.0 (2013-04-25T17:48:44+0800)
+ * draggable - v1.0.0 (2013-11-23T10:58:26+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -136,10 +136,6 @@ return widget.create(function(options) {
 			t._wrapper.each(function(node) {
 				if (node.releaseCapture) {
 					node.releaseCapture();
-				} else if (window.releaseEvents) {
-					window.releaseEvents(
-						window.Event[moveWhen.toUpperCase()] | window.Event[endWhen.toUpperCase()]
-					);
 				}
 			});
 
@@ -243,10 +239,6 @@ return widget.create(function(options) {
 			wrapper.each(function(node) {
 				if (node.setCapture) {
 					node.setCapture();
-				} else if (window.captureEvents) {
-					window.captureEvents(
-						window.Event[moveWhen.toUpperCase()] | window.Event[endWhen.toUpperCase()]
-					);
 				}
 			});
 
