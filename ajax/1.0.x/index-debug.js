@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * ajax - v1.0.1 (2013-09-07T21:45:47+0800)
+ * ajax - v1.0.1 (2013-11-30T17:40:06+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -9,6 +9,7 @@ define(function(require, exports, module) { 'use strict';
  * 本模块提供异步请求接口
  * @module ajax/1.0.x/
  * @category Utility
+ * @ignore
  */
 
 var base = require('base/1.0.x/'),
