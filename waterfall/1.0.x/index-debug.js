@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * waterfall - v1.0.0 (2013-09-28T11:29:53+0800)
+ * waterfall - v1.0.0 (2013-11-30T17:43:18+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -9,6 +9,7 @@ define(function(require, exports, module) { 'use strict';
  * 瀑布流布局组件
  * @module waterfall/1.0.x/
  * @category Widget
+ * @ignore
  */
 
 
