@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-base - v1.0.0 (2013-11-12T13:33:25+0800)
+ * dom-base - v1.0.0 (2013-12-02T16:10:26+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -24,7 +24,10 @@ return {
 	 * @param {Any} obj 待测对象
 	 * @return {Boolean} 待测对象是否DOM节点
 	 */
-	isNode: function(obj) { return typeof obj === 'object' && 'nodeType' in obj; },
+	isNode: function(obj) {
+		var type = typeof obj;
+		return (type === 'object' || type === 'function') && 'nodeType' in obj;
+	},
 
 	/**
 	 * 检查节点是否XML节点
