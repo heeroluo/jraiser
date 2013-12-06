@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-insertion - v1.0.0 (2013-08-21T17:23:38+0800)
+ * dom-insertion - v1.0.0 (2013-12-06T13:59:05+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -232,9 +232,12 @@ function doWithCurrentNodes(nodes, currentNodes, fn, condition) {
 
 // 清理节点数据
 function clearData(node) {
-	$data.removeData(node);
-	$event.off(node);
-	$base.removeUniqueId(node);
+	var id = $base.uniqueId(node, false);
+	if (id) {
+		$data.removeData(node);
+		$event.off(node);
+		$base.removeUniqueId(node);
+	}
 }
 
 

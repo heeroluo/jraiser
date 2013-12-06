@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-base - v1.0.0 (2013-12-02T16:10:26+0800)
+ * dom-base - v1.0.0 (2013-12-06T13:47:57+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -14,6 +14,7 @@ define(function(require, exports, module) { 'use strict';
 
 var ID_ATTR_NAME = '_jRaiserNodeId_',	// 节点ID属性名
 	autoId = 0,		// 节点ID递增值
+	undefined,
 	rMultiSpace = /\s+/;
 
 
@@ -24,10 +25,7 @@ return {
 	 * @param {Any} obj 待测对象
 	 * @return {Boolean} 待测对象是否DOM节点
 	 */
-	isNode: function(obj) {
-		var type = typeof obj;
-		return (type === 'object' || type === 'function') && 'nodeType' in obj;
-	},
+	isNode: function(obj) { return obj.nodeType !== undefined; },
 
 	/**
 	 * 检查节点是否XML节点
@@ -62,12 +60,18 @@ return {
 	 * 生成不重复的节点编号
 	 * @method uniqueId
 	 * @param {Element} node 节点
+	 * @param {Boolean} [autoSet=true] 节点id不存在时，是否生成id
 	 * @return {Number} 节点编号
 	 */
-	uniqueId: function(node) {
-		// 在IE6-8，如果设置了一个值属性，则此属性会出现在innerHTML中，但对象属性则不会
-		var id = node[ID_ATTR_NAME] = node[ID_ATTR_NAME] || new Number(++autoId);
-		return id.valueOf();
+	uniqueId: function(node, autoSet) {
+		var id = node[ID_ATTR_NAME];
+
+		if (id === undefined && autoSet !== false) {
+			// 在IE6-8，如果设置了一个值属性，则此属性会出现在innerHTML中，但对象属性则不会
+			id = node[ID_ATTR_NAME] = new Number(++autoId);
+		}
+
+		return id ? id.valueOf() : id;
 	},
 
 	/**
