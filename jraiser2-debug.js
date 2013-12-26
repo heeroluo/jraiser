@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * module loader - v1.0.2 (2013-09-10T09:48:26+0800)
+ * module loader - v1.0.3 (2013-12-26T13:35:30+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 !function(window, undefined) { 'use strict';
@@ -483,8 +483,8 @@ var taskManager = {
 
 	// 添加任务
 	add: function(task) {
-		task.setId( this._nextId() );
 		this._queue.push(task);
+		task.setId( this._nextId() );
 	},
 
 	// 尝试执行任务
