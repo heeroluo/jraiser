@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * module loader - v1.0.3 (2013-12-26T13:35:30+0800)
+ * module loader - v1.0.4 (2014-01-01T09:27:00+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 !function(window, undefined) { 'use strict';
@@ -129,7 +129,7 @@ function transferPath(rel, ref) {
 	return result.join('/');
 }
 // 把ID转换成URL（ref必须以“/”结尾）
-function idToURL(id, ref) {
+function idToURL(id, ref, nomap) {
 	var ts = { }, id = trimURL(id, ts).split('/');
 	
 	// 如果没有指定文件，则加载目录下的index.js
@@ -160,11 +160,13 @@ function idToURL(id, ref) {
 
 	if (ts.search) { url += '?' + ts.search; }
 
-	// 地址映射
-	var map = config.map;
-	if (map) {
-		for (var i = 0; i < map.length; i++) {
-			url = url.replace(map[i][0], map[i][1]);
+	if (!nomap) {
+		// 地址映射
+		var map = config.map;
+		if (map) {
+			for (var i = 0; i < map.length; i++) {
+				url = url.replace(map[i][0], map[i][1]);
+			}
 		}
 	}
 
@@ -415,7 +417,7 @@ extend(Module.prototype, {
 			_require.async = function(ids, callback) {
 				if (typeof ids === 'string') { ids = [ids]; }
 				for (var i = ids.length - 1; i >= 0; i--) {
-					ids[i] = idToURL(ids[i], self._dirname);
+					ids[i] = idToURL(ids[i], self._dirname, true);
 				}
 				require(ids, callback);
 			};
