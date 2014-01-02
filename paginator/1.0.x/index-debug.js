@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * paginator - v1.0.0 (2013-10-05T11:37:57+0800)
+ * paginator - v1.0.0 (2014-01-02T16:49:17+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -25,6 +25,7 @@ var widget = require('widget/1.0.x/'), tmpl = require('tmpl/1.0.x/');
  *   @param {Number} [options.totalPages] 总页数
  *   @param {String} [options.prevText='上一页'] 上一页文字
  *   @param {String} [options.nextText='下一页'] 下一页文字
+ *   @param {String} [options.ellipsisText='...'] 省略符文字
  *   @param {String} [options.template] 分页条HTML模版，一般情况下不建议修改
  */
 return widget.create(function(options) {
@@ -41,7 +42,8 @@ return widget.create(function(options) {
 			totalPages: options.totalPages,
 			pageNumbers: t._build(),
 			nextText: options.nextText,
-			prevText: options.prevText
+			prevText: options.prevText,
+			ellipsisText: options.ellipsisText
 		}) );
 
 		/**
@@ -148,6 +150,7 @@ return widget.create(function(options) {
 	numberOfPagesToShow: 7,
 	prevText: '上一页',
 	nextText: '下一页',
+	ellipsisText: '...',
 	template:
 '<ol class="paginator">' +
 '<% if (currentPage > 1) { %>' +
@@ -159,7 +162,7 @@ return widget.create(function(options) {
 	'<% if (obj.current) { %>' +
 	'<li class="paginator-item paginator-number paginator-current"><span><%=obj.page%></span></li>' +
 	'<% } else if (obj.page === "...") { %>' +
-	'<li class="paginator-item paginator-ellipsis"><span><%=obj.page%></span></li>' +
+	'<li class="paginator-item paginator-ellipsis"><span><%=ellipsisText%></span></li>' +
 	'<% } else { %>' +
 	'<li class="paginator-item paginator-number"><a href="#" data-page="<%=obj.page%>"><%=obj.page%></a></li>' +
 	'<% } %>' +
