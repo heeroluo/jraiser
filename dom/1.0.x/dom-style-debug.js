@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-style - v1.0.0 (2013-10-07T10:12:42+0800)
+ * dom-style - v1.0.0 (2013-12-31T14:16:27+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -111,10 +111,7 @@ function getStyle(node, name) {
 	if (hook) {
 		return hook(node);
 	} else {
-		var curVal = node.style[name];
-		if ( !base.isUndefined(curVal) ) {
-			return curVal !== '' ? curVal : getCurrentStyle(node, name);
-		}
+		if (name in node.style) { return getCurrentStyle(node, name); }
 	}
 }
 
@@ -395,31 +392,31 @@ var defaultDisplay = {
 
 
 return {
-	// See line 95
+	// See line 98
 	getStyle: getStyle,
 
 	// See line 118
 	setStyle: setStyle,
 
-	// See line 208
+	// See line 205
 	hasClass: hasClass,
 
-	// See line 220
+	// See line 217
 	addClass: addClass,
 
-	// See line 235
+	// See line 232
 	removeClass: removeClass,
 
-	// See line 256
+	// See line 253
 	toggleClass: toggleClass,
 
-	// See line 272
+	// See line 269
 	getSize: getSize,
 
-	// See line 332
+	// See line 329
 	getScroll: getScroll,
 
-	// See line 349
+	// See line 346
 	setScroll: setScroll,
 
 	shortcuts: {

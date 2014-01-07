@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-animation - v1.0.0 (2013-03-29T16:07:27+0800)
+ * dom-animation - v1.0.0 (2014-01-07T17:57:30+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -234,7 +234,8 @@ function startAnimation(node, finalStyles, options, isPass) {
 			stopAnimation(node);
 			// 确保最终样式正确
 			for (var s in finalStyles) {
-				$style.setStyle(node, s, finalStyles[s]);
+				$style.setStyle(node, s,
+					rColor.test(s) ? 'rgb(' + finalStyles[s] + ')' : finalStyles[s]);
 			}
 
 			// 回调
