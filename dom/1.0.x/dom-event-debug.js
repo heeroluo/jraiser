@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-event - v1.0.0 (2013-10-29T16:09:53+0800)
+ * dom-event - v1.0.0 (2014-03-20T14:40:06+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -446,7 +446,7 @@ function trigger(node, type, options) {
 		node = node.parentNode;
 	} while ( bubbles && node && !e.isPropagationStopped() );
 
-	if ( defaultActions[ type[0] ] && !e.isDefaultPrevented() ) {
+	if ( defaultActions[ type[0] ] && !e.isDefaultPrevented() && (type[0] in originalNode) ) {
 		// 防止重复执行事件处理函数
 		var nodeId = $base.uniqueId(originalNode);
 		handlerBlocker.add(nodeId, type[0]);
