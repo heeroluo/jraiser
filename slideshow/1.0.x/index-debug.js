@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * slideshow - v1.0.0 (2013-05-03T18:04:52+0800)
+ * slideshow - v1.0.0 (2014-03-21T12:37:09+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -125,6 +125,7 @@ var effects = {
  *   @param {String} [options.showWhen='click'] 导航触发内容显示的事件
  *   @param {String} [options.effect='slide'] 动画效果，可以为slide或fade
  *   @param {Object} [options.animation] 动画参数
+ *   @param {Boolean} [options.autoplay=true] 是否自动播放
  *   @param {Number} [options.playInterval=5000] 自动播放间隔
  */
 return widget.create(function(options) {
@@ -175,7 +176,7 @@ return widget.create(function(options) {
 		});
 
 		t.show(0);
-		if (options.playInterval) { t.play(); }
+		if (options.autoplay && options.playInterval) { t.play(); }
 	},
 
 	/**
@@ -306,7 +307,7 @@ return widget.create(function(options) {
 		if (t._isPlayingOn) {
 			t._wrapper
 				.off('mouseover', t._pauseHandler)
-				.on('mouseout', t._playHandler);
+				.off('mouseout', t._playHandler);
 
 			delete t._pauseHandler;
 			delete t._playHandler;
@@ -353,6 +354,7 @@ return widget.create(function(options) {
 	showWhen: 'click',
 	effect: 'slide',
 	animation: null,
+	autoplay: true,
 	playInterval: 5000
 })
 
