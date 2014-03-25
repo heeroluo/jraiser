@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * es5-shim - v2.1.0 (2013-10-16T10:04:25+0800)
+ * es5-shim - v2.1.0 (2014-03-25T15:33:29+0800)
  * http://jraiser.org/ | Released under MIT license
  *
  * Include es5-shim (https://github.com/kriskowal/es5-shim)
