@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * dom-style - v1.0.0 (2013-12-31T14:16:27+0800)
+ * dom-style - v1.0.0 (2014-03-25T14:33:29+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -173,20 +173,24 @@ if (supportClassList) {
 	};
 	_hasClass = function(node, className) { return hasString(node.className, className); };
 	_addClass = function(node, classes) {
-		var className = node.className, i = -1, len = classes.length;
+		var oldClassName = node.className,
+			className = oldClassName,
+			i = -1, len = classes.length;
 		while (++i < len) {
-			if ( !hasString(className, classes[i]) ) {
-				className += (' ' + classes[i]);
-			}
+			if ( !hasString(className, classes[i]) ) { className += (' ' + classes[i]); }
 		}
-		node.className = className.trim();
+		className = className.trim();
+		if (oldClassName !== className) { node.className = className; }
 	};
 	_removeClass = function(node, classes) {
-		var className = ' ' + node.className + ' ', i = -1, len = classes.length;
+		var oldClassName = node.className,
+			className = ' ' + oldClassName + ' ',
+			i = -1, len = classes.length;
 		while (++i < len) {
 			className = className.replace(' ' + classes[i] + ' ', ' ');
 		}
-		node.className = className.trim();
+		className = className.trim();
+		if (oldClassName !== className) { node.className = className; }
 	};
 	_toggleClass = function(node, classes) {
 		var className = ' ' + node.className + ' ', i = -1, len = classes.length, temp;
@@ -398,25 +402,25 @@ return {
 	// See line 118
 	setStyle: setStyle,
 
-	// See line 205
+	// See line 209
 	hasClass: hasClass,
 
-	// See line 217
+	// See line 221
 	addClass: addClass,
 
-	// See line 232
+	// See line 236
 	removeClass: removeClass,
 
-	// See line 253
+	// See line 257
 	toggleClass: toggleClass,
 
-	// See line 269
+	// See line 273
 	getSize: getSize,
 
-	// See line 329
+	// See line 333
 	getScroll: getScroll,
 
-	// See line 346
+	// See line 350
 	setScroll: setScroll,
 
 	shortcuts: {
