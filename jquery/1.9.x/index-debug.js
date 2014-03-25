@@ -1,6 +1,6 @@
 /*!
  * jRaiser 2 Javascript Library
- * jquery - v1.9.1 (2013-08-17T17:58:50+0800)
+ * jquery - v1.9.1 (2014-03-25T16:08:52+0800)
  * http://jraiser.org/ | Released under MIT license
  *
  * Include jQuery (http://jquery.com/)
@@ -22,7 +22,7 @@ define(function(require, exports, module) {
 // you try to trace through "use strict" call chains. (#13335)
 // Support: Firefox 18+
 //"use strict";
-var
+var undefined,
 	// The deferred used on DOM ready
 	readyList,
 
