@@ -1,6 +1,6 @@
 {
-	"appPath": "./test/",
-	"libPath": "./",
+	"app_path": "./test/",
+	"lib_path": "./",
 	"list": [
 		{ "target": "^base/.*/(index(.js)?)?$" },
 		{ "target": "^dom/.*/(index(.js)?)?$" },
