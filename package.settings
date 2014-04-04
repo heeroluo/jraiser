@@ -1,5 +1,5 @@
 {
-	"app_path": "./test/",
+	"app_path": "./_examples_/",
 	"lib_path": "./",
 	"list": [
 		{ "target": "^base/.*/(index(.js)?)?$" },
