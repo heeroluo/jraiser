@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * calendar - v1.0.0 (2013-08-07T11:38:34+0800)
  * http://jraiser.org/ | Released under MIT license
  */

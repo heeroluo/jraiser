@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * slideshow - v1.0.0 (2014-03-21T12:37:09+0800)
  * http://jraiser.org/ | Released under MIT license
  */

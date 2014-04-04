@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * dialogbox - v1.0.0 (2013-10-01T22:51:57+0800)
  * http://jraiser.org/ | Released under MIT license
  */

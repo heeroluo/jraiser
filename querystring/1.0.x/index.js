@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * querystring - v1.0.1 (2013-11-13T11:08:26+0800)
  * http://jraiser.org/ | Released under MIT license
  */

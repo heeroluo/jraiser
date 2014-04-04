@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * cookie - v1.0.0 (2013-01-08T22:12:53+0800)
  * http://jraiser.org/ | Released under MIT license
  */

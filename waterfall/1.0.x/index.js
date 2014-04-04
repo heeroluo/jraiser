@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * waterfall - v1.0.0 (2013-11-30T17:43:18+0800)
  * http://jraiser.org/ | Released under MIT license
  */

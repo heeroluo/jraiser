@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * popuplayer - v1.0.0 (2013-03-28T15:43:03+0800)
  * http://jraiser.org/ | Released under MIT license
  */

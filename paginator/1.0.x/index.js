@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * paginator - v1.0.0 (2014-01-02T16:49:17+0800)
  * http://jraiser.org/ | Released under MIT license
  */

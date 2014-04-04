@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * dom-event - v1.0.0 (2014-03-20T14:40:06+0800)
  * http://jraiser.org/ | Released under MIT license
  */
