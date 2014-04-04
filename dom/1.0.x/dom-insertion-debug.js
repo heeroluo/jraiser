@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * dom-insertion - v1.0.0 (2013-12-06T13:59:05+0800)
  * http://jraiser.org/ | Released under MIT license
  */

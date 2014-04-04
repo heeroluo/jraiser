@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * ajax - v1.1.1 (2013-09-07T12:10:17+0800)
  * http://jraiser.org/ | Released under MIT license
  */

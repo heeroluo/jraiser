@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * fixedlayer - v1.0.0 (2013-03-16T19:41:36+0800)
  * http://jraiser.org/ | Released under MIT license
  */

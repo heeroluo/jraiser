@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * dom-base - v1.0.0 (2013-12-06T13:47:57+0800)
  * http://jraiser.org/ | Released under MIT license
  */

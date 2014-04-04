@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * tabs - v1.0.0 (2013-08-17T16:39:26+0800)
  * http://jraiser.org/ | Released under MIT license
  */

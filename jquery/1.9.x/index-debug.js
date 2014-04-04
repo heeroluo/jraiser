@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * jquery - v1.9.1 (2014-03-25T16:08:52+0800)
  * http://jraiser.org/ | Released under MIT license
  *

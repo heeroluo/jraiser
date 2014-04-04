@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * slideshow-pager - v1.0.0 (2013-05-02T09:43:10+0800)
  * http://jraiser.org/ | Released under MIT license
  */

@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * underscore - v1.5.2 (2014-04-03T17:26:30+0800)
  * http://jraiser.org/ | Released under MIT license
  *

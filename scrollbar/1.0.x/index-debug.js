@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * scrollbar - v1.0.0 (2014-01-24T16:01:54+0800)
  * http://jraiser.org/ | Released under MIT license
  */

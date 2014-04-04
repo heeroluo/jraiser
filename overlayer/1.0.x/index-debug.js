@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * overlayer - v1.0.0 (2013-08-19T17:19:56+0800)
  * http://jraiser.org/ | Released under MIT license
  */

@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * widget - v1.0.2 (2013-10-16T18:03:41+0800)
  * http://jraiser.org/ | Released under MIT license
  */

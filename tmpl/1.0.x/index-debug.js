@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * micro-templating - v1.0.0 (2013-05-28T11:40:50+0800)
  * http://jraiser.org/ | Released under MIT license
  */

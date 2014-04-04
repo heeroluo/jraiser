@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * validator-step - v1.0.0 (2013-10-06T10:41:35+0800)
  * http://jraiser.org/ | Released under MIT license
  */

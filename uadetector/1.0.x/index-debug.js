@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * uadetector - v1.0.1 (2014-02-28T17:20:40+0800)
  * http://jraiser.org/ | Released under MIT license
  */

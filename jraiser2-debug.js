@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * module loader - v1.0.4 (2014-01-01T09:27:00+0800)
  * http://jraiser.org/ | Released under MIT license
  */

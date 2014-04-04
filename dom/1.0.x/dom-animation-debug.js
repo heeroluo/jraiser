@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * dom-animation - v1.0.0 (2014-01-07T17:57:30+0800)
  * http://jraiser.org/ | Released under MIT license
  */

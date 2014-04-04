@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * localstorage - v1.0.0 (2013-03-13T22:26:08+0800)
  * http://jraiser.org/ | Released under MIT license
  */

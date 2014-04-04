@@ -1,5 +1,5 @@
 /*!
- * jRaiser 2 Javascript Library
+ * JRaiser 2 Javascript Library
  * event-driven - v1.0.0 (2013-01-09T10:16:54+0800)
  * http://jraiser.org/ | Released under MIT license
  */
