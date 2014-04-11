@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * uadetector - v1.0.1 (2014-02-28T17:20:40+0800)
+ * uadetector - v1.0.1 (2014-04-11T14:03:33+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -21,7 +21,7 @@ var result = {
 	layoutEngine: { },
 	browser: { },
 	feature: {
-		touch: 'ontouchstart' in document
+		touch: ('ontouchstart' in document) || !!(window.PointerEvent || window.MSPointerEvent)
 	}
 };
 
@@ -99,10 +99,8 @@ if (device.iphone || device.ipod || device.ipad) {
 if (os.macosx && os.version) { os.version = os.version.replace(/_/g, '.'); }
 delete device.version;
 
-// 识别Windows RT
-var isWinRT = os.windows && parseFloat(os.version) >= 6.2 && ua.indexOf('ARM') !== -1;
 
-device.tablet = (isWinRT || !os.windows) && !!(
+device.tablet = !os.windows && !!(
 	device.ipad || device.playbook || ( os.android && !ua.match(/Mobile/) ) ||
 	( browser.firefox && /Tablet/.test(ua) ) ||
 	( browser.ie && !/Phone/.test(ua) && /Touch/.test(ua) )
@@ -122,7 +120,7 @@ if (!device.tablet && !device.phone) {
 	if (device.nokia || os.symbian || ua.indexOf('MIDP') !== -1) { device.phone = true; }
 }
 
-device.mobile = (isWinRT || !os.windows) && ( device.tablet || device.phone ||
+device.mobile = !os.windows && ( device.tablet || device.phone ||
 	/mobile/i.test(ua) || /tablet/i.test(ua) || /phone/i.test(ua) );
 
 device.pc = !device.mobile;
