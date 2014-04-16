@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * draggable - v1.0.0 (2013-11-23T10:58:26+0800)
+ * draggable - v1.0.1 (2014-04-16T09:47:49+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -12,6 +12,7 @@ define(function(require, exports, module) { 'use strict';
  */
 
 var base = require('base/1.0.x/'),
+	uaDetector = require('uadetector/1.0.x/'),
 	widget = require('widget/1.0.x/'),
 	$ = require('dom/1.0.x/'),
 	$window = $(window),
@@ -20,7 +21,7 @@ var base = require('base/1.0.x/'),
 
 var startWhen, endWhen, moveWhen;
 // 检测设备类型
-if ('ontouchstart' in document) {
+if ( uaDetector.isDevice('mobile') && uaDetector.hasFeature('touch') ) {
 	// 触摸屏
 	startWhen = 'touchstart';
 	endWhen = 'touchend';
