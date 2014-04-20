@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * paginator - v1.0.0 (2014-01-02T16:49:17+0800)
+ * paginator - v1.0.0 (2014-04-20T18:31:12+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -21,6 +21,7 @@ var widget = require('widget/1.0.x/'), tmpl = require('tmpl/1.0.x/');
  * @constructor
  * @exports
  * @param {Object} options 组件设置
+ *   @param {NodeList} [options.wrapper] 分页条容器
  *   @param {Number} [options.currentPage=1] 当前页
  *   @param {Number} [options.totalPages] 总页数
  *   @param {String} [options.prevText='上一页'] 上一页文字
