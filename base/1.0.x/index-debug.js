@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * base - v1.0.0 (2014-03-25T15:34:57+0800)
+ * base - v1.0.1 (2014-04-21T15:36:22+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -88,27 +88,6 @@ function access(elems, key, value, isExec, fns) {
 }
 
 
-// 类继承
-function inherit(sub, parent, parentArgs) {
-	var $class = parentArgs ? function() {
-		parent.apply(this, isFunction(parentArgs) ? parentArgs.apply(this, arguments) : parentArgs);
-		sub.apply(this, arguments);
-	} : function() {
-		parent.apply(this, arguments);
-		sub.apply(this, arguments);
-	};
-
-	extend($class.prototype, parent.prototype, sub.prototype);
-
-	// 记录父类
-	$class.parentClass = parent;
-	// 记录超类
-	$class.superClass = parent.superClass || parent;
-
-	return $class;
-}
-
-
 return {
 	/**
 	 * 检查变量是否Array类型
@@ -119,7 +98,7 @@ return {
 	isArray: Array.isArray ||
 		function(value) { return toString.call(value) === '[object Array]'; },
 
-	// See line 49
+	// See line 44
 	isFunction: isFunction,
 
 	/**
@@ -251,15 +230,34 @@ return {
 	/**
 	 * 创建类
 	 * @method createClass
-	 * @param {Function} $constructor 构造函数
+	 * @param {Function} constructor 构造函数
 	 * @param {Object} [methods] 方法
-	 * @param {Function} [parent] 父类
+	 * @param {Function} [Parent] 父类
 	 * @param {Function(args)|Array} [parentArgs] 传递给父类的参数，默认与子类构造函数参数一致
 	 * @return {Function} 类
 	 */
-	createClass: function($constructor, methods, parent, parentArgs) {
-		methods && extend($constructor.prototype, methods);
-		return parent ? inherit($constructor, parent, parentArgs) : $constructor;
+	createClass: function(constructor, methods, Parent, parentArgs) {
+		var $Class = Parent ? function() {
+			Parent.apply(
+				this,
+				parentArgs ? 
+					(typeof parentArgs === 'function' ?
+						parentArgs.apply(this, arguments) : parentArgs)
+				: arguments
+			);
+			constructor.apply(this, arguments);
+		} : function() { constructor.apply(this, arguments); };
+
+		if (Parent) {
+			var $Parent = function() { };
+			$Parent.prototype = Parent.prototype;
+			$Class.prototype = new Parent();
+			$Class.prototype.constructor = $Class;
+		}
+		if (methods) {
+			for (var m in methods) { $Class.prototype[m] = methods[m]; }
+		}
+		return $Class;
 	},
 
 	// See line 53
