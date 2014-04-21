@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * micro-templating - v1.0.0 (2013-05-28T11:40:50+0800)
+ * micro-templating - v1.0.0 (2014-04-21T14:44:29+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -89,7 +89,7 @@ function factory(settings) {
 				if (cached !== false) { cache[str] = render; }
 			}
 
-			return data != null ? render(data, escape) : str;
+			return render(data, escape);
 		},
 
 		/**
