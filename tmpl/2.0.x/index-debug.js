@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * micro-templating - v2.0.0 (2014-04-21T15:12:19+0800)
+ * micro-templating - v2.0.0 (2014-04-24T16:21:54+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -25,7 +25,7 @@ var re_entity = [ ], entityMap = {
 for (var key in entityMap) { re_entity.push(key); }
 var re_entity = new RegExp('[' + re_entity.join('') + ']', 'g');
 function escape(content) {
-	return content.replace(re_entity, function(match) {
+	return String(content).replace(re_entity, function(match) {
 		return entityMap[match];
 	});
 }
