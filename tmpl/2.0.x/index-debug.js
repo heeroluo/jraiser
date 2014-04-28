@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * micro-templating - v2.0.0 (2014-04-24T16:21:54+0800)
+ * micro-templating - v2.0.1 (2014-04-28T14:16:25+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -74,20 +74,15 @@ function compile(str, settings) {
 // 渲染模板
 var globalCache = { };
 function render(tpl, data, cached) {
-	if (null == tpl) { return tpl; }
+	if (null == tpl || null == data) { return tpl; }
 
-	var fn;
-	if (typeof tpl === 'string') {
-		fn = globalCache[tpl];
-		if (!fn) {
-			fn = compile( tpl, createSettings() );
-			if (cached !== false) { globalCache[tpl] = fn; }
-		}
-	} else {
-		fn = tpl;
+	var fn = globalCache[tpl];
+	if (!fn) {
+		fn = compile( tpl, createSettings() );
+		if (cached !== false) { globalCache[tpl] = fn; }
 	}
 
-	return data != null ? fn(data, escape) : tpl;
+	return fn(data, escape);
 }
 
 /**
@@ -141,12 +136,17 @@ var Tmpl = base.createClass(function(templates, settings) {
 	 */
 	render: function(key, data, retained) {
 		var tpl = this._templates[key];
+		if (tpl == null) {
+			throw new Error('template<' + key + '> does not exist');
+		}
+
 		if (typeof tpl === 'string') {
+			if (data == null) { return tpl; }
 			tpl = this._templates[key] = compile(tpl, this._settings);
 		}
 		if (retained === false) { this.clear(key); }
 
-		return render(tpl, data, false);
+		return tpl(data == null ? { } : data, escape);
 	},
 
 	/**
