@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * base - v1.0.1 (2014-04-21T15:36:22+0800)
+ * base - v1.0.1 (2014-05-04T09:49:45+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -261,7 +261,20 @@ return {
 	},
 
 	// See line 53
-	access: access
+	access: access,
+
+	/**
+	 * 释放全局变量
+	 * @method releaseGlobalVar
+	 * @param {String} name 变量名
+	 */
+	releaseGlobalVar: function(name) {
+		try {
+			delete window[name];
+		} catch (e) {
+			window[name] = null;
+		}
+	}
 };
 
 });
