@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-attr - v1.0.0 (2013-06-20T12:59:25+0800)
+ * dom-attr - v1.0.0 (2014-05-06T10:56:52+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -12,7 +12,7 @@ define(function(require, exports, module) { 'use strict';
  * @ignore
  */
 
-var base = require('base/1.0.x/'), $base = require('./dom-base');
+var $base = require('./dom-base');
 
 
 // 特殊属性名映射
@@ -243,7 +243,7 @@ return {
 		 * @return {NodeList} 当前节点集合
 		 */
 		attr: function(name, val) {
-			return base.access(this, name, val, true, {
+			return $base.access(this, name, val, true, {
 				get: getAttr,
 				set: setAttr
 			});
@@ -289,7 +289,7 @@ return {
 		 * @return {NodeList} 当前节点集合
 		 */
 		prop: function(name, val) {
-			return base.access(this, name, val, true, {
+			return $base.access(this, name, val, true, {
 				get: getProp,
 				set: setProp
 			});
@@ -326,7 +326,7 @@ return {
 		 * @return {NodeList} 当前节点集合
 		 */
 		text: function(content) {
-			return base.access(this, null, content, true, {
+			return $base.access(this, null, content, true, {
 				get: getText,
 				set: function(node, k, v) { setText(node, v); }
 			});
@@ -346,7 +346,7 @@ return {
 		 * @return {NodeList} 当前节点集合
 		 */
 		html: function(content) {
-			return base.access(this, null, content, true, {
+			return $base.access(this, null, content, true, {
 				get: function(node, k) { return node.innerHTML; },
 				set: function(node, k, v) { node.innerHTML = v; }
 			});
@@ -366,7 +366,7 @@ return {
 		 * @return {NodeList} 当前节点集合
 		 */
 		val: function(val) {
-			return base.access(this, null, val, true, {
+			return $base.access(this, null, val, true, {
 				get: function(node, k) { return node.value; },
 				set: function(node, k, v) { node.value = v; }
 			});

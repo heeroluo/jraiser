@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-base - v1.0.0 (2013-12-06T13:47:57+0800)
+ * dom-base - v1.0.1 (2014-05-06T10:54:29+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -16,6 +16,33 @@ var ID_ATTR_NAME = '_jRaiserNodeId_',	// 节点ID属性名
 	autoId = 0,		// 节点ID递增值
 	undefined,
 	rMultiSpace = /\s+/;
+
+
+// get first, set all
+function access(elems, key, value, isExec, fns) {
+	var len = elems.length, i, temp;
+
+	if (key != null && typeof key === 'object') {
+		for (var k in key) {
+			access(elems, k, key[k], isExec, fns);
+		}
+		return elems;
+	}
+
+	if (value !== undefined) {
+		isExec = isExec && typeof value === 'function';
+
+		i = -1;
+		while (++i < len) {
+			fns.set.call(elems, elems[i], key, isExec ?
+				value.call(elems[i], fns.get.call(elems, elems[i], key), i) : value);
+		}
+
+		return elems;
+	}
+
+	return len ? fns.get.call(elems, elems[0], key) : null;
+}
 
 
 return {
@@ -96,7 +123,21 @@ return {
 		if (typeof val === 'string') { val = val.split(rMultiSpace); }
 
 		return val == null || val.length === 0 ? null : val;
-	}
+	},
+
+	/**
+	 * Get First, Set All 访问器
+	 * @method access
+	 * @param {Any} elems 被访问元素集合
+	 * @param {String|Object} key 键名。如果为Object类型，则对每个属性和值递归调用此函数
+	 * @param {Any} [value] 值。如果为undefined，则为get first操作，否则为set all操作
+	 * @param {Boolean} [isExec=false] 当value为函数时，是否执行函数并以函数返回值作为最终值
+	 * @param {Object} fns get、set访问函数
+	 *   @param {Function(first,key)} fns.get get操作函数，上下文为被访问元素集合
+	 *   @param {Function(current,key,value)} fns.set set操作函数，上下文为被访问元素集合
+	 * @return {Any} get first操作返回第一个元素键名对应的值；set all操作返回被访问元素集合
+	 */
+	access: access
 };
 
 });

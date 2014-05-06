@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-data - v1.0.0 (2013-02-13T19:21:50+0800)
+ * dom-data - v1.0.0 (2014-05-06T10:57:25+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -107,7 +107,7 @@ return {
 		 * @return {NodeList} 当前节点集合
 		 */
 		data: function(key, val) {
-			return base.access(this, key, val, true, {
+			return $base.access(this, key, val, true, {
 				get: getData,
 				set: setData
 			});

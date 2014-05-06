@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-style - v1.0.0 (2014-03-25T14:33:29+0800)
+ * dom-style - v1.0.0 (2014-05-06T10:58:26+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -447,7 +447,7 @@ return {
 		 * @return {NodeList} 当前节点集合
 		 */
 		css: function(name, val) {
-			return base.access(this, name, val, true, {
+			return $base.access(this, name, val, true, {
 				get: getStyle,
 				set: setStyle
 			});
@@ -622,7 +622,7 @@ return {
 		 * @return {NodeList} 当前节点集合
 		 */
 		scrollTop: function(val) {
-			return base.access(this, 'top', val, true, {
+			return $base.access(this, 'top', val, true, {
 				get: getScroll,
 				set: setScroll
 			});
@@ -642,7 +642,7 @@ return {
 		 * @return {NodeList} 当前节点集合
 		 */
 		scrollLeft: function(val) {
-			return base.access(this, 'left', val, true, {
+			return $base.access(this, 'left', val, true, {
 				get: getScroll,
 				set: setScroll
 			});

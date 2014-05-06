@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * base - v1.0.1 (2014-05-04T09:49:45+0800)
+ * base - v1.0.2 (2014-05-06T10:53:08+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -50,41 +50,24 @@ var toString = Object.prototype.toString;
 function isFunction(value) { return toString.call(value) === '[object Function]'; }
 
 
-/**
- * Get First, Set All 访问器
- * @method access
- * @param {Any} elems 被访问元素集合
- * @param {String|Object} key 键名。如果为Object类型，则对每个属性和值递归调用此函数
- * @param {Any} [value] 值。如果为undefined，则为get first操作，否则为set all操作
- * @param {Boolean} [isExec=false] 当value为函数时，是否执行函数并以函数返回值作为最终值
- * @param {Object} fns get、set访问函数
- *   @param {Function(first,key)} fns.get get操作函数，上下文为被访问元素集合
- *   @param {Function(current,key,value)} fns.set set操作函数，上下文为被访问元素集合
- * @return {Any} get first操作返回第一个元素键名对应的值；set all操作返回被访问元素集合
- */
-function access(elems, key, value, isExec, fns) {
-	var len = elems.length, i, temp;
 
-	if (key != null && typeof key === 'object') {
-		for (var k in key) {
-			access(elems, k, key[k], isExec, fns);
+
+
+// 记录已经生成的id
+var uniqueStrs = { };
+function uniqueRndStr(length) {
+	var result;
+	do {
+		result = '';
+		while (result.length < length) {
+			result += Math.random().toString(36).substr(2);
 		}
-		return elems;
-	}
+		result = result.substr(0, length);
+	} while ( uniqueStrs.hasOwnProperty(result) );
 
-	if (value !== undefined) {
-		isExec = isExec && isFunction(value);
+	uniqueStrs[result] = true;
 
-		i = -1;
-		while (++i < len) {
-			fns.set.call(elems, elems[i], key, isExec ?
-				value.call(elems[i], fns.get.call(elems, elems[i], key), i) : value);
-		}
-
-		return elems;
-	}
-
-	return len ? fns.get.call(elems, elems[0], key) : null;
+	return result;
 }
 
 
@@ -260,20 +243,40 @@ return {
 		return $Class;
 	},
 
-	// See line 53
-	access: access,
-
 	/**
-	 * 释放全局变量
-	 * @method releaseGlobalVar
+	 * 移除全局变量
+	 * @method deleteGlobalVar
 	 * @param {String} name 变量名
 	 */
-	releaseGlobalVar: function(name) {
+	deleteGlobalVar: function(name) {
 		try {
 			delete window[name];
 		} catch (e) {
 			window[name] = null;
 		}
+	},
+
+	/**
+	 * 生成不重复的随机字符串
+	 * @method uniqueRndStr
+	 * @param {Number} length 字符串长度
+	 * @return {String} 生成的字符串
+	 */
+	uniqueRndStr: uniqueRndStr,
+
+	/**
+	 * 返回一个新函数，使目标函数只执行一次
+	 * @method once
+	 * @param {Function} fn 目标函数
+	 * @return {Function} 新函数
+	 */
+	once: function(fn) {
+		return function() {
+			if (fn) {
+				fn.apply(this, arguments);
+				fn = null;
+			}
+		};
 	}
 };
 
