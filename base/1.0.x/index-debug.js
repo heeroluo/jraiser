@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * base - v1.0.2 (2014-05-06T10:53:08+0800)
+ * base - v1.0.2 (2014-05-06T11:37:38+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -234,7 +234,7 @@ return {
 		if (Parent) {
 			var $Parent = function() { };
 			$Parent.prototype = Parent.prototype;
-			$Class.prototype = new Parent();
+			$Class.prototype = new $Parent();
 			$Class.prototype.constructor = $Class;
 		}
 		if (methods) {
