@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * base - v1.0.2 (2014-05-06T11:37:38+0800)
+ * base - v1.0.2 (2014-05-07T09:16:20+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -271,11 +271,13 @@ return {
 	 * @return {Function} 新函数
 	 */
 	once: function(fn) {
+		var returnValue;
 		return function() {
 			if (fn) {
-				fn.apply(this, arguments);
+				returnValue = fn.apply(this, arguments);
 				fn = null;
 			}
+			return returnValue;
 		};
 	}
 };
