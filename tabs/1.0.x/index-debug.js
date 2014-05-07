@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * tabs - v1.0.0 (2013-08-17T16:39:26+0800)
+ * tabs - v1.0.0 (2014-05-06T15:43:35+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -85,18 +85,17 @@ return widget.create(function(options) {
 					n = t._tabs.indexOf(this);
 			}
 
-			var evtProps = { }, active = t._active;
-			if (t._active != null) {
+			var active = t._active, evtProps = {
+				newTab: t._tabs.get(n),
+				newPanel: t._panels.get(n),
+				newActive: n
+			};
+			if (active != null) {
 				evtProps.oldTab = t._tabs.get(active);
 				evtProps.oldPanel = t._panels.get(active);
-				evtProps.newTab = t._tabs.get(n);
-				evtProps.newPanel = t._panels.get(n);
-				evtProps.oldActive = t._active;
-				evtProps.newActive = n;
+				evtProps.oldActive = active;
 			}
-			base.mix(evtProps, e, {
-				overwrite: false
-			});
+			base.mix(evtProps, e, { overwrite: false });
 
 			/**
 			 * 显示某个内容面板前触发，可以阻止show动作
