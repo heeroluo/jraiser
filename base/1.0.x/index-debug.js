@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * base - v1.0.2 (2014-05-07T09:16:20+0800)
+ * base - v1.0.2 (2014-05-15T15:23:45+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -48,9 +48,6 @@ var toString = Object.prototype.toString;
  * @return {Boolean} 待测变量是否Function类型
  */
 function isFunction(value) { return toString.call(value) === '[object Function]'; }
-
-
-
 
 
 // 记录已经生成的id
