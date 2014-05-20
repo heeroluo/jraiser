@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * module loader - v1.0.4 (2014-01-01T09:27:00+0800)
+ * module loader - v1.0.5 (2014-05-20T14:07:02+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 !function(window, undefined) { 'use strict';
@@ -293,7 +293,7 @@ extend(Module.prototype, {
 		t._id = id;
 		if ( !t.isTask() ) { id = trimURL(id); }
 
-		Module.all[id] = t;
+		Module.all[id] = Module.all[id] || t;
 
 		if (Module.anonymous === t) { delete Module.anonymous; }
 
