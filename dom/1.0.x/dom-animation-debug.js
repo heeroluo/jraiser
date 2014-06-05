@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-animation - v1.0.0 (2014-01-07T17:57:30+0800)
+ * dom-animation - v1.0.1 (2014-06-05T11:21:41+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -18,7 +18,7 @@ var base = require('base/1.0.x/'),
 
 
 var animationQueue = [ ],	// 动画队列
-	animationTimerId;		// 执行动画的setInterval返回的timer id
+	animationTimerId;		// 执行动画的setInterval返回的timerid
 
 // 把动作加入动画队列，并执行队列（如果未执行）
 function doAnimation(action) {
@@ -26,7 +26,7 @@ function doAnimation(action) {
 
 	if (!animationTimerId) {
 		animationTimerId = setInterval(function() {
-			for (var i = 0, len = animationQueue.length; i < len; i++) {
+			for (var i = 0; i < animationQueue.length; i++) {
 				animationQueue[i] && animationQueue[i]();
 			}
 		}, 13);
@@ -40,9 +40,16 @@ function doAnimation(action) {
 function clearAnimation(id) {
 	animationQueue[id] = null;
 
-	// 没有动画，可以清理动画队列
-	if (animationQueue.join('') === '') {
-		animationQueue = [ ];
+	if (animationQueue.length) {
+		var isEmpty = true;
+		for (var i = animationQueue.length - 1; i >= 0; i--) {
+			if (animationQueue[i] != null) {
+				isEmpty = false;
+				break;
+			}
+		}
+		// 没有动画，可以清理动画队列
+		if (isEmpty) { animationQueue = [ ]; }
 
 		if (animationTimerId) {
 			clearInterval(animationTimerId);
@@ -53,27 +60,27 @@ function clearAnimation(id) {
 
 
 var rNumber = /^[+-]?\d+(?:\.\d+)?[^\s]*$/,
-	rRelNumber = /^([+-])?(\d+(?:\.\d+)?)[^\s]*$/,
+	rRelNumber = /^([+-])=(\d+(?:\.\d+)?)$/,
 	rColor = /color$/i,
 	rSharpColor = /^#[a-f0-9]{6}$/i,
 	rRGBColor = /^rgb\((\d+),\s(\d+),\s(\d+)\)$/,
 	rScroll = /^scroll/,
 	defaultStyleValues = { opacity: 1 };
 
-// 转换样式值，数值去掉单位
+// 转换样式值为可用于动画运算的数值
 function parseStyleValue(val) {
 	if (typeof val === 'string') {
 		if ( rNumber.test(val) ) {
 			val = parseFloat(val, 10) || 0;
 		} else if ( rSharpColor.test(val) ) {
-			// #开头的16进制颜色值转10进制
+			// #开头的16进制颜色值转RGB数组
 			val = [
 				parseInt(val.substr(1, 2), 16),
 				parseInt(val.substr(3, 2), 16),
 				parseInt(val.substr(5, 2), 16)
 			];
 		} else if ( rRGBColor.test(val) ) {
-			// rgb开头的10进制颜色值转为数字
+			// rgb(R,G,B) 格式的10进制颜色值转为数字数组
 			val = [
 				parseInt(RegExp.$1, 10),
 				parseInt(RegExp.$2, 10),
@@ -87,8 +94,20 @@ function parseStyleValue(val) {
 	return val;
 }
 
+// 修正最终样式
+function parseFinalStyles(finalStyles, curStyles) {
+	var n, style, result = { };
+	for (n in finalStyles) {
+		style = finalStyles[n];
+		result[n] = rRelNumber.test(style) ?
+			curStyles[n] + parseFloat(RegExp.$1 + RegExp.$2, 10) :
+			parseStyleValue(style);
+	}
+	return result;
+}
+
 // 获取与最终样式相对应的初始样式值
-function getCurStyles(node, finalStyles) {
+function getRelatedStyles(node, finalStyles) {
 	var curStyles = { }, val;
 	for (var n in finalStyles) {
 		if (n === 'width' || n === 'height') {
@@ -99,7 +118,7 @@ function getCurStyles(node, finalStyles) {
 			val = parseStyleValue( $style.getStyle(node, n) );
 		}
 
-		if ( val === '' && defaultStyleValues.hasOwnProperty(n) ) {
+		if ( val === '' && defaultStyleValues[n] != null ) {
 			val = defaultStyleValues[n];
 		}
 
@@ -130,11 +149,6 @@ function calculateVal(cVal, fVal, easing, progress) {
 	var nVal;
 
 	if (typeof cVal === 'number') {
-		// 相对数值，如 '+5'
-		if ( typeof fVal === 'string' && rRelNumber.test(fVal) ) {
-			fVal = cVal + parseFloat(fVal, 10);
-		}
-
 		if (typeof fVal === 'number') {
 			nVal = cVal + (fVal - cVal) * easing(0, 1, progress);
 			// 防止超出界限值
@@ -166,34 +180,23 @@ var animationSpace = { };
  *   @param {Function|String} [options.easing='linear'] 动画过渡效果
  *   @param {Function} [options.callback] 动画结束后的回调
  */
-// isPass参数主要用于循环调用的时候，忽略对最终样式值的修正
-function startAnimation(node, finalStyles, options, isPass) {
+function startAnimation(node, finalStyles, options) {
 	if ( !isSupportAnimation(node) ) { return; }
 
 	options = base.mix({
 		duration: 400,
 		easing: 'linear'
-	}, options, {
-		ignoreNull: true
-	});
+	}, options, { ignoreNull: true });
 
 	var easing = options.easing;
-	if (typeof easing === 'string') {
-		easing = easings[easing];
-	}
-	if (!easing) {
-		throw new Error('please specify easing');
-	}
-
-	if (!isPass) {
-		// 修正最终样式的样式值
-		for (var n in finalStyles) {
-			finalStyles[n] = parseStyleValue(finalStyles[n]);
-		}
-	}
+	if (typeof easing === 'string') { easing = easings[easing]; }
+	if (!easing) { throw new Error('please specify easing'); }
 
 	// 获取节点的当前样式
-	var curStyles = getCurStyles(node, finalStyles);
+	var curStyles = getRelatedStyles(node, finalStyles);
+
+	// 修正最终样式的样式值
+	finalStyles = parseFinalStyles(finalStyles, curStyles);
 
 	// 停止已有的动画，防止冲突
 	stopAnimation(node);
@@ -263,10 +266,10 @@ function stopAnimation(node) {
 }
 
 
-// See line 159
+// See line 173
 exports.start = startAnimation;
 
-// See line 249
+// See line 253
 exports.stop = stopAnimation;
 
 exports.shortcuts = {
@@ -286,9 +289,7 @@ exports.shortcuts = {
 			finalStyles[n] = parseStyleValue(finalStyles[n]);
 		}
 
-		this.forEach(function(node) {
-			startAnimation(node, finalStyles, options, true);
-		});
+		this.forEach(function(node) { startAnimation(node, finalStyles, options); });
 
 		return this;
 	},

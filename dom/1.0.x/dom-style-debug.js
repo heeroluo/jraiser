@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-style - v1.0.0 (2014-05-06T10:58:26+0800)
+ * dom-style - v1.0.1 (2014-06-05T10:33:38+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -115,6 +115,8 @@ function getStyle(node, name) {
 	}
 }
 
+var rRelNumber = /^([+-])=(\d+(?:\.\d+)?)$/;
+
 /**
  * 设置节点样式
  * @method setStyle
@@ -126,16 +128,20 @@ function setStyle(node, name, val) {
 	if ( !isSupportStyle(node) ) { return; }
 
 	name = fixStyleName(name);
+
+	// 计算相对值，例如 +=5
+	if ( rRelNumber.test(val) ) {
+		var curVal = parseFloat(getStyle(node, name), 10);
+		if ( !isNaN(curVal) ) { val = curVal + parseFloat(RegExp.$1 + RegExp.$2, 10); }
+	}
+
 	val = fixStyleValue(name, val);
 
 	var hook = (cssHooks[name] || 1).set;
 	if (hook) {
 		hook(node, val);
 	} else {
-		var curVal = node.style[name];
-		if ( !base.isUndefined(curVal) ) {
-			node.style[name] = val;
-		}
+		if (name in node.style) { node.style[name] = val; }
 	}
 }
 
@@ -381,7 +387,7 @@ var defaultDisplay = {
 		if (!this._cache[nodeName]) {
 			var node = document.createElement(nodeName);
 			document.body.appendChild(node);
-			
+
 			var val = getStyle(node, 'display');
 			if (val === 'none') { val = 'block'; }
 			this._cache[nodeName] = val;
@@ -399,28 +405,28 @@ return {
 	// See line 98
 	getStyle: getStyle,
 
-	// See line 118
+	// See line 120
 	setStyle: setStyle,
 
-	// See line 209
+	// See line 215
 	hasClass: hasClass,
 
-	// See line 221
+	// See line 227
 	addClass: addClass,
 
-	// See line 236
+	// See line 243
 	removeClass: removeClass,
 
-	// See line 257
+	// See line 263
 	toggleClass: toggleClass,
 
-	// See line 273
+	// See line 279
 	getSize: getSize,
 
-	// See line 333
+	// See line 339
 	getScroll: getScroll,
 
-	// See line 350
+	// See line 356
 	setScroll: setScroll,
 
 	shortcuts: {
