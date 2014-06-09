@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-animation - v1.0.1 (2014-06-05T11:21:41+0800)
+ * dom-animation - v1.0.1 (2014-06-09T16:51:32+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -49,11 +49,12 @@ function clearAnimation(id) {
 			}
 		}
 		// 没有动画，可以清理动画队列
-		if (isEmpty) { animationQueue = [ ]; }
-
-		if (animationTimerId) {
-			clearInterval(animationTimerId);
-			animationTimerId = null;
+		if (isEmpty) {
+			animationQueue = [ ];
+			if (animationTimerId) {
+				clearInterval(animationTimerId);
+				animationTimerId = null;
+			}
 		}
 	}
 }
