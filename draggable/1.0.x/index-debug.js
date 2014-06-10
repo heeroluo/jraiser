@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * draggable - v1.0.1 (2014-04-16T09:47:49+0800)
+ * draggable - v1.0.2 (2014-06-10T18:03:00+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -186,6 +186,7 @@ return widget.create(function(options) {
 				cssPosition = 'absolute';
 				wrapper.css('position', cssPosition);
 			}
+			wrapper.css(wrapperPos);
 			t._isFixedPosition = cssPosition === 'fixed';
 
 			// 计算方式：newWrapperLeft = newPageX - oldPageX + wrapperLeft
@@ -238,9 +239,7 @@ return widget.create(function(options) {
 			}
 
 			wrapper.each(function(node) {
-				if (node.setCapture) {
-					node.setCapture();
-				}
+				if (node.setCapture) { node.setCapture(); }
 			});
 
 			$document.on(moveWhen, t.drag);
