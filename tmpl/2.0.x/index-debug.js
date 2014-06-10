@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * micro-templating - v2.0.1 (2014-04-28T14:16:25+0800)
+ * micro-templating - v2.0.2 (2014-06-10T09:29:50+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -175,6 +175,15 @@ var Tmpl = base.createClass(function(templates, settings) {
  * @return {String} 渲染结果
  */
 Tmpl.render = render;
+/**
+ * 把字符串中的HTML特殊字符编码为HTML实体
+ * @method escape
+ * @for Tmpl
+ * @static
+ * @param {String} content 要编码的内容
+ * @return {String} 编码结果
+ */
+Tmpl.escape = escape;
 
 
 return Tmpl;
