@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * draggable - v1.0.2 (2014-06-10T18:03:00+0800)
+ * draggable - v1.0.2 (2014-06-11T11:47:27+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -74,8 +74,8 @@ return widget.create(function(options) {
 			};
 
 			if (t._isFixedPosition) {
-				newPos.left -= $(window).scrollLeft();
-				newPos.top -= $(window).scrollTop();
+				newPos.left -= $window.scrollLeft();
+				newPos.top -= $window.scrollTop();
 			}
 
 			var boundary = t._boundary;
@@ -179,15 +179,22 @@ return widget.create(function(options) {
 			e.preventDefault();
 
 			var wrapper = t._wrapper, wrapperPos = wrapper.position();
-
 			// 修正节点的position值
 			var cssPosition = wrapper.css('position');
 			if (cssPosition !== 'fixed' && cssPosition !== 'absolute') {
 				cssPosition = 'absolute';
 				wrapper.css('position', cssPosition);
 			}
-			wrapper.css(wrapperPos);
 			t._isFixedPosition = cssPosition === 'fixed';
+
+			if (t._isFixedPosition) {
+				wrapper.css({
+					top: wrapperPos.top - $window.scrollTop(),
+					left: wrapperPos.left - $window.scrollLeft()
+				});
+			} else {
+				wrapper.css(wrapperPos);
+			}
 
 			// 计算方式：newWrapperLeft = newPageX - oldPageX + wrapperLeft
 			//                          = newPageX - (oldPageX - wrapperLeft)
