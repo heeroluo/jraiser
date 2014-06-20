@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * scrollbar - v1.0.0 (2014-01-24T16:01:54+0800)
+ * scrollbar - v1.0.1 (2014-06-20T11:59:37+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) {
@@ -39,9 +39,12 @@ var supportOverflowScrolling = 'webkitOverflowScrolling' in document.body.style;
  * @constructor
  * @exports
  * @param {Object} options 组件设置
+ *   @param {NodeList} options.scrollOuter 滚动条容器，此容器包含滚动条及滚动主体
+ *   @param {NodeList} options.scrollBody 滚动主体
  *   @param {String} [options.axis='y'] 滚动条轴向，x为横向或y纵向
  *   @param {Number} [options.minThumbSize=20] 拖动条最小尺寸
- *   @param {Number} [options.mouseWheelStep=100] 滚一下鼠标滑轮移动的距离，为0的时候禁用鼠标滑轮
+ *   @param {Number} [options.mouseWheelStep=100] 滚一下鼠标滑轮移动的距离，为0的时候鼠标滑轮无效
+ *   @param {Boolean} [options.scrollPageWhenEnd=true] 滚到尽头的时候，是否允许页面滚动
  */
 return widget.create(function() {
 
@@ -118,17 +121,24 @@ return widget.create(function() {
 
 		if (options.mouseWheelStep) {
 			t.onMouseWheel = function(e) {
-				// 防止执行整个页面的滚动
-				e.preventDefault();
-
 				var origEvent = e.originalEvent, direction = 1;
-				// 确定滚动方向
+				// 确定滚动方向：-1-上/左；1-下/右
 				if (origEvent.wheelDelta) {
 					if (origEvent.wheelDelta > 0) { direction = -1; }
 				} else if (origEvent.detail) {
 					if (origEvent.detail < 0) { direction = -1; }
 				}
-				t.scroll(direction * options.mouseWheelStep);
+
+				var isEnd = options.scrollPageWhenEnd && t._scrollBodyPosition != null && (
+					(direction === -1 && t._scrollBodyPosition <= 0) ||
+					(direction === 1 && t._scrollBodyPosition >= t._scrollBodyLimit)
+				);
+
+				if (!isEnd) {
+					t.scroll(direction * options.mouseWheelStep);
+					// 防止执行整个页面的滚动
+					e.preventDefault();
+				}
 			};
 
 			t._scrollOuter.on(mouseWheelEvent, t.onMouseWheel);
@@ -172,6 +182,7 @@ return widget.create(function() {
 		delete t._scrollbarEnabled;
 		delete t._scrollThumbLimit;
 		delete t._scrollBodyLimit;
+		delete t._scrollBodyPosition;
 		delete t._scrollThumb;
 		delete t._scrollBody;
 	},
@@ -340,6 +351,7 @@ return widget.create(function() {
 				break;
 		}
 		t._scrollBody.css(style, -pos);
+		t._scrollBodyPosition = pos;
 
 		// 重定位拖动条: (位置 /主体最大滚动距离) * 拖动条最大滚动距离
 		var thumbPos = pos / t._scrollBodyLimit * t._scrollThumbLimit;
@@ -363,7 +375,8 @@ return widget.create(function() {
 }, {
 	axis: 'y',
 	minThumbSize: 20,
-	mouseWheelStep: 100
+	mouseWheelStep: 100,
+	scrollPageWhenEnd: true
 });
 
 });
