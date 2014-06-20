@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * scrollbar - v1.0.1 (2014-06-20T11:59:37+0800)
+ * scrollbar - v1.0.1 (2014-06-20T13:59:45+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) {
@@ -376,7 +376,7 @@ return widget.create(function() {
 	axis: 'y',
 	minThumbSize: 20,
 	mouseWheelStep: 100,
-	scrollPageWhenEnd: true
+	scrollPageWhenEnd: false
 });
 
 });
