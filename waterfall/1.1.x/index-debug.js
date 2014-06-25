@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * waterfall - v1.1.0 (2013-09-28T11:29:46+0800)
+ * waterfall - v1.1.1 (2014-06-25T18:06:45+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -53,10 +53,14 @@ function onEachImageLoad(imgs, callback) {
 		if (img.loaded || img.complete) {
 			callback();
 		} else {
-			img.onload = function() {
-				this.onload = null;
-				this.loaded = true;
-				callback();
+			var executed;
+			img.onload = img.onerror = img.onabort = function() {
+				if (!executed) {
+					executed = true;
+					this.onload = this.onerror = this.onabort = null;
+					this.loaded = true;
+					callback();
+				}
 			};
 		}
 	});
