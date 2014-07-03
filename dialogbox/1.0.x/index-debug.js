@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dialogbox - v1.0.0 (2013-10-01T22:51:57+0800)
+ * dialogbox - v1.0.0 (2014-07-03T11:33:25+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -21,16 +21,8 @@ var base = require('base/1.0.x/'),
 
 // 返回居中对齐的坐标值
 function alignCenter(wrapper, size, direction) {
-	var doc = document.documentElement,
-		which = direction === 'top' ? 'Height' : 'Width',
-		val = (doc['client' + which] - size) / 2;
-
-	if (wrapper.css('position') !== 'fixed') {
-		val = val + $style.getScroll(window, direction) -
-			wrapper.offsetParent().offset()[direction] || 0;
-	}
-
-	return val;
+	var doc = document.documentElement, which = direction === 'top' ? 'Height' : 'Width';
+	return (doc['client' + which] - size) / 2;
 }
 
 
