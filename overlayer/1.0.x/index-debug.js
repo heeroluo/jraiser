@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * overlayer - v1.0.0 (2013-08-19T17:19:56+0800)
+ * overlayer - v1.0.0 (2014-07-03T12:33:38+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -70,8 +70,8 @@ return widget.create(function(options) {
 			});
 		}
 
-		var styleLayer;
-		if (isOldIE || options.useIframe) {
+		var styleLayer, useIframe = (isOldIE && options.useIframe !== false) || options.useIframe;
+		if (useIframe) {
 			styleLayer = $('<div style="width: 100%; height: 100%;"></div>');
 		} else {
 			styleLayer = overlayer;
@@ -119,7 +119,7 @@ return widget.create(function(options) {
 		if (!useFixed) { $(window).on('resize', t.adjustSize); }
 
 		// 以iframe挡住select
-		if (isOldIE || options.useIframe) {
+		if (useIframe) {
 			var iframe = $('<iframe' +
 				' style="width: 100%; height: 100%; position: absolute; left: 0; top: 0; z-index: -1;"' +
 				' frameborder="0" scrolling="no"></iframe>'
