@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * scrollbar - v1.0.1 (2014-06-20T13:59:45+0800)
+ * scrollbar - v1.0.1 (2014-07-04T17:09:04+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) {
@@ -250,7 +250,7 @@ return widget.create(function() {
 			// 鼠标拖动拖动条的功能
 			t._draggable = t._draggable || new Draggable({
 				wrapper: t._scrollThumb,
-				boundary: t._scrollbar,
+				boundary: t._scrollbar.find('.scrollbar-track'),
 				events: {
 					drag: function(e) {
 						var pos;
