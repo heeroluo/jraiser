@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-insertion - v1.0.0 (2013-12-06T13:59:05+0800)
+ * dom-insertion - v1.0.0 (2014-07-15T12:35:11+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -31,11 +31,30 @@ var willCloneExpando = (function() {
 
 // 如果会克隆扩展属性，就要通过outerHTML克隆，以避免克隆节点编号
 var cloneNode = willCloneExpando ? function(node) {
-	var div = document.createElement('div');
-	div.innerHTML = node.outerHTML;
-	var result = div.firstChild;
+	var html;
+	if (node.nodeType === 11) {
+		html = '';
+		var child = node.firstChild;
+		while (child) {
+			html += child.outerHTML;
+			child = child.nextSibling;
+		}
+	} else {
+		html = node.outerHTML;
+	}
 
-	div.removeChild(div.firstChild);
+	var div = node.ownerDocument.createElement('div');
+	div.innerHTML = html;
+
+	var result;
+	if (div.firstChild !== div.lastChild) {
+		result = node.ownerDocument.createDocumentFragment();
+		while (div.firstChild) {
+			result.appendChild(div.firstChild);
+		}
+	} else {
+		result = div.removeChild(div.firstChild);
+	}
 	div = null;
 
 	return result;
@@ -242,25 +261,25 @@ function clearData(node) {
 
 
 return {
-	// See line 44
+	// See line 63
 	create: createNodes,
 
-	// See line 66
+	// See line 85
 	buildFragment: buildFragment,
 
-	// See line 96
+	// See line 115
 	appendChild: appendChild,
 
-	// See line 113
+	// See line 132
 	prependChild: prependChild,
 
-	// See line 135
+	// See line 154
 	insertBefore: insertBefore,
 
-	// See line 152
+	// See line 171
 	insertAfter: insertAfter,
 
-	// See line 175
+	// See line 194
 	replaceWith: replaceWith,
 
 	shortcuts: {
