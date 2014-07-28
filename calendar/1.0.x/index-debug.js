@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * calendar - v1.0.0 (2013-08-07T11:38:34+0800)
+ * calendar - v1.0.1 (2014-07-22T15:56:25+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -209,9 +209,13 @@ return widget.create(function(options) {
 			 * @event dayselect
 			 * @for Calendar
 			 * @param {Object} e 事件对象
-			 *   @param {Date} e.selectedData 被选择那一天的日期对象
+			 *   @param {Date} e.selectedDate 被选择那一天的日期对象
+			 *   @param {Element} e.dayGrid 被点击的日期格子
 			 */
-			t.trigger('dayselect', { selectedDate: date });
+			t.trigger('dayselect', {
+				selectedDate: date,
+				dayGrid: this
+			});
 		});
 
 		/**
