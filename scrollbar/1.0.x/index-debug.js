@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * scrollbar - v1.0.1 (2014-07-04T17:09:04+0800)
+ * scrollbar - v1.0.1 (2014-07-16T16:11:48+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) {
@@ -58,8 +58,8 @@ return widget.create(function() {
 		}
 
 		var t = this;
+		// 滚动方向
 		t._axis = axis;
-		
 		// 滚动主体
 		t._scrollBody = options.scrollBody;
 		
@@ -179,6 +179,8 @@ return widget.create(function() {
 			delete t._onOverflowScroll;
 		}
 
+		delete t._bodySize;
+		delete t._viewportSize;
 		delete t._scrollbarEnabled;
 		delete t._scrollThumbLimit;
 		delete t._scrollBodyLimit;
@@ -209,6 +211,8 @@ return widget.create(function() {
 				viewportSize = t._scrollBody.parent().outerHeight();
 			break;
 		}
+		t._bodySize = bodySize;
+		t._viewportSize = viewportSize;
 
 		/**
 		 * 刷新滚动条状态前触发
@@ -303,6 +307,22 @@ return widget.create(function() {
 	},
 
 	/**
+	 * 获取滚动可视区域尺寸
+	 * @method viewportSize
+	 * @for Scrollbar
+	 * @return {Number} 滚动可视区域尺寸
+	 */
+	viewportSize: function() { return this._viewportSize; },
+
+	/**
+	 * 获取滚动主体高度
+	 * @method bodySize
+	 * @for Scrollbar
+	 * @return {Number} 滚动主体高度
+	 */
+	bodySize: function() { return this._bodySize; },
+
+	/**
 	 * 滚动一段距离
 	 * @method scroll
 	 * @for Scrollbar
@@ -371,7 +391,15 @@ return widget.create(function() {
 			scrollBodyPosition: pos,
 			scrollThumbPosition: thumbPos
 		});
-	}
+	},
+
+	/**
+	 * 获取滚动主体位置
+	 * @method scrollBodyPosition
+	 * @for Scrollbar
+	 * @return {Number} 滚动主体位置
+	 */
+	scrollBodyPosition: function() { return this._scrollBodyPosition; }
 }, {
 	axis: 'y',
 	minThumbSize: 20,
