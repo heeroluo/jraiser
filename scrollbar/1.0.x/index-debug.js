@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * scrollbar - v1.0.1 (2014-07-16T16:11:48+0800)
+ * scrollbar - v1.0.1 (2014-07-29T10:36:01+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) {
@@ -279,7 +279,7 @@ return widget.create(function() {
 			// 不需要滚动条，也不需要拖动功能了
 			if (t._draggable) {
 				t._draggable.destroy();
-				delete t._draggable();
+				delete t._draggable;
 			}
 
 			t._scrollbar.addClass('scrollbar-disabled');
