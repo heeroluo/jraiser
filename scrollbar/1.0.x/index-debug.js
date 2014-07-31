@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * scrollbar - v1.0.1 (2014-07-31T10:26:16+0800)
+ * scrollbar - v1.0.1 (2014-07-31T15:12:57+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) {
@@ -378,7 +378,7 @@ return widget.create(function() {
 		t._scrollBodyPosition = pos;
 
 		// 重定位拖动条: (位置 /主体最大滚动距离) * 拖动条最大滚动距离
-		var thumbPos = pos / t._scrollBodyLimit * t._scrollThumbLimit;
+		var thumbPos = t._scrollBodyLimit ? pos / t._scrollBodyLimit * t._scrollThumbLimit : 0;
 		t._scrollThumb.css(style, thumbPos);
 
 		/**
