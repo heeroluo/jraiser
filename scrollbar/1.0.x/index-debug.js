@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * scrollbar - v1.0.1 (2014-07-29T10:36:01+0800)
+ * scrollbar - v1.0.1 (2014-07-31T10:26:16+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) {
@@ -129,10 +129,12 @@ return widget.create(function() {
 					if (origEvent.detail < 0) { direction = -1; }
 				}
 
-				var isEnd = options.scrollPageWhenEnd && t._scrollBodyPosition != null && (
-					(direction === -1 && t._scrollBodyPosition <= 0) ||
-					(direction === 1 && t._scrollBodyPosition >= t._scrollBodyLimit)
-				);
+				var isEnd = options.scrollPageWhenEnd && ( !t._scrollbarEnabled || (
+					options.scrollPageWhenEnd && t._scrollBodyPosition != null && (
+						(direction === -1 && t._scrollBodyPosition <= 0) ||
+						(direction === 1 && t._scrollBodyPosition >= t._scrollBodyLimit)
+					)
+				) );
 
 				if (!isEnd) {
 					t.scroll(direction * options.mouseWheelStep);
@@ -284,6 +286,8 @@ return widget.create(function() {
 
 			t._scrollbar.addClass('scrollbar-disabled');
 			t._scrollbarEnabled = false;
+			// 无需滚动条的时候自动滚回最顶
+			t.scrollTo(0);
 		}
 
 		/**
@@ -351,7 +355,7 @@ return widget.create(function() {
 	 */
 	scrollTo: function(pos) {
 		var t = this;
-		if (!t._scrollbarEnabled) { return; }
+		if (!t._scrollbarEnabled && pos > 0) { return; }
 
 		// 限制pos不能超过最小值和最大值
 		if (pos < 0) {
