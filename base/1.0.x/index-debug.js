@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * base - v1.0.2 (2014-05-15T15:23:45+0800)
+ * base - v1.0.3 (2014-08-01T15:10:08+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -11,7 +11,7 @@ define(function(require, exports, module) { 'use strict';
  * @category Infrastructure
  */
 
-require('es5-shim/2.3.x/');
+require('es5-shim/4.0.x/');
 
 
 /**
