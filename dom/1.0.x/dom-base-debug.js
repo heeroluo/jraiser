@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-base - v1.0.1 (2014-05-06T10:54:29+0800)
+ * dom-base - v1.0.1 (2014-08-10T17:28:48+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -20,7 +20,7 @@ var ID_ATTR_NAME = '_jRaiserNodeId_',	// 节点ID属性名
 
 // get first, set all
 function access(elems, key, value, isExec, fns) {
-	var len = elems.length, i, temp;
+	var len = elems.length, i;
 
 	if (key != null && typeof key === 'object') {
 		for (var k in key) {
