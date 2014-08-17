@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom - v1.0.0 (2013-11-07T09:21:46+0800)
+ * dom - v1.0.0 (2014-08-17T20:25:32+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -52,9 +52,6 @@ function querySelector(selector, context) {
 	}
 }
 
-
-// 匹配HTML字符串
-var rHTML = /<[\w\W]+>/;
 
 // 根据选择器以及上下文查找节点（对selector进行重载）
 function query(selector, context) {
