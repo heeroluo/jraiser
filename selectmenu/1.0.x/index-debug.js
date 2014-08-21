@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * selectmenu - v1.0.0 (2014-08-21T11:27:26+0800)
+ * selectmenu - v1.0.0 (2014-08-21T13:53:00+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -138,7 +138,11 @@ return widget.create(function() {
 				scrollOuter: selectMenu,
 				scrollBody: t._optionList,
 				events: {
-					scroll: function() { t._clickOnMe = true; }
+					scroll: function() {
+						t._clickOnMe = true;
+						if (t._scrollTimer) { clearTimeout(t._scrollTimer); }
+						t._scrollTimer = setTimeout(function() { t._clickOnMe = false; }, 120);
+					}
 				}
 			});
 		} else {
