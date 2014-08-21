@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * scrollbar - v1.0.2 (2014-08-20T15:53:58+0800)
+ * scrollbar - v1.0.2 (2014-08-21T10:56:42+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -92,6 +92,7 @@ return widget.create(function() {
 
 		// 创建滚动条元素
 		t._scrollbar = $(TEMPLATE).click(function(e) {
+			e.stopPropagation();
 			if ( !t._scrollbarEnabled || $(e.target).hasClass('scrollbar-thumb') ) { return; }
 			var pos;
 			switch (t._axis) {
@@ -106,7 +107,6 @@ return widget.create(function() {
 				break;
 			}
 			t.scrollTo(pos);
-			e.stopPropagation();
 		});
 		switch (axis) {
 			case 'x':
@@ -158,6 +158,7 @@ return widget.create(function() {
 			t._scrollOuter.off(mouseWheelEvent, t.onMouseWheel);
 			delete t.onMouseWheel;
 		}
+		t._scrollOuter.removeClass('scrollbar-unscrollable');
 		delete t._scrollOuter;
 
 		if (t._draggable) {
@@ -276,6 +277,7 @@ return widget.create(function() {
 			});
 
 			t._scrollbar.removeClass('scrollbar-disabled');
+			t._scrollOuter.removeClass('scrollbar-unscrollable');
 			t._scrollbarEnabled = true;
 			t.scroll(0);
 		} else {
@@ -286,6 +288,7 @@ return widget.create(function() {
 			}
 
 			t._scrollbar.addClass('scrollbar-disabled');
+			t._scrollOuter.addClass('scrollbar-unscrollable');
 			t._scrollbarEnabled = false;
 			// 无需滚动条的时候自动滚回最顶
 			t.scrollTo(0);
