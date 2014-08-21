@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Example of selectmenu 1.0.x</title>
+<style type="text/css">
+body { font-size: 14px; }
+ul { padding: 0; margin: 0; }
+li { list-style: none; }
+.selectmenu {
+	width: 150px;
+	height: 26px;
+	border: 1px solid #aaa;
+	position: relative;
+}
+	.selectmenu-button { padding: 0 20px 0 5px; height: 100%; line-height: 26px; }
+		.selectmenu-triangle {
+			width: 0;
+			height: 0;
+			overflow: hidden;
+			border: 5px solid;
+			border-color: #555 #fff #fff #fff;
+			position: absolute;
+			right: 5px;
+			top: 50%;
+			margin-top: -2px;
+		}
+	.selectmenu-menu {
+		width: 100%;
+		height: 130px;
+		display: none;
+		overflow: hidden;
+		position: absolute;
+		left: -1px;
+		top: 26px;
+		border: 1px solid #ccc;
+		background: #fff; 
+	}
+	.scrollbar-unscrollable .selectmenu-menu-inner { margin-right: 0; }
+	.selectmenu-menu-inner { margin-right: 12px; height: 100%; }
+		.selectmenu-options { width: 100%; position: absolute; }
+			.selectmenu-option { padding: 0 5px; line-height: 26px; }
+			.selectmenu-option:hover, .selectmenu-option-selected { background: #eee; }
+			.selectmenu-option-selected { color: red; }
+		.selectmenu-menu .scrollbar {
+			position: absolute;
+			top: 3px;
+			right: 0;
+			height: 124px;
+		}
+		.selectmenu-menu .scrollbar-disabled { display: none; }
+			.selectmenu-menu .scrollbar-track {
+				width: 6px;
+				height: 100%;
+				margin: 0 3px;
+				position: relative;
+			}
+				.selectmenu-menu .scrollbar-thumb {
+					width: 100%;
+					border-radius: 3px;
+					position: absolute;
+					left: 0;
+					top: 0;
+					background: #ddd;
+				}
+</style>
+</head>
+
+<body>
+<div id="wrapper"></div>
+<script src="../../../jraiser2-debug.js"></script>
+<script src="../../config.js"></script>
+<script>
+require([
+	'dom/1.0.x/',
+	'selectmenu/1.0.x/'
+], function($, SelectMenu) {
+	new SelectMenu({
+		appendTo: $('#wrapper'),
+		defaultText: '请选择',
+		optionItems: [
+			{ text: '1', value: 1 },
+			{ text: '2', value: 2 },
+			{ text: '3', value: 3 },
+			{ text: '4', value: 4 },
+			{ text: '5', value: 5 },
+			{ text: '6', value: 6 },
+			{ text: '7', value: 7 },
+			{ text: '8', value: 8 },
+			{ text: '9', value: 9 },
+			{ text: '10', value: 10 }
+		]
+	});
+});
+</script>
+</body>
+</html>
