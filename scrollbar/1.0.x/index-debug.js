@@ -1,9 +1,9 @@
 /*!
  * JRaiser 2 Javascript Library
- * scrollbar - v1.0.1 (2014-07-31T15:12:57+0800)
+ * scrollbar - v1.0.2 (2014-08-20T15:53:58+0800)
  * http://jraiser.org/ | Released under MIT license
  */
-define(function(require, exports, module) {
+define(function(require, exports, module) { 'use strict';
 
 /**
  * 模拟滚动条组件
@@ -106,6 +106,7 @@ return widget.create(function() {
 				break;
 			}
 			t.scrollTo(pos);
+			e.stopPropagation();
 		});
 		switch (axis) {
 			case 'x':
