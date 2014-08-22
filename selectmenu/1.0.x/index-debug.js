@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * selectmenu - v1.0.0 (2014-08-22T09:47:27+0800)
+ * selectmenu - v1.0.0 (2014-08-22T16:27:51+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -131,11 +131,6 @@ return widget.create(function() {
 		var selectMenu = t._wrapper.addClass('selectmenu-open')
 			.find('div.selectmenu-menu').css('height', '').show();
 
-		var listHeight = t._optionList.outerHeight(true);
-
-		// 当列表高度太小的时候，重设高度
-		if ( listHeight <= selectMenu.height() ) { selectMenu.css('height', listHeight); }
-
 		// 刷新滚动条
 		if (!t._scrollbar) {
 			t._scrollbar = new Scrollbar({
@@ -154,6 +149,11 @@ return widget.create(function() {
 		} else {
 			t._scrollbar.refresh();
 		}
+
+		var listHeight = t._optionList.outerHeight(true);
+
+		// 当列表高度太小的时候，重设高度
+		if ( listHeight <= selectMenu.height() ) { selectMenu.css('height', listHeight); }
 	},
 
 	/**
