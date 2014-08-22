@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * selectmenu - v1.0.0 (2014-08-21T13:53:00+0800)
+ * selectmenu - v1.0.0 (2014-08-22T09:47:27+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -34,7 +34,7 @@ var tmpl = new Tmpl({
 
 	OPTION_ITEMS:
 '<% data.forEach(function(d) { %>' +
-	'<li class="selectmenu-option" data-value="<%=(d.value == null ? d.text : d.value)%>"><%=d.text%></li>' +
+'<li class="selectmenu-option" data-value="<%=(d.value == null ? d.text : d.value)%>"><%=d.text%></li>' +
 '<% }); %>'
 });
 
@@ -47,7 +47,7 @@ var tmpl = new Tmpl({
  * @exports
  * @param {Object} options 组件设置
  *   @param {NodeList} options.appendTo 选择框所在容器
- *   @param {Array<Object<text,value>>} options.optionItems 选项参数列表
+ *   @param {Array<Object<text,value>>} [options.optionItems] 选项参数列表
  *   @param {String} [options.name] 表单字段名
  *   @param {String} [options.defaultText] 默认文字
  *   @param {String} [options.value] 初始值
@@ -82,7 +82,7 @@ return widget.create(function() {
 
 		wrapper.find('div.selectmenu-button').click(function() { t.toggleMenu(); });
 
-		if (options.optionItems) { t._addOptionItems(options.optionItems); }
+		t._addOptionItems(options.optionItems);
 		if (options.value != null) { t.val(options.value); }	
 	},
 
@@ -97,6 +97,7 @@ return widget.create(function() {
 		delete t._clickOnMe;
 		$(document).off('click', t._onDocumentClick);
 		delete t._onDocumentClick;
+		delete t._scrollTimer;
 
 		t._wrapper.remove();
 		delete t._wrapper;
@@ -124,10 +125,13 @@ return widget.create(function() {
 	 * @for SelectMenu
 	 */
 	showMenu: function() {
-		var t = this,
-			selectMenu = t._wrapper.addClass('selectmenu-open')
-				.find('div.selectmenu-menu').css('height', '').show(),
-			listHeight = t._optionList.outerHeight(true);
+		var t = this;
+		if (!t._data.length) { return }
+
+		var selectMenu = t._wrapper.addClass('selectmenu-open')
+			.find('div.selectmenu-menu').css('height', '').show();
+
+		var listHeight = t._optionList.outerHeight(true);
 
 		// 当列表高度太小的时候，重设高度
 		if ( listHeight <= selectMenu.height() ) { selectMenu.css('height', listHeight); }
@@ -137,10 +141,12 @@ return widget.create(function() {
 			t._scrollbar = new Scrollbar({
 				scrollOuter: selectMenu,
 				scrollBody: t._optionList,
+				mouseWheelStep: 35,
 				events: {
 					scroll: function() {
 						t._clickOnMe = true;
 						if (t._scrollTimer) { clearTimeout(t._scrollTimer); }
+						// 一定时间后吧clickOnMe设为false，否则滚轮滚动后在其他地方必须点两下才能关闭菜单
 						t._scrollTimer = setTimeout(function() { t._clickOnMe = false; }, 120);
 					}
 				}
@@ -156,8 +162,7 @@ return widget.create(function() {
 	 * @for SelectMenu
 	 */
 	hideMenu: function() {
-		this._wrapper.removeClass('selectmenu-open')
-			.find('div.selectmenu-menu').hide();
+		this._wrapper.removeClass('selectmenu-open').find('div.selectmenu-menu').hide();
 	},
 
 	// 增加列表项
@@ -166,7 +171,12 @@ return widget.create(function() {
 		t._data = t._data || [ ];
 		if (items && items.length) {
 			t._data = t._data.concat(items);
-			t._optionList.append( tmpl.render('OPTION_ITEMS', { data: items }) );
+			t._optionList.empty().html( tmpl.render('OPTION_ITEMS', { data: t._data }) );
+		}
+		if (t._data.length) {
+			t._wrapper.removeClass('selectmenu-nooptions');
+		} else {
+			t._wrapper.addClass('selectmenu-nooptions');
 		}
 	},
 
@@ -176,8 +186,17 @@ return widget.create(function() {
 	 * @for SelectMenu
 	 * @param {String} newValue 新值
 	 */
+	/**
+	 * 获取当前值
+	 * @method val
+	 * @for SelectMenu
+	 * @return {String} 当前值
+	 */
 	val: function(newValue) {
 		var t = this, oldValue = t._value;
+
+		if (!arguments.length) { return oldValue; }
+
 		newValue = String(newValue);
 
 		// 值一样，无需再设置
