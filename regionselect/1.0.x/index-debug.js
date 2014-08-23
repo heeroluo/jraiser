@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * regionselect - v1.0.0 (2014-08-22T14:43:40+0800)
+ * regionselect - v1.0.0 (2014-08-23T22:43:09+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -95,6 +95,7 @@ var loadCounty = (function() {
  *   @param {Object} options.province 省份选择框设置，参数同selectmenu/1.0.x/
  *   @param {Object} [options.city] 城市选择框设置，如果不指定，则不选择城市
  *   @param {Object} [options.county] 区县选择框设置，如果不指定，则不选择区县
+ *   @param {String} [options.valueType='code'] 值类型。code为区划编码，name为地区名
  */
 return widget.create(function() {
 
@@ -106,7 +107,7 @@ return widget.create(function() {
 				optionItems: data.map(function(d) {
 					return {
 						text: d.name,
-						value: d.code
+						value: d[options.valueType]
 					};
 				}),
 				events: {
@@ -117,7 +118,7 @@ return widget.create(function() {
 						delete t._currentCounty;
 						// 寻找更改后的省份
 						for (var i = 0; i < data.length; i++) {
-							if (data[i].code == e.newValue) {
+							if (data[i].code == e.newValue || data[i].name == e.newValue) {
 								t._currentProvince = data[i];
 								break;
 							}
@@ -189,7 +190,7 @@ return widget.create(function() {
 				optionItems: data.map(function(d) {
 					return {
 						text: d.name,
-						value: d.code
+						value: d[t._options.valueType]
 					};
 				}),
 				events: {
@@ -200,14 +201,14 @@ return widget.create(function() {
 						// 寻找更改后的城市
 						var cities = t._currentProvince.cities;
 						for (var i = 0; i < cities.length; i++) {
-							if (cities[i].code == e.newValue) {
+							if (cities[i].code == e.newValue || cities[i].name == e.newValue) {
 								t._currentCity = cities[i];
 								break;
 							}
 						}
 						// 生成区县选择框
 						if (t._options.county) {
-							if (t._currentCity.end) {
+							if (!t._currentCity || t._currentCity.end) {
 								t._renderCounties();
 							} else {
 								t._renderCounties(t._currentProvince.code, t._currentCity.code);
@@ -240,14 +241,14 @@ return widget.create(function() {
 				optionItems: counties.map(function(c) {
 					return {
 						text: c.name,
-						value: c.code
+						value: c[t._options.valueType]
 					};
 				}),
 				events: {
 					change: function(e) {
 						delete t._currentCounty;
 						for (var i = 0; i < counties.length; i++) {
-							if (counties[i].code == e.newValue) {
+							if (counties[i].code == e.newValue || counties[i].name == e.newValue) {
 								t._currentCounty = counties[i];
 								break;
 							}
@@ -259,6 +260,8 @@ return widget.create(function() {
 			}) );
 		});
 	}
+}, {
+	valueType: 'code'
 });
 
 });
