@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * regionselect - v1.0.0 (2014-08-23T22:43:09+0800)
+ * regionselect - v1.0.0 (2014-08-24T13:37:43+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -96,12 +96,16 @@ var loadCounty = (function() {
  *   @param {Object} [options.city] 城市选择框设置，如果不指定，则不选择城市
  *   @param {Object} [options.county] 区县选择框设置，如果不指定，则不选择区县
  *   @param {String} [options.valueType='code'] 值类型。code为区划编码，name为地区名
+ *   @param {Object} [options.value] 初始值，省市区分别对应province、city、county属性
  */
 return widget.create(function() {
 
 }, {
 	_init: function(options) {
 		var t = this;
+		t._specifiedValue = { };
+		if (options.value) { t.val(options.value); }
+
 		loadProvincesAndCities(function(data) {
 			t._provinceSelect = new SelectMenu( base.extend(options.province, {
 				optionItems: data.map(function(d) {
@@ -110,6 +114,7 @@ return widget.create(function() {
 						value: d[options.valueType]
 					};
 				}),
+				value: t._specifiedValue.province,
 				events: {
 					change: function(e) {
 						// 省份改变了，先移除当前省市区记录
@@ -135,6 +140,8 @@ return widget.create(function() {
 					}
 				}
 			}) );
+
+			delete t._specifiedValue.province;
 		});
 	},
 
@@ -147,6 +154,7 @@ return widget.create(function() {
 
 		delete t._currentProvince;
 		delete t._currentCity;
+		delete t._specifiedValue;
 	},
 
 	// 触发change事件
@@ -193,6 +201,7 @@ return widget.create(function() {
 						value: d[t._options.valueType]
 					};
 				}),
+				value: t._specifiedValue.city,
 				events: {
 					change: function(e) {
 						// 城市变了，移除当前市区记录
@@ -219,6 +228,8 @@ return widget.create(function() {
 					}
 				}
 			}) );
+
+			delete t._specifiedValue.city;
 		}
 
 		// 城市选择框重新渲染，意味着之前的区县选择框已经无效了，将其移除
@@ -244,6 +255,7 @@ return widget.create(function() {
 						value: c[t._options.valueType]
 					};
 				}),
+				value: t._specifiedValue.county,
 				events: {
 					change: function(e) {
 						delete t._currentCounty;
@@ -258,7 +270,45 @@ return widget.create(function() {
 					}
 				}
 			}) );
+
+			delete t._specifiedValue.county;
 		});
+	},
+
+	/**
+	 * 获取当前值
+	 * @method val
+	 * @for RegionSelect
+	 * @return {Object} 当前值。省市区对应的属性分别为province、city、county
+	 */
+	/**
+	 * 设置当前值
+	 * @method val
+	 * @for RegionSelect
+	 * @param {Object} newValue 新值
+	 *   @param {String} [newValue.province] 省
+	 *   @param {String} [newValue.city] 市
+	 *   @param {String} [newValue.county] 区
+	 */
+	val: function(newValue) {
+		var t = this;
+		if (arguments.length) {
+			if ( newValue.hasOwnProperty('city') ) { t._specifiedValue.city = newValue.city; }
+			if ( newValue.hasOwnProperty('county') ) { t._specifiedValue.county = newValue.county; }
+			if ( newValue.hasOwnProperty('province') ) {
+				if (t._provinceSelect) {
+					t._provinceSelect.val(newValue.province);	
+				} else {
+					t._specifiedValue.province = newValue.province;
+				}
+			}
+		} else {
+			return {
+				province: t._provinceSelect ? t._provinceSelect.val() : null,
+				city: t._citySelect ? t._citySelect.val() : null,
+				county: t._countySelect ? t._countySelect.val() : null
+			}
+		}
 	}
 }, {
 	valueType: 'code'

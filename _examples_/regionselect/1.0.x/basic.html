@@ -84,24 +84,26 @@ require([
 	'dom/1.0.x/',
 	'regionselect/1.0.x/'
 ], function($, RegionSelect) {
-	new RegionSelect({
+	var regionSelect = new RegionSelect({
 		province: {
 			appendTo: $('#province-select'),
 			name: 'province',
-			defaultText: '请选择省份',
-			value: '440000'
+			defaultText: '请选择省份'
 		},
 		city: {
 			appendTo: $('#city-select'),
 			name: 'city',
-			defaultText: '请选择城市',
-			value: '440100'
+			defaultText: '请选择城市'
 		},
 		county: {
 			appendTo: $('#county-select'),
 			name: 'county',
-			defaultText: '请选择区县',
-			value: '440106'
+			defaultText: '请选择区县'
+		},
+		value: {
+			province: '440000',
+			city: '440100',
+			county: '440106'
 		}
 	});
 });
