@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * base - v1.0.3 (2014-08-01T15:10:08+0800)
+ * base - v1.0.3 (2014-08-24T22:47:21+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -276,6 +276,23 @@ return {
 			}
 			return returnValue;
 		};
+	},
+
+	/**
+	 * 把数组二的元素合并到数组一
+	 * @method merge
+	 * @param {Array} first 数组一
+	 * @param {Array} second 数组二
+	 * @return {Array} 合并后的数组一
+	 */
+	merge: function(first, second) {
+		var len = second.length, j = 0, i = first.length;
+		while (j < len) {
+			first[i++] = second[j++];
+		}
+		first.length = i;
+
+		return first;
 	}
 };
 
