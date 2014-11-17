@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-style - v1.0.1 (2014-06-05T10:33:38+0800)
+ * dom-style - v1.0.1 (2014-10-28T14:47:12+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -67,7 +67,7 @@ if ( !('opacity' in testElt.style) ) {
 			} else {
 				var opacity = 'alpha(opacity=' + Math.min(1, val) * 100 + ')';
 				style.filter = ALPHA_FILTER.test(filter) ?
-					filter.replace(filter, opacity) : filter + ' ' + opacity;
+					filter.replace(ALPHA_FILTER, opacity) : filter + ' ' + opacity;
 			}
 		}
 	};
