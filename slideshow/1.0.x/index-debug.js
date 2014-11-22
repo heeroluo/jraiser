@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * slideshow - v1.0.0 (2014-03-21T12:37:09+0800)
+ * slideshow - v1.0.0 (2014-11-22T16:38:01+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -211,8 +211,8 @@ return widget.create(function(options) {
 			if (t._navItems) { evtProps.newNav = t._navItems.eq(i); }
 			if (t._current != null) {
 				evtProps.oldIndex = t._current;
-				evtProps.oldPanel = t._panelItems.eq(t.current);
-				if (t._navItems) { evtProps.oldNav = t._navItems.eq(t.current); }
+				evtProps.oldPanel = t._panelItems.eq(t._current);
+				if (t._navItems) { evtProps.oldNav = t._navItems.eq(t._current); }
 			}
 			if (e) {
 				base.mix(evtProps, e, {
@@ -339,7 +339,6 @@ return widget.create(function(options) {
 		delete t._panelItems;
 		delete t._navs;
 		delete t._navSize;
-		delete t._panelItems;
 
 		delete t._total;
 		delete t._current;
