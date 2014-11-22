@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * fixedlayer - v1.0.0 (2013-03-16T19:41:36+0800)
+ * fixedlayer - v1.0.0 (2014-11-22T19:49:17+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -12,7 +12,7 @@ define(function(require, exports, module) { 'use strict';
  */
 
 var base = require('base/1.0.x/'),
-	_ = require('underscore/1.4.x/'),
+	_ = require('underscore/1.6.x/'),
 	widget = require('widget/1.0.x/'),
 	$ = require('dom/1.0.x/'),
 	$window = $(window);
@@ -49,7 +49,7 @@ var FixedLayer = widget.create(function(options) {
 		}
 	});
 
-	options.position = position;
+	this._position = position;
 }, {
 	_init: function(options) {
 		var t = this, wrapper = options.wrapper, reCenter = /^center$/i;
@@ -60,7 +60,7 @@ var FixedLayer = widget.create(function(options) {
 
 			// 检查是否有居中对齐的需求
 			var hasCenter;
-			base.each(options.position, function(val, key) {
+			base.each(t._position, function(val, key) {
 				if ( reCenter.test(val) ) {
 					hasCenter = true;
 				} else {
@@ -71,7 +71,7 @@ var FixedLayer = widget.create(function(options) {
 			if (hasCenter) {
 				// 若有居中对齐，则位置需要随浏览器大小而变化
 				t.computePosition = t.computePosition || function() {
-					var position = options.position, doc = document.documentElement, style = { };	
+					var position = t._position, doc = document.documentElement, style = { };	
 
 					if ( reCenter.test(position.top) || reCenter.test(position.bottom) ) {
 						style.top = ( doc.clientHeight - wrapper.outerHeight(true) ) / 2;
@@ -102,7 +102,7 @@ var FixedLayer = widget.create(function(options) {
 			t.computePosition = t.computePosition || function() {
 				var doc = document.documentElement,
 					body = document.body,
-					position = options.position,
+					position = t._position,
 					top = doc.scrollTop || body.scrollTop || 0,
 					left = doc.scrollLeft || body.scrollLeft || 0;
 
@@ -190,10 +190,10 @@ var FixedLayer = widget.create(function(options) {
 
 		options.wrapper.css('position', t._originalPosition);
 		delete t._originalPosition;
+		delete t._position;
 
 		if (t.moveToPosition) {
-			$window.off('scroll', t.moveToPosition);
-			$window.off('resize', t.moveToPosition);
+			$window.off('scroll resize', t.moveToPosition);
 			if (options.effect === 'none') {
 				// effect为'move'时，因为调用了throttle延时执行动画，
 				// 如果删除了computePosition，throttle函数体执行时就会报错。

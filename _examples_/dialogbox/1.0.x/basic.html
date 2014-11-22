@@ -41,6 +41,12 @@ require(['dom/1.0.x/', 'dialogbox/1.0.x/'], function($, Dialogbox) {
 
 var dialogbox = new Dialogbox({
 	wrapper: $('#dialogbox'),
+	fixedLayer: {
+		position: {
+			left: 'center',
+			top: 'center'
+		}
+	},
 	animation: {
 		duration: 220
 	},
