@@ -1,6 +1,6 @@
 {
-	"template_path": "F:\\Websites\\HTML\\_doc_template_",
-	"output_path": "F:\\Websites\\HTML\\api.jraiser.org\\pc",
+	"template_path": "/Users/heerolaw/Sites/HTML/_doc_template_",
+	"output_path": "/Users/heerolaw/Sites/HTML/api.jraiser.org/pc",
 	"category_order": [
 		"Loader",
 		"Infrastructure",
