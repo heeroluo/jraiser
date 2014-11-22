@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dialogbox - v1.0.0 (2014-07-03T11:33:25+0800)
+ * dialogbox - v1.0.0 (2014-11-22T19:45:34+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -73,8 +73,11 @@ return widget.create(function(options) {
 	},
 
 	_destroy: function() {
-		PopupLayer.prototype._init.apply(this, arguments);
-		this._wrapper.find('.dialogbox-close').off('click', this.close);
+		var t = this;
+		PopupLayer.prototype._init.apply(t, arguments);
+		t._wrapper.find('.dialogbox-close').off('click', t.close);
+		if (t._fixedLayer) { t._fixedLayer.destroy(); }
+		if (t._draggable) { t._draggable.destroy(); }
 	},
 
 	_computeStyle: function(styleName) {
