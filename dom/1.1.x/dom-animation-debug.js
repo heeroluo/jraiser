@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-animation - v1.1.0 (2014-12-16T15:19:09+0800)
+ * dom-animation - v1.1.0 (2014-12-16T17:36:42+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -115,7 +115,7 @@ function start(node, endStyle, options) {
 			// 动画执行完成，清理任务id
 			idSpace.clear(node);
 			// 执行回调函数
-			if (options.callback) { options.callback.call(node); }
+			if (options.oncomplete) { options.oncomplete.call(node); }
 		}
 	});
 
