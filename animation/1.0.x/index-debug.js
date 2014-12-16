@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * Animation - v1.0.0 (2014-12-16T15:08:37+0800)
+ * animation - v1.0.0 (2014-12-16T16:13:12+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -280,7 +280,7 @@ return {
 	 *   @param {Number|Array} options.endValue 结束值
 	 *   @param {Number} [options.duration=400] 持续时间
 	 *   @param {Function} [options.easing='linear'] 缓动函数
-	 *   @param {Function(value,isEnd)} options.step 接收动画过程中每个值的函数
+	 *   @param {Function(value,key)} options.step 接收动画过程中每个值的函数
 	 *   @param {Function(value,progress,remaining)} [options.onprogress] 动画每一帧执行后的回调函数
 	 *   @param {Function(taskId)} [options.oncomplete] 动画执行完成后的回调函数
 	 * @return {Number|Array} 动画任务id
