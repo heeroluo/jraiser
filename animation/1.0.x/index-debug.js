@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * animation - v1.0.0 (2014-12-16T16:13:12+0800)
+ * animation - v1.0.0 (2014-12-16T17:13:55+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -183,6 +183,7 @@ function checkQueueEmpty() {
 	if (!queue.length) {
 		// 动画队列为空，停止轮询
 		clearInterval(timerId);
+		timerId = null;
 	}
 }
 
