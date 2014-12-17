@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-animation - v1.1.0 (2014-12-16T17:36:42+0800)
+ * dom-animation - v1.1.0 (2014-12-17T11:27:14+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -22,7 +22,7 @@ var base = require('base/1.0.x/'),
 
 var rNumber = /^[+-]?\d+(?:\.\d+)?[^\s]*$/,
 	rColor = /color$/i,
-	rSharpColor = /^#[a-f0-9]{6}$/i,
+	rSharpColor = /^#[0-9a-f]{6}$/i,
 	rRGBColor = /^rgb\((\d+),\s(\d+),\s(\d+)\)$/;
 
 // 转换样式值为可用于动画运算的数值
@@ -40,11 +40,7 @@ function parseStyleValue(name, value) {
 				];
 			} else if ( rRGBColor.test(value) ) {
 				// rgb(R,G,B)颜色值转数组
-				value = [
-					parseInt(RegExp.$1, 10),
-					parseInt(RegExp.$2, 10),
-					parseInt(RegExp.$3, 10)
-				];
+				value = [Number(RegExp.$1), Number(RegExp.$2), Number(RegExp.$3)];
 			}
 		} else {
 			value = value.toLowerCase();
@@ -73,7 +69,7 @@ function fixEndStyle(endStyle, startStyle) {
 	var name, style = { };
 	for (name in endStyle) {
 		style[name] = domStyle.rRelNumber.test(endStyle[name]) ?
-			startStyle[name] + parseFloat(RegExp.$1 + RegExp.$2, 10) :
+			(parseFloat(startStyle[name], 10) || 0) + Number(RegExp.$1 + RegExp.$2) :
 			parseStyleValue(name, endStyle[name]);
 	}
 
@@ -105,8 +101,16 @@ function start(node, endStyle, options) {
 		duration: options.duration,
 		easing: options.easing,
 		step: function(value, key) {
-			domStyle.setStyle(node, key,
-				rColor.test(key) ? 'rgb(' + value.join(', ') + ')' : value);
+			domStyle.setStyle(
+				node,
+				key,
+				rColor.test(key) ?
+					'rgb(' + value.map(function(v) {
+						// RGB只能用整数表示
+						return Math.min( 255, Math.round(v) );
+					}).join(', ') + ')' :
+					value
+			);
 		},
 		onprogress: function() {
 			if (options.onprogress) { options.onprogress.apply(node, arguments); }

@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * animation - v1.0.0 (2014-12-16T17:46:11+0800)
+ * animation - v1.0.0 (2014-12-17T11:49:40+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -152,20 +152,20 @@ var easings = {
 };
 
 
-// 计算动画过程中的下一个值
-function computeNextValue(startValue, endValue, totalTime, easing, progress) {
-	var nextValue;
+// 计算动画过程中的值
+function computeStepValue(startValue, endValue, totalTime, easing, progress) {
+	var stepValue;
 
 	if (typeof startValue === 'number' && typeof endValue === 'number') {
-		nextValue = startValue + (endValue - startValue) *
+		stepValue = startValue + (endValue - startValue) *
 			easing.call(easings, progress, totalTime * progress, 0, 1, totalTime);
 	} else if ( base.isArray(startValue) && base.isArray(endValue) ) {
-		nextValue = startValue.map(function(v, i) {
-			return computeNextValue(v, endValue[i], easing, progress, totalTime);
+		stepValue = startValue.map(function(v, i) {
+			return computeStepValue(v, endValue[i], totalTime, easing, progress);
 		});
 	}
 
-	return nextValue != null ? nextValue : endValue;
+	return stepValue != null ? stepValue : endValue;
 }
 
 
@@ -222,10 +222,10 @@ function exec(animation, percentage, key) {
 			}, percentage, key);
 		}
 	} else {
-		// 动画最后一帧时直接使用最终值（小数计算可能有误差，这样最保险），否则使用计算值
-		nextValue = percentage >= 1 ? animation.endValue : computeNextValue(
-			animation.startValue,
-			animation.endValue,
+		// 动画最后一帧时直接使用最终值（小数计算可能有误差，这样最保险），否则使用计算出来的值
+		nextValue = percentage >= 1 ? endValue : computeStepValue(
+			startValue,
+			endValue,
 			animation.duration,
 			animation.easing,
 			percentage
@@ -257,7 +257,7 @@ function run() {
 		}
 
 		if (percentage >= 1) {
-			// 进度大于等于1，动画已完成，将其移除
+			// 移除已完成动画
 			queue.splice(i, 1);
 
 			if (animation.oncomplete) {
