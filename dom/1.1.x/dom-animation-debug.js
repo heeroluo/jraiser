@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-animation - v1.1.0 (2014-12-17T11:27:14+0800)
+ * dom-animation - v1.1.0 (2014-12-19T14:33:35+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -17,10 +17,12 @@ var base = require('base/1.0.x/'),
 	animation = require('animation/1.0.x/'),
 	domBase = require('./dom-base'),
 	domData = require('./dom-data'),
-	domStyle = require('./dom-style');
+	domStyle = require('./dom-style'),
+	domOffset = require('./dom-offset');
 
 
 var rNumber = /^[+-]?\d+(?:\.\d+)?[^\s]*$/,
+	rScroll = /^scroll/,
 	rColor = /color$/i,
 	rSharpColor = /^#[0-9a-f]{6}$/i,
 	rRGBColor = /^rgb\((\d+),\s(\d+),\s(\d+)\)$/;
@@ -52,12 +54,17 @@ function parseStyleValue(name, value) {
 
 // 获取与最终样式对应的初始样式值
 function getRelatedStyle(node, refStyle) {
-	var style = { };
+	var style = { }, val;
 	for (var name in refStyle) {
 		if ( refStyle.hasOwnProperty(name) ) {
-			style[name] = name === 'width' || name === 'height' ?
-				domStyle.getSize( node, name ) :
-				parseStyleValue( name, domStyle.getStyle(node, name) );
+			if ( name === 'width' || name === 'height' ) {
+				val = domStyle.getSize( node, name );
+			} else if ( rScroll.test(name) ) {
+				val = domOffset.getScroll( node, name.replace(rScroll, '') );
+			} else {
+				val = parseStyleValue( name, domStyle.getStyle(node, name) );
+			}
+			style[name] = val;
 		}
 	}
 
@@ -101,16 +108,20 @@ function start(node, endStyle, options) {
 		duration: options.duration,
 		easing: options.easing,
 		step: function(value, key) {
-			domStyle.setStyle(
-				node,
-				key,
-				rColor.test(key) ?
-					'rgb(' + value.map(function(v) {
-						// RGB只能用整数表示
-						return Math.min( 255, Math.round(v) );
-					}).join(', ') + ')' :
-					value
-			);
+			if ( rScroll.test(key) ) {
+				domOffset.setScroll(node, key.replace(rScroll, ''), value);
+			} else {
+				domStyle.setStyle(
+					node,
+					key,
+					rColor.test(key) ?
+						'rgb(' + value.map(function(v) {
+							// RGB只能用整数表示
+							return Math.min( 255, Math.round(v) );
+						}).join(', ') + ')' :
+						value
+				);
+			}
 		},
 		onprogress: function() {
 			if (options.onprogress) { options.onprogress.apply(node, arguments); }
