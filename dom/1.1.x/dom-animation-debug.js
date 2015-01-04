@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-animation - v1.1.0 (2014-12-19T14:33:35+0800)
+ * dom-animation - v1.1.0 (2014-12-25T10:01:03+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -22,7 +22,7 @@ var base = require('base/1.0.x/'),
 
 
 var rNumber = /^[+-]?\d+(?:\.\d+)?[^\s]*$/,
-	rScroll = /^scroll/,
+	rScroll = /^scroll(Top|Left)$/,
 	rColor = /color$/i,
 	rSharpColor = /^#[0-9a-f]{6}$/i,
 	rRGBColor = /^rgb\((\d+),\s(\d+),\s(\d+)\)$/;
@@ -34,7 +34,7 @@ function parseStyleValue(name, value) {
 			value = parseFloat(value, 10) || 0;
 		} else if ( rColor.test(name) ) {
 			if ( rSharpColor.test(value) ) {
-				// #开头的颜色值转数组
+				// #开头的十六进制颜色值转数组
 				value = [
 					parseInt(value.substr(1, 2), 16),
 					parseInt(value.substr(3, 2), 16),
@@ -60,7 +60,7 @@ function getRelatedStyle(node, refStyle) {
 			if ( name === 'width' || name === 'height' ) {
 				val = domStyle.getSize( node, name );
 			} else if ( rScroll.test(name) ) {
-				val = domOffset.getScroll( node, name.replace(rScroll, '') );
+				val = domOffset.getScroll( node, RegExp.$1 );
 			} else {
 				val = parseStyleValue( name, domStyle.getStyle(node, name) );
 			}
@@ -109,7 +109,7 @@ function start(node, endStyle, options) {
 		easing: options.easing,
 		step: function(value, key) {
 			if ( rScroll.test(key) ) {
-				domOffset.setScroll(node, key.replace(rScroll, ''), value);
+				domOffset.setScroll(node, RegExp.$1, value);
 			} else {
 				domStyle.setStyle(
 					node,

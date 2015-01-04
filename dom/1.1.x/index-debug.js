@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom - v1.1.0 (2014-12-16T15:02:47+0800)
+ * dom - v1.1.0 (2014-12-19T15:34:26+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -23,9 +23,9 @@ define(function(require, exports, module) { 'use strict';
 var base = require('base/1.0.x/'),
 	Sizzle = require('./sizzle'),
 	domBase = require('./dom-base'),
+	domAttr = require('./dom-attr'),
 	domData = require('./dom-data'),
 	domTraversal = require('./dom-traversal'),
-	domAttr = require('./dom-attr'),
 	domIns = require('./dom-insertion'),
 	domStyle = require('./dom-style'),
 	domOffset = require('./dom-offset'),

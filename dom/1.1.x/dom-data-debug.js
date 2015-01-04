@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-data - v1.1.0 (2014-12-14T20:17:12+0800)
+ * dom-data - v1.1.0 (2014-12-25T14:40:37+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -35,18 +35,16 @@ var uniqueId = (function () {
 	//   2 - 写入到specialObjData
 	function expandoType(node) {
 		if ( domBase.isWindow(node) || !domBase.isNode(node) ) {
+			// 非节点数据写入到specialObjData
+			return 2;
+		} else if ( node == null || (node.nodeType !== 1 && node.nodeType !== 9) ) {
+			// 不对非元素节点写入
+			return 0;
+		} else if ( domBase.isXMLNode(node) || noData[node.nodeName] ) {
+			// XML节点和特殊HTML节点的数据写入到specialObjData
 			return 2;
 		} else {
-			if (node.nodeType !== 1 && node.nodeType !== 9) {
-				// 不对非元素节点写入
-				return 0;
-			} else {
-				if (domBase.isXMLNode(node) || noData[node.nodeName]) {
-					return 2;
-				} else {
-					return 1;
-				}
-			}
+			return 1;
 		}
 	}
 
