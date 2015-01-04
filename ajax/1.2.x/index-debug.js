@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.2.0 (2014-12-04T16:22:23+0800)
+ * ajax - v1.2.0 (2015-01-04T11:38:30+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -371,7 +371,7 @@ return {
 				href: href
 			}, options.props);
 
-		for (var p in props) { links[p] = props[p]; }
+		for (var p in props) { link[p] = props[p]; }
 
 		document.getElementsByTagName('head')[0].appendChild(link);
 
