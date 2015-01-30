@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-attr - v1.1.0 (2014-10-28T15:50:00+0800)
+ * dom-attr - v1.1.0 (2015-01-30T14:17:15+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -334,8 +334,8 @@ return {
 		 * @param {String|Function} innerHTML
 		 * @return {NodeList} 当前节点集合
 		 */
-		html: function(content) {
-			return domBase.access(this, null, content, true, {
+		html: function(innerHTML) {
+			return domBase.access(this, null, innerHTML, true, {
 				get: function(node) { return node.innerHTML; },
 				set: function(node, key, value) { setHTML(node, value); }
 			});

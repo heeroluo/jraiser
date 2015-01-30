@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * animation - v1.0.0 (2014-12-17T11:49:40+0800)
+ * animation - v1.0.0 (2015-01-30T11:36:56+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -239,17 +239,11 @@ function exec(animation, percentage, key) {
 
 // 运行动画队列
 function run() {
-	var i = 0, animation, currentTime, stepValue;
+	var i = 0, animation, remaining, percentage, stepValue;
 
 	while (animation = queue[i]) {
-		currentTime = +new Date;
-
-		// 记录开始时间
-		animation.startTime = animation.startTime || currentTime;
-
-		var remaining = Math.max(0, animation.startTime + animation.duration - currentTime),
-			percentage = 1 - (remaining / animation.duration || 0);
-
+		remaining = Math.max(0, animation.startTime + animation.duration - new Date);
+		percentage = 1 - (remaining / animation.duration || 0);
 		stepValue = exec(animation, percentage);
 
 		if (animation.onprogress) {
@@ -302,10 +296,11 @@ return {
 			base.mix({
 				easing: easing,
 				id: taskId,
-				duration: options.duration || 400
+				duration: options.duration || 400,
+				startTime: +new Date
 			}, options, {
 				overwrite: false,
-				ignoreNull: false
+				ignoreNull: true
 			})
 		);
 

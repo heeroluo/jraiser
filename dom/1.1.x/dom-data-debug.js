@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-data - v1.1.0 (2014-12-25T14:40:37+0800)
+ * dom-data - v1.1.0 (2015-01-30T14:37:23+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -25,7 +25,7 @@ var uniqueId = (function () {
 		APPLET: true
 	};
 
-	var expandoName = '_jraiser_nodeid_' + ( +new Date() ) + '_',  // id属性名
+	var expandoName = '_jraiser_nodeid_' + (+new Date) + '_',  // id属性名
 		autoId = 0,  // 自增id
 		specialObjData = { };  // 存放非HTML节点的数据
 
@@ -241,7 +241,7 @@ function removeData(node, keys) {
 
 
 return {
-	// See line 210
+	// See line 208
 	createDataSpace: createDataSpace,
 
 	/**
