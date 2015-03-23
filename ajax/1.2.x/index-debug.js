@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.2.0 (2015-01-04T11:38:30+0800)
+ * ajax - v1.2.0 (2015-03-23T17:49:44+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -12,9 +12,7 @@ define(function(require, exports, module) { 'use strict';
  */
 
 
-var base = require('base/1.0.x/'),
-	qs = require('querystring/1.0.x/'),
-	JSON = require('json/1.0.x/');
+var base = require('base/1.0.x/'), qs = require('querystring/1.0.x/');
 
 
 // 包装一些参数处理

@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.0.1 (2013-11-30T17:40:06+0800)
+ * ajax - v1.0.1 (2015-03-23T17:49:11+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -12,9 +12,7 @@ define(function(require, exports, module) { 'use strict';
  * @ignore
  */
 
-var base = require('base/1.0.x/'),
-	qs = require('querystring/1.0.x/'),
-	JSON = require('json/1.0.x/');
+var base = require('base/1.0.x/'), qs = require('querystring/1.0.x/');
 
 
 // IE10同时支持两种事件，但是当JS有缓存的时候，会先触发onreadystatechange再执行JS程序
