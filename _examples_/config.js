@@ -1,3 +1,7 @@
-jraiser.config({
-	libPath: '../../../'
+bowljs.config({
+	libPath: '../../../',
+	preload: [
+		Function.prototype.bind ? '' : 'compatibility/es5-shim',
+		window.JSON ? '' : 'compatibility/json2'
+	]
 });
