@@ -1,6 +1,6 @@
 /*!
  * Bowl.js
- * Javascript module loader for browser - v1.0.0 (2015-03-23T14:45:52+0800)
+ * Javascript module loader for browser - v1.0.0 (2015-03-25T11:37:20+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 !function(global, undefined) { 'use strict';
@@ -102,7 +102,7 @@ function resolvePath(path, ref) {
 		// 以“/”开头的路径，参考路径为应用路径
 		ref = config.appPath;
 		path = path.substr(1);
-	} else if ( /^[a-z0-9]/i.test(path) ) {
+	} else if ( !/^\./.test(path) ) {
 		// 非相对路径情况下，参考路径为类库路径
 		ref = config.libPath;
 	}
