@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.2.0 (2015-03-23T17:49:44+0800)
+ * ajax - v1.2.0 (2015-03-26T12:02:07+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -201,13 +201,13 @@ function generateCallbackName(src) {
 	pathname = (pathname[pathname.length - 1] || 'index').replace(/\.\w+$/, '');
 
 	// 取主机和路径的最后一段作为前缀
-	var prefix = (a.host + pathname).replace(/[^\w]+/g, ''),
+	var prefix = 'jsonp_callback_' + (a.host + pathname).replace(/\W+/g, ''),
 		callbackName = prefix,
 		counter = 0;
 
 	// 如果不存在名字跟前缀一样的全局变量，就把前缀作为函数名
 	// 否则在后面拼接数字
-	while (window[callbackName]) {
+	while (window[callbackName] != null) {
 		callbackName = prefix + '_' + counter++;
 	}
 
@@ -241,7 +241,7 @@ function jsonp(src, options) {
 	} else {
 		// 没指定callback的时候，生成一个
 		callbackName = options.callbackName =
-			options.callbackName || 'jsonp_callback_' + generateCallbackName(src);
+			options.callbackName || generateCallbackName(src);
 	}
 
 	options.onload = function() {
