@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-animation - v1.1.0 (2015-01-30T14:06:57+0800)
+ * dom-animation - v1.1.0 (2015-03-26T10:37:01+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -75,9 +75,11 @@ function getRelatedStyle(node, refStyle) {
 function fixEndStyle(endStyle, startStyle) {
 	var name, style = { };
 	for (name in endStyle) {
-		style[name] = domStyle.rRelNumber.test(endStyle[name]) ?
-			(parseFloat(startStyle[name], 10) || 0) + Number(RegExp.$1 + RegExp.$2) :
-			parseStyleValue(name, endStyle[name]);
+		if ( endStyle.hasOwnProperty(name) ) {
+			style[name] = domStyle.rRelNumber.test(endStyle[name]) ?
+				(parseFloat(startStyle[name], 10) || 0) + Number(RegExp.$1 + RegExp.$2) :
+				parseStyleValue(name, endStyle[name]);
+		}
 	}
 
 	return style;
@@ -168,7 +170,9 @@ return {
 		 */
 		animate: function(endStyle, options) {
 			for (var name in endStyle) {
-				endStyle[name] = parseStyleValue(name, endStyle[name]);
+				if ( endStyle.hasOwnProperty(name) ) {
+					endStyle[name] = parseStyleValue(name, endStyle[name]);	
+				}
 			}
 
 			this.forEach(function(node) { start(node, endStyle, options); });
