@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * animation - v1.0.0 (2015-01-30T11:36:56+0800)
+ * animation - v1.0.0 (2015-03-26T11:11:08+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -8,7 +8,7 @@ define(function(require, exports, module) { 'use strict';
 /**
  * 本模块提供基于缓动函数实现动画的相关接口
  * @module animation/1.0.x/
- * @catgory Infrastructure
+ * @category Infrastructure
  */
 
 

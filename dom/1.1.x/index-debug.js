@@ -1,13 +1,13 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom - v1.1.0 (2014-12-19T15:34:26+0800)
+ * dom - v1.1.0 (2015-03-26T11:11:35+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
 
 /**
  * 本模块提供选择器查询接口以及包含大量DOM操作接口的节点集合类型
- * @module dom/1.0.x/
+ * @module dom/1.1.x/
  * @category Infrastructure
  * @includeFor {NodeList} ./dom-attr-debug.js,
  *   ./dom-data-debug.js,
