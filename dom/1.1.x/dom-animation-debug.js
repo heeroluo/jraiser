@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-animation - v1.1.0 (2015-03-26T10:37:01+0800)
+ * dom-animation - v1.1.0 (2015-03-26T18:29:46+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -162,8 +162,8 @@ return {
 		 * @for NodeList
 		 * @param {Object} endStyle 最终样式
 		 * @param {Object} [options] 其他参数
-		 *   @param {Number} [options.duration=400] 动画时长
-		 *   @param {Function} [options.easing='linear'] 缓动函数
+		 *   @param {Number} [options.duration=400] 动画时长（毫秒）
+		 *   @param {String|Function} [options.easing='linear'] 缓动函数
 		 *   @param {Function(value,progress,remaining)} [options.onprogress] 动画每一帧执行后的回调函数
 		 *   @param {Function} [options.oncomplete] 动画执行完成后的回调函数
 		 * @return {NodeList} 当前节点集合

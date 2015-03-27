@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * base - v1.0.3 (2015-03-23T17:43:16+0800)
+ * base - v1.0.3 (2015-03-27T17:02:14+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -76,7 +76,7 @@ return {
 	isArray: Array.isArray ||
 		function(value) { return toString.call(value) === '[object Array]'; },
 
-	// See line 44
+	// See line 42
 	isFunction: isFunction,
 
 	/**
@@ -116,7 +116,7 @@ return {
 	 */
 	isUndefined: function(value) { return value === undefined; },
 
-	// See line 17
+	// See line 15
 	extend: extend,
 
 	/**
