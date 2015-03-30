@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * animation - v1.0.0 (2015-03-26T11:40:59+0800)
+ * animation - v1.0.0 (2015-03-30T10:31:37+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -237,26 +237,37 @@ function exec(animation, percentage, key) {
 	return nextValue;
 }
 
+// 运行动画
+function runAnimation(animation, remaining) {
+	var percentage = 1 - (remaining / animation.duration || 0),
+		stepValue = exec(animation, percentage);
+
+	if (animation.onprogress) {
+		animation.onprogress.call(window, stepValue, percentage, remaining);
+	}
+
+	if (percentage >= 1) {
+		if (animation.oncomplete) {
+			animation.oncomplete.call(window);
+		}
+	}
+
+	return percentage;
+}
+
 // 运行动画队列
-function run() {
+function runAnimationQueue() {
 	var i = 0, animation, remaining, percentage, stepValue;
 
 	while (animation = queue[i]) {
-		remaining = Math.max(0, animation.startTime + animation.duration - new Date);
-		percentage = 1 - (remaining / animation.duration || 0);
-		stepValue = exec(animation, percentage);
-
-		if (animation.onprogress) {
-			animation.onprogress.call(window, stepValue, percentage, remaining);
-		}
+		percentage = runAnimation(
+			animation,
+			Math.max(0, animation.startTime + animation.duration - new Date)
+		);
 
 		if (percentage >= 1) {
 			// 移除已完成动画
 			queue.splice(i, 1);
-
-			if (animation.oncomplete) {
-				animation.oncomplete.call(window, animation.id);
-			}
 		} else {
 			i++;
 		}
@@ -304,7 +315,7 @@ return {
 			})
 		);
 
-		if (!timerId) { timerId = setInterval(run, 13); }
+		if (!timerId) { timerId = setInterval(runAnimationQueue, 13); }
 
 		return taskId;
 	},
@@ -318,8 +329,7 @@ return {
 	remove: function(taskId, jumpToEnd) {
 		var i = indexOfTask(taskId);
 		if (i !== -1) {
-			var animation = queue.splice(i, 1)[0];
-			if (jumpToEnd) { exec(animation, 1); }
+			if (jumpToEnd) { runAnimation(queue.splice(i)[0], 0); }
 		}
 
 		checkQueueEmpty();
