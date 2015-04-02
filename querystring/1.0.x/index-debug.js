@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * querystring - v1.0.1 (2013-11-13T11:08:26+0800)
+ * querystring - v1.0.2 (2015-04-02T12:23:10+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -61,41 +61,26 @@ return {
 		o = base.extend({
 			decode: decodeURIComponent
 		}, o);
-		
+
 		var returnArray = o.dataType === 'array', data = returnArray ? [ ] : { };
 
-		qs = ( qs || window.location.search.substr(1) )
-			.replace(/(?:^|&)([^&]+)=([^&]+)/g, function($0, $1, $2) {
-				var value = $2;
-				try {
-					value = o.decode(value);
-				} catch (e) {
+		qs = ( qs || window.location.search )
+			.replace(/^\?+/, '').split('&').forEach(function(pair) {
+				if (!pair) { return; }
 
-				}
+				pair = pair.split('=');
+				// 只有参数名，没有等号和值的情况
+				if (pair.length < 2) { pair.push(null); }
+
 				if (returnArray) {
 					data.push({
-						name: $1,
-						value: value
+						name: pair[0],
+						value: pair[1]
 					});
 				} else {
-					data[$1] = value;
+					data[ pair[0] ] = pair[1];
 				}
-				return '';
-			})
-			.split('&');
-
-		for (var i = 0; i < qs.length; i++) {
-			if (qs[i]) {
-				if (returnArray) {
-					data.push({
-						name: qs[i],
-						value: null
-					});
-				} else {
-					data[ qs[i] ] = null;
-				}
-			}
-		}
+			});
 
 		return data;
 	},
@@ -110,12 +95,11 @@ return {
 	 * @return {String} 处理后的URL
 	 */
 	append: function(url, data, o) {
-		if ( !data || base.isEmptyObject(data) || (base.isArray(data) && !data.length) ) {
+		if ( !data || (base.isArray(data) && !data.length) || base.isEmptyObject(data) ) {
 			return url;
 		}
 
-		if (typeof data !== 'string') { data = this.stringify(data, o); }
-		data = data.replace(/^[?&]+/, '');
+		data = typeof data !== 'string' ? this.stringify(data, o) : data.replace(/^[?&]+/, '');
 
 		var temp = url.indexOf('#'), hash = '';
 		if (temp !== -1) {
