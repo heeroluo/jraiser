@@ -1,6 +1,6 @@
 /*!
  * Bowl.js
- * Javascript module loader for browser - v1.0.0 (2015-03-25T11:37:20+0800)
+ * Javascript module loader for browser - v1.0.0 (2015-04-03T10:26:13+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 !function(global, undefined) { 'use strict';
@@ -246,7 +246,7 @@ var scriptLoader = (function() {
 // 模块依赖链
 var dependentChain = (function() {
 	// 记录某个模块被哪些模块依赖
-	var whichDepOnMe = window.whichDepOnMe = { };
+	var whichDepOnMe = { };
 
 	return {
 		// 添加依赖记录
