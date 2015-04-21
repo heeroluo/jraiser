@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * micro-templating - v2.1.1 (2015-04-21T14:53:37+0800)
+ * micro-templating - v2.1.1 (2015-04-21T15:24:12+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -231,7 +231,7 @@ Tmpl.fromScripts = function(context) {
 	var scripts = context.getElementsByTagName('script'), result = { };
 	for (var i = 0, len = scripts.length; i < len; i++) {
 		if (scripts[i].type === 'text/template') {
-			result[scripts[i].getAttribute('data-key')] = scripts[i].innerHTML.trim();
+			result[scripts[i].getAttribute('data-key') || ''] = scripts[i].innerHTML.trim();
 		}
 	}
 
