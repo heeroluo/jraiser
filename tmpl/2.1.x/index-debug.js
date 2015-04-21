@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * micro-templating - v2.1.1 (2015-04-16T14:25:15+0800)
+ * micro-templating - v2.1.1 (2015-04-21T14:53:37+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -214,18 +214,27 @@ Tmpl.render = function(tpl, data, cached) {
 Tmpl.escape = escape;
 /**
  * 加载script节点中的模板（只有type为text/template的会被加载）
- * @method loadFromHTML
+ * @method fromScripts
  * @for Tmpl
  * @static
+ * @param {Element|NodeList} context 上下文元素
  * @return {Object} 模板集合
  */
-Tmpl.loadFromHTML = function() {
-	var scripts = document.getElementsByTagName('script'), result = { };
-	for (var i = 0; i < scripts.length; i++) {
+Tmpl.fromScripts = function(context) {
+	// 兼容NodeList类型（取第一个元素）
+	if (context && !('nodeType' in context) && typeof context.get === 'function') {
+		context = context.get(0);
+	}
+	// 默认为document
+	if (!context || context.nodeType !== 1) { context = document; }
+
+	var scripts = context.getElementsByTagName('script'), result = { };
+	for (var i = 0, len = scripts.length; i < len; i++) {
 		if (scripts[i].type === 'text/template') {
 			result[scripts[i].getAttribute('data-key')] = scripts[i].innerHTML.trim();
 		}
 	}
+
 	return result;
 };
 
