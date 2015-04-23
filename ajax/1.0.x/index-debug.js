@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.0.1 (2015-03-23T17:49:11+0800)
+ * ajax - v1.0.2 (2015-04-23T11:38:53+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -368,7 +368,9 @@ return {
 
 		if (!headers['X-Requested-With']) { headers['X-Requested-With'] = 'XMLHttpRequest'; }
 		for (var i in headers) {
-			xhr.setRequestHeader(i, headers[i]);
+			if ( headers.hasOwnProperty(i) ) {
+				xhr.setRequestHeader(i, headers[i]);
+			}
 		}
 
 		xhr.send(data || '');

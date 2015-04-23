@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.2.0 (2015-03-26T12:02:07+0800)
+ * ajax - v1.2.1 (2015-04-23T11:38:43+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -369,7 +369,11 @@ return {
 				href: href
 			}, options.props);
 
-		for (var p in props) { link[p] = props[p]; }
+		for (var p in props) {
+			if ( props.hasOwnProperty(p) ) {
+				link[p] = props[p];
+			}
+		}
 
 		document.getElementsByTagName('head')[0].appendChild(link);
 
@@ -548,7 +552,9 @@ return {
 			headers['X-Requested-With'] = 'XMLHttpRequest';
 		}
 		for (var i in headers) {
-			xhr.setRequestHeader(i, headers[i]);
+			if ( headers.hasOwnProperty(i) ) {
+				xhr.setRequestHeader(i, headers[i]);
+			}
 		}
 
 		// 触发beforesend事件，可以在此事件中配置XMLHttpRequest对象

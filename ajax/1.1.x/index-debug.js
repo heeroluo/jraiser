@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.1.1 (2015-03-23T17:49:34+0800)
+ * ajax - v1.1.2 (2015-04-23T11:38:47+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -399,7 +399,9 @@ return {
 			headers['X-Requested-With'] = 'XMLHttpRequest';
 		}
 		for (var i in headers) {
-			xhr.setRequestHeader(i, headers[i]);
+			if ( headers.hasOwnProperty(i) ) {
+				xhr.setRequestHeader(i, headers[i]);
+			}
 		}
 
 		// 触发beforesend事件，可以在此事件中再次修改opts
