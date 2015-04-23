@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * jquery - v1.11.2 (2014-12-22T09:44:42+0800)
+ * jquery - v1.11.2 (2015-04-23T17:35:26+0800)
  * http://jraiser.org/ | Released under MIT license
  *
  * Include jQuery (http://jquery.com/)
@@ -10305,11 +10305,11 @@ jQuery.fn.andSelf = jQuery.fn.addBack;
 // AMD loader is present. jQuery is a special case. For more information, see
 // https://github.com/jrburke/requirejs/wiki/Updating-existing-libraries#wiki-anon
 
-if ( typeof define === "function" && define.amd ) {
-	define( "jquery", [], function() {
-		return jQuery;
-	});
-}
+// if ( typeof define === "function" && define.amd ) {
+// 	define( "jquery", [], function() {
+// 		return jQuery;
+// 	});
+// }
 
 
 
