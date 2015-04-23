@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.2.1 (2015-04-23T14:12:48+0800)
+ * ajax - v1.2.1 (2015-04-23T17:04:16+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -60,9 +60,9 @@ var scriptOnloadEvent = 'onload' in document.createElement('script') ?
  * @param {String} src 文件URL
  * @param {Object} [options] 其他参数
  *   @param {Object} [options.data] 发送的数据
- *   @param {Boolean} [options.nocache=false] 是否在URL中添加timestamp参数（参数名为“_”）以防止缓存
+ *   @param {Boolean} [options.nocache=false] 是否在URL中添加时间戳（参数名为“_”）防止缓存
  *   @param {String} [options.charset] 文件编码
- *   @param {Number} [options.timeout] 超时时间，单位为毫秒
+ *   @param {Number} [options.timeout] 超时时间（毫秒）
  *   @param {Function(statusText)} [options.onload] 加载完成（无论成功与否）后的回调函数
  * @return {Object} 请求对象
  */
@@ -138,12 +138,14 @@ function postScript(action, options, callbackName) {
 	var form = div.firstChild;
 	// 添加数据到表单
 	if (options.data) {
-		base.each(options.data, function(value, name) {
-			var input = document.createElement('input');
-			input.type = 'hidden';
-			input.name = name;
-			input.value = value;
-			form.appendChild(input);
+		base.each(options.data, function(value, name, data) {
+			if ( data.hasOwnProperty(name) ) {
+				var input = document.createElement('input');
+				input.type = 'hidden';
+				input.name = name;
+				input.value = value;
+				form.appendChild(input);
+			}
 		});
 	}
 
@@ -221,7 +223,7 @@ function generateCallbackName(src) {
  * @param {Object} [options] 其他参数
  *   @param {Object} [options.data] 发送的数据
  *   @param {String} [options.callbackName] 回调函数名，如不指定则按照特定规则生成
- *   @param {Boolean} [options.nocache=false] 是否在URL中添加timestamp参数（参数名为“_”）以防止缓存。
+ *   @param {Boolean} [options.nocache=false] 是否在URL中添加时间戳（参数名为“_”）防止缓存
  *     请求方式为POST时忽略此参数
  *   @param {String} [options.charset] 编码。请求方式为POST时忽略此参数
  *   @param {Number} [options.timeout] 超时时间，单位为毫秒
@@ -248,7 +250,7 @@ function jsonp(src, options) {
 		if (options.oncomplete) { options.oncomplete.apply(window, arguments); }
 	};
 
-	return options.method && options.method.toUpperCase() === 'POST' ?
+	return String(options.method).toUpperCase() === 'POST' ?
 		postScript(src, options, callbackName) :
 		getScript(src, options, callbackName);
 }
@@ -261,7 +263,7 @@ var allImages = { };
  * @param {String} src 图片URL
  * @param {Object} [options] 其他参数
  *   @param {Object} [options.data] 发送的数据
- *   @param {Boolean} [options.nocache=false] 是否在URL中添加timestamp参数（参数名为“_”）以防止缓存
+ *   @param {Boolean} [options.nocache=false] 是否在URL中添加时间戳（参数名为“_”）防止缓存
  *   @param {Function} [options.onload] 请求完成（无论成功与否）后的回调函数
  */
 var getImage = wrap(function(src, options) {
@@ -347,7 +349,7 @@ return {
 		return data;
 	},
 
-	// See line 52
+	// See line 50
 	getScript: getScript,
 
 	// See line 219
@@ -388,17 +390,16 @@ return {
 	 * @method send
 	 * @param {String} url 请求URL
 	 * @param {Object} [options] 其他参数
-	 *   @param {String} [options.url] 请求URL
+	 *   @param {Object} [options.data] 发送的数据
 	 *   @param {String} [options.dataType='text'] 返回的数据格式，json、jsonp、xml或text
 	 *   @param {String} [options.method='GET'] 请求方式，GET、POST
-	 *   @param {Object} [options.data] 发送的数据
-	 *   @param {String} [options.callbackName] jsonp回调函数名，如不指定则按照特定规则生成。
-	 *     仅当dataType为jsonp时有效
-	 *   @param {Boolean} [options.nocache=false] 是否在URL中添加timestamp参数（参数名为“_”）以防止缓存
+	 *   @param {Boolean} [options.nocache=false] 是否在URL中添加时间戳（参数名为“_”）防止缓存
 	 *   @param {Object} [options.headers] 要设置的HTTP头，dataType为jsonp时无效
-	 *   @param {Boolean} [options.async=true] 是否使用异步方式请求，dataType为jsonp时只能使用异步
+	 *   @param {Boolean} [options.async=true] 是否使用异步方式请求，dataType为jsonp时只能为true
 	 *	 @param {Number} [options.timeout] 超时时间，仅在异步请求方式时有效
 	 *   @param {XMLHttpRequest} [options.xhr] 进行请求的XMLHttpRequest对象，如不指定则自动创建，dataType为jsonp时无效
+	 *   @param {String} [options.callbackName] jsonp回调函数名，如不指定则按照特定规则生成。
+	 *     仅当dataType为jsonp时有效
 	 *   @param {Function(xhr)} [options.onbeforesend] 发送请求前执行的操作，dataType为jsonp时无效
 	 *   @param {Function(xhr,statusText)} [options.onload] 请求回应（无论HTTP状态值是什么）后执行的操作，dataType为jsonp时无效
 	 *   @param {Function(result,xhr,statusText)} [options.onsuccess] 请求成功后执行的操作
@@ -409,7 +410,25 @@ return {
 	/**
 	 * 发送AJAX请求
 	 * @method send
-	 * @param {Object} [options] 其他参数同上
+	 * @param {Object} [options] 参数
+	 *   @param {String} [options.url] URL
+	 *   @param {Object} [options.data] 发送的数据
+	 *   @param {String} [options.dataType='text'] 返回的数据格式，json、jsonp、xml或text
+	 *   @param {String} [options.method='GET'] 请求方式，GET、POST
+	 *   @param {Boolean} [options.nocache=false] 是否在URL中添加时间戳（参数名为“_”）防止缓存
+	 *   @param {Object} [options.headers] 要设置的HTTP头，dataType为jsonp时无效
+	 *   @param {Boolean} [options.async=true] 是否使用异步方式请求，dataType为jsonp时只能为true
+	 *	 @param {Number} [options.timeout] 超时时间，仅在异步请求方式时有效
+	 *   @param {XMLHttpRequest} [options.xhr] 进行请求的XMLHttpRequest对象，
+	 *     如不指定则自动创建，dataType为jsonp时无效
+	 *   @param {String} [options.callbackName] jsonp回调函数名，如不指定则按照特定规则生成。
+	 *     仅当dataType为jsonp时有效
+	 *   @param {Function(xhr)} [options.onbeforesend] 发送请求前执行的操作，dataType为jsonp时无效
+	 *   @param {Function(xhr,statusText)} [options.onload] 请求回应（无论HTTP状态值是什么）后执行的操作，
+	 *     dataType为jsonp时无效
+	 *   @param {Function(result,xhr,statusText)} [options.onsuccess] 请求成功后执行的操作
+	 *   @param {Function(xhr,statusText)} [options.onerror] 请求失败后执行的操作，dataType为jsonp时无效
+	 *   @param {Function(xhr,statusText)} [options.oncomplete] 请求完成且回调结束后执行的操作
 	 * @return {XMLHttpRequest} 进行请求的XMLHttpRequest对象
 	 */
 	send: function(url, options) {

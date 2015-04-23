@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * calendar - v1.0.1 (2014-07-22T15:56:25+0800)
+ * calendar - v1.0.1 (2015-04-23T17:24:26+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -174,6 +174,11 @@ return widget.create(function(options) {
 }, {
 	_init: function(options) { },
 
+	_destroy: function(options) {
+		options.wrapper.empty();
+		delete this._model;
+	},
+
 	/**
 	 * 渲染月历
 	 * @method render
@@ -284,11 +289,6 @@ return widget.create(function(options) {
 			month: '+0',
 			selectedDates: selectedDates
 		});
-	},
-
-	_destroy: function(options) {
-		options.wrapper.empty();
-		delete this._model;
 	}
 }, {
 	weekDayNames: '日一二三四五六'.split(''),

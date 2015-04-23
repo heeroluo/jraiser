@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.1.2 (2015-04-23T11:38:47+0800)
+ * ajax - v1.1.2 (2015-04-23T17:00:22+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -119,14 +119,14 @@ return {
 		return data;
 	},
 
-	// See line 77
+	// See line 75
 	createXHR: createXHR,
-	
+
 	/**
 	 * 加载样式表文件
 	 * @method getCSS
 	 * @param {String} href 文件URL
-	 * @param {Function} [onload] 加载完成后的回调函数
+	 * @param {Function} [onload] 加载完成后的回调函数（某些浏览器下无效）
 	 */
 	/**
 	 * 加载样式表文件
@@ -135,9 +135,9 @@ return {
 	 * @param {Object} [opts] 加载设置
 	 *   @param {String} [opts.media] 样式对何种设备有效（link标签的media属性）
 	 *   @param {Object} [opts.data] 发送的数据
-	 *   @param {Function} [opts.onload] 加载完成后的回调函数
-	 *   @param {String} [opts.charset]  文件编码，当页面编码与样式表编码不同时指定
-	 *   @param {Boolean} [opts.nocache=false] 是否在URL中添加timestamp参数（参数名为“_”）以防止缓存
+	 *   @param {Function} [opts.onload] 加载完成后的回调函数（某些浏览器下无效）
+	 *   @param {String} [opts.charset] 文件编码，当页面编码与样式表编码不同时指定
+	 *   @param {Boolean} [opts.nocache=false] 是否在URL中添加时间戳（参数名为“_”）防止缓存
 	 */
 	getCSS: function(href, opts) {
 		if (typeof opts === 'function') {
@@ -174,7 +174,7 @@ return {
 	 *   @param {Object} [opts.data] 发送的数据
 	 *   @param {Function} [opts.onload] 加载完成后的回调函数
 	 *   @param {String} [opts.charset] 文件编码，当页面编码与样式表编码不同时指定
-	 *   @param {Boolean} [opts.nocache=true] 是否在URL中添加timestamp参数（参数名为“_”）以防止缓存
+	 *   @param {Boolean} [opts.nocache=true] 是否在URL中添加时间戳（参数名为“_”）防止缓存
 	 */
 	getScript: function(src, opts) {
 		if (typeof opts === 'function') {
@@ -207,7 +207,7 @@ return {
 	 *   @param {Function} [opts.oncomplete] 请求完成后的执行的函数
 	 *   @param {Object} [opts.data] 发送的数据
 	 *   @param {String} [opts.charset] 文件编码，当页面编码与样式表编码不同时指定
-	 *   @param {Boolean} [opts.nocache=true] 是否在URL中添加timestamp参数（参数名为“_”）以防止缓存
+	 *   @param {Boolean} [opts.nocache=true] 是否在URL中添加时间戳（参数名为“_”）防止缓存
 	 */
 	jsonp: function(url, opts) {
 		opts = opts || { };
@@ -249,16 +249,15 @@ return {
 	 * @method send
 	 * @param {String} url URL
 	 * @param {Object} [opts] 其他参数
-	 *   @param {String} [opts.url] URL
+	 *   @param {Object} [opts.data] 发送的数据
 	 *   @param {String} [opts.dataType='text'] 返回的数据格式，json、jsonp、xml或text
 	 *   @param {String} [opts.method='GET'] 请求方式，GET、POST或HEAD，dataType为jsonp时只能为GET
-	 *   @param {Object} [opts.data] 发送的数据
-	 *   @param {String} [opts.callbackName] jsonp回调函数名，如不指定则随机生成，仅当dataType为jsonp时有效
-	 *   @param {Boolean} [opts.nocache=true] 是否在URL中添加timestamp参数（参数名为“_”）以防止缓存
+	 *   @param {Boolean} [opts.nocache=true] 是否在URL中添加时间戳（参数名为“_”）防止缓存
 	 *   @param {Object} [opts.headers] 要设置的HTTP头，dataType为jsonp时无效
 	 *   @param {Boolean} [opts.async=true] 是否使用异步方式请求，dataType为jsonp时只能为true
 	 *	 @param {Number} [opts.timeout] 超时时间，仅在异步方式且dataType不是jsonp时有效
 	 *   @param {XMLHttpRequest} [opts.xhr] 进行请求的XMLHttpRequest对象，如不指定则自动创建，dataType为jsonp时无效
+	 *   @param {String} [opts.callbackName] jsonp回调函数名，如不指定则随机生成，仅当dataType为jsonp时有效
 	 *   @param {Function(xhr)} [opts.onbeforesend] 发送请求前执行的操作，dataType为jsonp时无效
 	 *   @param {Function(xhr,statusText)} [opts.onload] 请求回应（无论HTTP状态值是什么）后执行的操作，dataType为jsonp时无效
 	 *   @param {Function(result,xhr,statusText)} [opts.onsuccess] 请求成功后执行的操作
@@ -269,8 +268,23 @@ return {
 	/**
 	 * 发送AJAX请求
 	 * @method send
-	 * @param {Object} [opts] 其他参数同上
-	 * @return {XMLHttpRequest} 进行请求的XMLHttpRequest对象，jsonp时无返回值
+	 * @param {Object} [opts] 参数
+	 *   @param {String} [opts.url] URL
+	 *   @param {Object} [opts.data] 发送的数据
+	 *   @param {String} [opts.dataType='text'] 返回的数据格式，json、jsonp、xml或text
+	 *   @param {String} [opts.method='GET'] 请求方式，GET、POST或HEAD，dataType为jsonp时只能为GET
+	 *   @param {Boolean} [opts.nocache=true] 是否在URL中添加时间戳（参数名为“_”）防止缓存
+	 *   @param {Object} [opts.headers] 要设置的HTTP头，dataType为jsonp时无效
+	 *   @param {Boolean} [opts.async=true] 是否使用异步方式请求，dataType为jsonp时只能为true
+	 *	 @param {Number} [opts.timeout] 超时时间，仅在异步方式且dataType不是jsonp时有效
+	 *   @param {XMLHttpRequest} [opts.xhr] 进行请求的XMLHttpRequest对象，如不指定则自动创建，dataType为jsonp时无效
+	 *   @param {String} [opts.callbackName] jsonp回调函数名，如不指定则随机生成，仅当dataType为jsonp时有效
+	 *   @param {Function(xhr)} [opts.onbeforesend] 发送请求前执行的操作，dataType为jsonp时无效
+	 *   @param {Function(xhr,statusText)} [opts.onload] 请求回应（无论HTTP状态值是什么）后执行的操作，dataType为jsonp时无效
+	 *   @param {Function(result,xhr,statusText)} [opts.onsuccess] 请求成功后执行的操作
+	 *   @param {Function(xhr,statusText)} [opts.onerror] 请求失败后执行的操作，dataType为jsonp时无效
+	 *   @param {Function(xhr,statusText)} [opts.oncomplete] 请求完成且回调结束后执行的操作
+	 * @return {XMLHttpRequest} 进行请求的XMLHttpRequest对象，dataType为jsonp时无返回值
 	 */
 	send: function(url, opts) {
 		// 重载，允许把url写到opts中

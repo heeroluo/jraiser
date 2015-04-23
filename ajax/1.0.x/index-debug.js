@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.0.2 (2015-04-23T11:38:53+0800)
+ * ajax - v1.0.2 (2015-04-23T15:30:00+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -97,7 +97,7 @@ var createXHR = window.ActiveXObject ? function() {
 
 
 return {
-	// See line 84
+	// See line 83
 	createXHR: createXHR,
 	
 	/**
