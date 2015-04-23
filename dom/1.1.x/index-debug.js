@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom - v1.1.0 (2015-03-26T11:11:35+0800)
+ * dom - v1.1.0 (2015-04-23T17:51:44+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -196,7 +196,7 @@ var NodeList = base.createClass(function(nodes) {
 		return this;
 	},
 
-	// for internal use only
+	// 仅供内部使用，不建议外部调用
 	sort: arrProto.sort,
 
 	/**
@@ -261,7 +261,7 @@ var NodeList = base.createClass(function(nodes) {
 	map: arrProto.map,
 
 	/**
-	 * 移除当前集合的最后一个节点
+	 * 移出当前集合的最后一个节点
 	 * @method pop
 	 * @for NodeList
 	 * @return {Element} 被移出的节点
@@ -277,7 +277,7 @@ var NodeList = base.createClass(function(nodes) {
 	shift: arrProto.shift,
 
 	/**
-	 * 从当前集合中移出节点或插入节点
+	 * 从当前集合中移出或插入节点
 	 * @method splice
 	 * @for NodeList
 	 * @param {Number} index 操作位置
