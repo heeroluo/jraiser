@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.2.1 (2015-04-23T11:38:43+0800)
+ * ajax - v1.2.1 (2015-04-23T14:12:48+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -394,7 +394,7 @@ return {
 	 *   @param {Object} [options.data] 发送的数据
 	 *   @param {String} [options.callbackName] jsonp回调函数名，如不指定则按照特定规则生成。
 	 *     仅当dataType为jsonp时有效
-	 *   @param {Boolean} [options.nocache=true] 是否在URL中添加timestamp参数（参数名为“_”）以防止缓存
+	 *   @param {Boolean} [options.nocache=false] 是否在URL中添加timestamp参数（参数名为“_”）以防止缓存
 	 *   @param {Object} [options.headers] 要设置的HTTP头，dataType为jsonp时无效
 	 *   @param {Boolean} [options.async=true] 是否使用异步方式请求，dataType为jsonp时只能使用异步
 	 *	 @param {Number} [options.timeout] 超时时间，仅在异步请求方式时有效
@@ -522,7 +522,7 @@ return {
 			}
 		}
 
-		if (options.nocache !== false) {
+		if (options.nocache) {
 			// 添加timestamp防止缓存
 			url = qs.append(url, { _: +new Date });
 		}
