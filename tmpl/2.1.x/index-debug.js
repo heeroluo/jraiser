@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * micro-templating - v2.1.1 (2015-04-21T15:24:12+0800)
+ * micro-templating - v2.1.1 (2015-04-24T09:36:29+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -217,7 +217,7 @@ Tmpl.escape = escape;
  * @method fromScripts
  * @for Tmpl
  * @static
- * @param {Element|NodeList} context 上下文元素
+ * @param {Element|NodeList} [context] 上下文元素，默认为document
  * @return {Object} 模板集合
  */
 Tmpl.fromScripts = function(context) {

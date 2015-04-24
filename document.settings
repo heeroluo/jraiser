@@ -8,5 +8,5 @@
 		"Widget",
 		""
 	],
-	"ignored_paths": ["_examples_"]
+	"ignored_paths": ["_examples_", "bowl", "es5-shim", "json"]
 }

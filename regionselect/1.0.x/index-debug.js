@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * regionselect - v1.0.0 (2014-08-24T13:37:43+0800)
+ * regionselect - v1.0.0 (2015-04-24T09:40:11+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -174,7 +174,7 @@ return widget.create(function() {
 		/**
 		 * 省市区其中任意一个值改变时触发
 		 * @event change
-		 * @for SelectMenu
+		 * @for RegionSelect
 		 * @param {Object} e 事件参数
 		 *   @param {Object} e.currentProvince 当前省份信息
 		 *   @param {Object} e.currentCity 当前城市信息
