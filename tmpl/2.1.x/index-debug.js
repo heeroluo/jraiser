@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * micro-templating - v2.1.1 (2015-04-24T09:36:29+0800)
+ * micro-templating - v2.1.2 (2015-04-27T15:27:22+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -11,7 +11,7 @@ define(function(require, exports, module) { 'use strict';
  * @category Utility
  */
 
-var base = require('base/1.0.x/');
+var base = require('base/1.1.x/');
 
 
 // HTML特殊字符及其对应的编码内容

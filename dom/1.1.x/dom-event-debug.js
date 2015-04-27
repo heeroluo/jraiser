@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-event - v1.1.0 (2014-12-15T10:35:06+0800)
+ * dom-event - v1.1.1 (2015-04-27T15:37:44+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -13,7 +13,7 @@ define(function(require, exports, module) { 'use strict';
  */
 
 
-var base = require('base/1.0.x/'),
+var base = require('base/1.1.x/'),
 	domBase = require('./dom-base'),
 	domData = require('./dom-data'),
 	Sizzle = require('./sizzle'),
@@ -116,7 +116,7 @@ var eventArgNormalizer = {
 			hook = this[eventTypes[e.type] + 'Hook'],
 			props = hook && hook.props ? this.props.concat(hook.props) : this.props;
 
-		e = base.mix(new EventArg(e), originalEvent, {
+		e = base.customExtend(new EventArg(e), originalEvent, {
 			whiteList: props
 		});
 
@@ -342,7 +342,7 @@ function on(node, types, handler, options) {
 	types.forEach(function(type) {
 		var hook = eventHooks[type];
 
-		listenerManager.add(node, hook ? hook.bindType : type, base.mix({
+		listenerManager.add( node, hook ? hook.bindType : type, base.customExtend({
 			handler: handler,
 			trueType: type,
 			handle: hook ? hook.handle : null

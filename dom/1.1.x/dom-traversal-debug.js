@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-traversal - v1.1.0 (2014-10-10T10:01:16+0800)
+ * dom-traversal - v1.1.1 (2015-04-27T15:38:00+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -13,7 +13,7 @@ define(function(require, exports, module) { 'use strict';
  */
 
 
-var base = require('base/1.0.x/'),
+var base = require('base/1.1.x/'),
 	domBase = require('./dom-base'),
 	Sizzle = require('./sizzle');
 

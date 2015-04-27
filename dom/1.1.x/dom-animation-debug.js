@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-animation - v1.1.0 (2015-03-26T18:29:46+0800)
+ * dom-animation - v1.1.1 (2015-04-27T15:37:10+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -13,8 +13,7 @@ define(function(require, exports, module) { 'use strict';
  */
 
 
-var base = require('base/1.0.x/'),
-	animation = require('animation/1.0.x/'),
+var animation = require('animation/1.0.x/'),
 	domBase = require('./dom-base'),
 	domData = require('./dom-data'),
 	domStyle = require('./dom-style'),

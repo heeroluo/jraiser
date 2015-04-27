@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-data - v1.1.0 (2015-01-30T14:37:23+0800)
+ * dom-data - v1.1.1 (2015-04-27T15:37:33+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -13,7 +13,7 @@ define(function(require, exports, module) { 'use strict';
  */
 
 
-var base = require('base/1.0.x/'), domBase = require('./dom-base');
+var base = require('base/1.1.x/'), domBase = require('./dom-base');
 
 
 // 管理节点id

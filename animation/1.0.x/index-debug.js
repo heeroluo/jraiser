@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * animation - v1.0.0 (2015-03-30T10:31:37+0800)
+ * animation - v1.0.1 (2015-04-27T15:23:58+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -12,7 +12,7 @@ define(function(require, exports, module) { 'use strict';
  */
 
 
-var base = require('base/1.0.x/');
+var base = require('base/1.1.x/');
 
 
 var easings = {
@@ -310,8 +310,7 @@ return {
 				duration: options.duration || 400,
 				startTime: +new Date
 			}, options, {
-				overwrite: false,
-				ignoreNull: true
+				overwrite: false
 			})
 		);
 

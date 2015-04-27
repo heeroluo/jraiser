@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-event-arg - v1.1.0 (2014-12-08T16:26:30+0800)
+ * dom-event-arg - v1.1.1 (2015-04-27T15:37:23+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -12,7 +12,7 @@ define(function(require, exports, module) { 'use strict';
  * @ignore
  */
 
-var base = require('base/1.0.x/'), undefined;
+var base = require('base/1.1.x/'), undefined;
 
 
 function returnFalse() { return false; }
