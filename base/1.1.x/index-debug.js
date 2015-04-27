@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * base - v1.1.0 (2015-04-27T10:27:06+0800)
+ * base - v1.1.0 (2015-04-27T18:16:58+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -288,7 +288,7 @@ function randomStr(prefix) {
 		result += Math.random().toString(36).substr(2);
 	} while (result.length < 10);
 
-	result = result.substr(0, 10) + ( '00000' + (+new Date).toString() ).slice(-6);
+	result = result.substr(0, 10) + ( '00000' + Math.abs(+new Date).toString() ).slice(-6);
 
 	if (prefix) { result = prefix + result; }
 
