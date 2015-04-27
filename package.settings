@@ -9,6 +9,10 @@
 			"excepts": ["^base/.*"]
 		},
 		{
+			"target": "^event-driven/.*/(index(.js)?)?$",
+			"includes": ["^event-driven/"]
+		},
+		{
 			"target": "^widget/.*/(index(.js)?)?$",
 			"excepts": ["^base/.*", "^dom/.*"]
 		},
