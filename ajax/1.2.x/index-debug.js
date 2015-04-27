@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.2.1 (2015-04-23T17:04:16+0800)
+ * ajax - v1.2.2 (2015-04-27T15:00:53+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -12,10 +12,10 @@ define(function(require, exports, module) { 'use strict';
  */
 
 
-var base = require('base/1.0.x/'), qs = require('querystring/1.0.x/');
+var base = require('base/1.1.x/'), qs = require('querystring/1.0.x/');
 
 
-// 包装一些参数处理
+// 包装一些选项处理
 function wrap(fn) {
 	return function(url, options) {
 		if (typeof options === 'function') {
@@ -25,12 +25,7 @@ function wrap(fn) {
 		}
 
 		// 添加GET参数
-		if (options.data) { url = qs.append(url, options.data); }
-
-		// 添加JSONP callback
-		if (options.callbackName) {
-			url = qs.append(url, { callback: options.callbackName });
-		}
+		url = qs.append(url, options.data);
 
 		// 添加timestamp防止缓存
 		if (options.nocache) { url = qs.append(url, { _: +new Date }); }
@@ -44,21 +39,21 @@ function wrap(fn) {
 }
 
 
-var scriptOnloadEvent = 'onload' in document.createElement('script') ?
-	'onload' : 'onreadystatechange';
+var scriptOnloadEvent = 'onload' in document.createElement('script') ? 'onload' : 'onreadystatechange',
+	head = document.head || document.getElementsByTagName('head')[0];
 
 /**
  * 加载脚本文件
  * @method getScript
  * @param {String} src 文件URL
- * @param {Function(statusCode,statusText)} [onload] 加载完成后的回调函数
+ * @param {Function(statusCode,statusText)} [onload] 加载完成（无论成功与否）后的回调函数
  * @return {Object} 请求对象
  */
 /**
  * 加载脚本文件
  * @method getScript
  * @param {String} src 文件URL
- * @param {Object} [options] 其他参数
+ * @param {Object} [options] 其他选项
  *   @param {Object} [options.data] 发送的数据
  *   @param {Boolean} [options.nocache=false] 是否在URL中添加时间戳（参数名为“_”）防止缓存
  *   @param {String} [options.charset] 文件编码
@@ -69,9 +64,7 @@ var scriptOnloadEvent = 'onload' in document.createElement('script') ?
 var getScript = wrap(function(src, options, callbackName) {
 	// callbackName仅供内部使用
 
-	var head = document.getElementsByTagName('head')[0],
-		script = document.createElement('script'),
-		statusText;
+	var script = document.createElement('script'), statusText;
 
 	var onload = base.once(function(status) {
 		statusText = status;
@@ -83,7 +76,7 @@ var getScript = wrap(function(src, options, callbackName) {
 			script[scriptOnloadEvent] = null;
 
 			// 移除script节点
-			if (script.parentNode) { script.parentNode.removeChild(script); }
+			head.removeChild(script);
 			script = null;
 
 			// 释放全局回调函数
@@ -126,7 +119,7 @@ function postScript(action, options, callbackName) {
 	div.style.display = 'none';
 
 	// 生成随机的iframe id/name
-	var target = 'form-target-' + base.uniqueRndStr(10);
+	var target = base.randomStr('form-target-');
 	// 无刷新POST实现原理为表单提交到iframe
 	// iframe内页面调用父页面callback函数
 	div.innerHTML =
@@ -203,9 +196,9 @@ function generateCallbackName(src) {
 	pathname = (pathname[pathname.length - 1] || 'index').replace(/\.\w+$/, '');
 
 	// 取主机和路径的最后一段作为前缀
-	var prefix = 'jsonp_callback_' + (a.host + pathname).replace(/\W+/g, ''),
+	var prefix = 'jsonp_callback_' + (a.host + '_' + pathname).replace(/\W+/g, ''),
 		callbackName = prefix,
-		counter = 0;
+		counter = 1;
 
 	// 如果不存在名字跟前缀一样的全局变量，就把前缀作为函数名
 	// 否则在后面拼接数字
@@ -220,30 +213,29 @@ function generateCallbackName(src) {
  * 发送JSONP请求
  * @method jsonp
  * @param {String} src 请求地址
- * @param {Object} [options] 其他参数
+ * @param {Object} [options] 其他选项
  *   @param {Object} [options.data] 发送的数据
- *   @param {String} [options.callbackName] 回调函数名，如不指定则按照特定规则生成
- *   @param {Boolean} [options.nocache=false] 是否在URL中添加时间戳（参数名为“_”）防止缓存
+ *   @param {String} [options.callbackName] 回调函数名。如不指定则按照特定规则生成
+ *   @param {Boolean} [options.nocache=false] 是否在URL中添加时间戳（参数名为“_”）防止缓存。
  *     请求方式为POST时忽略此参数
  *   @param {String} [options.charset] 编码。请求方式为POST时忽略此参数
- *   @param {Number} [options.timeout] 超时时间，单位为毫秒
- *   @param {String} [options.method='GET'] 请求方式，GET或POST
+ *   @param {Number} [options.timeout] 超时时间（毫秒）
+ *   @param {String} [options.method='GET'] 请求方式。GET或POST
  *   @param {Function} [options.onsuccess] 回调函数
  *   @param {Function} [options.oncomplete] 加载完成（无论成功与否）后执行的函数
  * @return {Object} 请求对象
  */
 function jsonp(src, options) {
-	// 复制一份，避免影响原参数对象
-	options = base.mix({ }, options, { ignoreNull: true });
+	// 复制一份，避免影响原选项对象
+	options = base.extend({ }, options);
 
 	var callbackName;
-	if ( /[?&]callback=([^&]+)/.test(src) ) { callbackName = RegExp.$1; }
-	if (callbackName) {
-		delete options.callbackName;
+	// 识别URL中的回调函数名
+	if ( /[?&]callback=([^&]+)/.test(src) ) {
+		callbackName = RegExp.$1;
 	} else {
-		// 没指定callback的时候，生成一个
-		callbackName = options.callbackName =
-			options.callbackName || generateCallbackName(src);
+		// 使用指定的callback或重新生成一个
+		callbackName = options.callbackName || generateCallbackName(src);
 	}
 
 	options.onload = function() {
@@ -252,7 +244,7 @@ function jsonp(src, options) {
 
 	return String(options.method).toUpperCase() === 'POST' ?
 		postScript(src, options, callbackName) :
-		getScript(src, options, callbackName);
+		getScript(qs.append(src, { callback: callbackName }), options, callbackName);
 }
 
 
@@ -261,7 +253,7 @@ var allImages = { };
  * 请求图片
  * @method getImage
  * @param {String} src 图片URL
- * @param {Object} [options] 其他参数
+ * @param {Object} [options] 其他选项
  *   @param {Object} [options.data] 发送的数据
  *   @param {Boolean} [options.nocache=false] 是否在URL中添加时间戳（参数名为“_”）防止缓存
  *   @param {Function} [options.onload] 请求完成（无论成功与否）后的回调函数
@@ -298,7 +290,7 @@ var createXHR = window.ActiveXObject ? function() {
 
 
 return {
-	// See line 284
+	// See line 276
 	createXHR: createXHR,
 
 	/**
@@ -349,10 +341,10 @@ return {
 		return data;
 	},
 
-	// See line 50
+	// See line 45
 	getScript: getScript,
 
-	// See line 219
+	// See line 212
 	jsonp: jsonp,
 
 	/**
@@ -364,32 +356,26 @@ return {
 	 * @return {Element} 样式节点
 	 */
 	getCSS: function(href, options) {
-		var link = document.createElement('link'),
-			props = base.extend({
-				rel: 'stylesheet',
-				type: 'text/css',
-				href: href
-			}, options.props);
-
-		for (var p in props) {
-			if ( props.hasOwnProperty(p) ) {
-				link[p] = props[p];
-			}
-		}
-
-		document.getElementsByTagName('head')[0].appendChild(link);
-
-		return link;
+		return head.appendChild(
+			base.extend(
+				document.createElement('link'),
+				base.extend({
+					rel: 'stylesheet',
+					type: 'text/css',
+					href: href
+				}, options.props)
+			)
+		);
 	},
 
-	// See line 260
+	// See line 252
 	getImage: getImage,
 
 	/**
 	 * 发送AJAX请求
 	 * @method send
 	 * @param {String} url 请求URL
-	 * @param {Object} [options] 其他参数
+	 * @param {Object} [options] 其他选项
 	 *   @param {Object} [options.data] 发送的数据
 	 *   @param {String} [options.dataType='text'] 返回的数据格式，json、jsonp、xml或text
 	 *   @param {String} [options.method='GET'] 请求方式，GET、POST
@@ -410,7 +396,7 @@ return {
 	/**
 	 * 发送AJAX请求
 	 * @method send
-	 * @param {Object} [options] 参数
+	 * @param {Object} [options] 选项
 	 *   @param {String} [options.url] URL
 	 *   @param {Object} [options.data] 发送的数据
 	 *   @param {String} [options.dataType='text'] 返回的数据格式，json、jsonp、xml或text
@@ -443,7 +429,7 @@ return {
 
 		if (dataType === 'jsonp') {
 			return jsonp(
-				url, base.mix({ }, options, {
+				url, base.customExtend({ }, options, {
 					whiteList: [
 						'data',
 						'callbackName',
@@ -453,8 +439,7 @@ return {
 						'nocache',
 						'timeout',
 						'method'
-					],
-					ignoreNull: true
+					]
 				})
 			);
 		}
@@ -532,7 +517,7 @@ return {
 				break;
 
 				case 'POST':
-					base.mix(headers, {
+					base.customExtend(headers, {
 						'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
 					}, {
 						overwrite: false
