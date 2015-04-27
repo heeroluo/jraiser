@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * cookie - v1.0.0 (2013-01-08T22:12:53+0800)
+ * cookie - v1.0.1 (2015-04-27T11:10:54+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -11,7 +11,7 @@ define(function(require, exports, module) { 'use strict';
  * @category Utility
  */
 
-var base = require('base/1.0.x/');
+var base = require('base/1.1.x/');
 
 
 // 时间单位

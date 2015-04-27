@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * querystring - v1.0.2 (2015-04-02T12:23:10+0800)
+ * querystring - v1.0.3 (2015-04-27T11:08:12+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -11,7 +11,7 @@ define(function(require, exports, module) { 'use strict';
  * @category Utility
  */
 
-var base = require('base/1.0.x/');
+var base = require('base/1.1.x/');
 
 
 function encode(name, value, encoder) {
