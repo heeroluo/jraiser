@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.2.2 (2015-04-27T15:00:53+0800)
+ * ajax - v1.2.2 (2015-04-28T10:11:45+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -229,22 +229,23 @@ function jsonp(src, options) {
 	// 复制一份，避免影响原选项对象
 	options = base.extend({ }, options);
 
-	var callbackName;
+	var callbackName, isPost = String(options.method).toUpperCase() === 'POST';
 	// 识别URL中的回调函数名
 	if ( /[?&]callback=([^&]+)/.test(src) ) {
 		callbackName = RegExp.$1;
 	} else {
 		// 使用指定的callback或重新生成一个
 		callbackName = options.callbackName || generateCallbackName(src);
+		if (!isPost) { src = qs.append(src, { callback: callbackName }); }
 	}
 
 	options.onload = function() {
 		if (options.oncomplete) { options.oncomplete.apply(window, arguments); }
 	};
 
-	return String(options.method).toUpperCase() === 'POST' ?
+	return isPost ?
 		postScript(src, options, callbackName) :
-		getScript(qs.append(src, { callback: callbackName }), options, callbackName);
+		getScript(src, options, callbackName);
 }
 
 
