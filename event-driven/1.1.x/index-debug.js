@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * event-driven - v1.1.0 (2015-04-29T14:31:32+0800)
+ * event-driven - v1.1.0 (2015-04-29T18:04:00+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -19,10 +19,19 @@ var base = require('base/1.1.x/'), EventArg = require('./event-arg');
  * @class EventDriven
  * @exports
  * @constructor
+ * @param {Object<String,Function>} [handlers] 初始的事件监听
  */
-return base.createClass(function() {
+return base.createClass(function(handlers) {
 	// 存放回调函数
 	this.__eventHandlers = { };
+
+	if (handlers) {
+		for (var e in handlers) {
+			if ( handlers.hasOwnProperty(e) ) {
+				this.on(e, handlers[e]);
+			}
+		}
+	}
 }, {
 	/**
 	 * 触发事件
@@ -61,11 +70,11 @@ return base.createClass(function() {
 	},
 
 	/**
-	 * 移除事件监听
+	 * 注销事件监听
 	 * @method off
 	 * @for EventDriven
-	 * @param {String} [type] 事件类型。如不指定，则取消所有事件类型的监听
-	 * @param {Function} [handler] 处理函数。如不指定，则取消指定事件类型的所有监听
+	 * @param {String} [type] 事件类型。如不指定，则注销所有事件监听
+	 * @param {Function} [handler] 处理函数。如不指定，则注销指定事件类型的所有监听
 	 * @return {Object} 当前对象
 	 */
 	off: function(type, handler) {
