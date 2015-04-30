@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * widget - v1.1.0 (2015-04-30T11:57:58+0800)
+ * widget - v1.1.0 (2015-04-30T12:11:42+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -227,7 +227,7 @@ var WidgetBase = exports.WidgetBase = base.createClass(function() {
 			t.off();
 			// 移除属性
 			for (var i in t) {
-				if ( t.hasOwnProperty(i) ) {
+				if (t.hasOwnProperty(i) && i !== '_options') {
 					delete t[i];
 				}
 			}
