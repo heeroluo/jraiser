@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.2.2 (2015-04-28T10:11:45+0800)
+ * ajax - v1.2.2 (2015-05-04T11:52:32+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -132,13 +132,11 @@ function postScript(action, options, callbackName) {
 	// 添加数据到表单
 	if (options.data) {
 		base.each(options.data, function(value, name, data) {
-			if ( data.hasOwnProperty(name) ) {
-				var input = document.createElement('input');
-				input.type = 'hidden';
-				input.name = name;
-				input.value = value;
-				form.appendChild(input);
-			}
+			var input = document.createElement('input');
+			input.type = 'hidden';
+			input.name = name;
+			input.value = value;
+			form.appendChild(input);
 		});
 	}
 

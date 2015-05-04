@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * base - v1.1.0 (2015-04-28T09:21:30+0800)
+ * base - v1.1.0 (2015-05-04T11:44:03+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -201,7 +201,7 @@ function each(obj, callback) {
 		var i, len = obj.length;
 		if ( len === undefined || isFunction(obj) ) {
 			for (i in obj) {
-				if ( false === callback.call(obj[i], obj[i], i, obj) ) {
+				if ( obj.hasOwnProperty(i) && false === callback.call(obj[i], obj[i], i, obj) ) {
 					break;
 				}
 			}
