@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * event-arg - v1.0.0 (2015-04-27T10:34:29+0800)
+ * event-arg - v1.1.0 (2015-06-01T11:19:11+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
