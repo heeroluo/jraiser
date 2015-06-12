@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * xtemplate wrapper - v4.3.0 (2015-06-12T12:01:31+0800)
+ * xtemplate wrapper - v4.3.0 (2015-06-12T14:34:42+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -160,9 +160,10 @@ var defaultTpl;
  * @return {String} 渲染结果
  */
 XTpl.render = function(tpl, data, cached) {
+	var key = base.randomStr('xtpl_');
 	defaultTpl = defaultTpl || new XTpl();
-	if ( !defaultTpl.has(tpl) ) { defaultTpl.add(tpl, tpl); }
-	return defaultTpl.render(tpl, data, cached);
+	if ( !defaultTpl.has(tpl) ) { defaultTpl.add(key, tpl); }
+	return defaultTpl.render(key, data, cached);
 };
 
 /**
