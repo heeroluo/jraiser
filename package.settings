@@ -13,6 +13,10 @@
 			"includes": ["^event-driven/"]
 		},
 		{
+			"target": "^xtpl/.*/(index(.js)?)?$",
+			"excepts": ["^base/.*"]
+		},
+		{
 			"target": "^widget/.*/(index(.js)?)?$",
 			"includes": ["^event-driven/"]
 		},
