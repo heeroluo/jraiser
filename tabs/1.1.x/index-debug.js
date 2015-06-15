@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * tabs - v1.1.0 (2015-06-03T17:16:36+0800)
+ * tabs - v1.1.0 (2015-06-15T11:21:20+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -26,16 +26,16 @@ var base = require('base/1.1.x/'),
  * @param {Object} options 组件设置
  *   @param {NodeList} [options.wrapper] 选项卡组件容器。
  *     如不指定，则tabs和panels参数必须为NodeList类型
- *   @param {NodeList|String} [options.tabs='.tabs-nav>*'] 选项卡节点。
+ *   @param {NodeList|String} [options.tabs='.tabs__tabs__item'] 选项卡节点。
  *     可以是节点集合或者以wrapper为上下文的选择器
- *   @param {NodeList|String} [options.panels='.tabs-panels>*'] 内容面板节点。
+ *   @param {NodeList|String} [options.panels='.tabs__panels__item'] 内容面板节点。
  *     可以是节点集合或者以wrapper为上下文的选择器
  *   @param {Number} [options.active=0] 初始激活项
  *   @param {String} [options.event] 选项卡触发内容显示的事件，PC端默认为mouseover，移动端默认为click
  *   @param {Boolean} [options.isPreventDefault] 是否阻止event的默认动作。PC端默认为false，移动端默认为true
  *   @param {Boolean} [options.useHashStorage=false] 是否通过锚点记录当前选项卡
- *   @param {String} [options.activeTabClass='tabs__tab--active'] 选项卡在激活状态下的CSS类
- *   @param {String} [options.activePanelClass='tabs__panel--active'] 内容面板在激活状态下的CSS类
+ *   @param {String} [options.activeTabClass='tabs__tabs__item--active'] 选项卡在激活状态下的CSS类
+ *   @param {String} [options.activePanelClass='tabs__panels__item--active'] 内容面板在激活状态下的CSS类
  *   @param {Object} [options.activePanelStyle] 内容面板在激活状态下的样式，默认为display:block
  *   @param {Object} [options.inactivePanelStyle] 内容面板在非激活状态下的样式，默认为display:none
  *   @param {Function(current,total)} [options.next] 返回下一个序号的函数，默认为当前序号加一
@@ -61,7 +61,7 @@ return widget.create({
 		if (options.event) {
 			t._onDOMEvent(t._tabs, options.event, function(e) {
 				if (options.preventDefault) { e.preventDefault(); }
-				t.activate( t._tabs.indexOf(this) );
+				t.activate(t._tabs.indexOf(this), e);
 			});
 		}
 
@@ -84,7 +84,9 @@ return widget.create({
 	 * @for Tabs
 	 * @param {Number|String} n 选项卡序号或内容面板id
 	 */
-	activate: function(n) {
+	activate: function(n, _e) {
+		// _e为事件对象，仅供内部使用
+
 		var t = this, options = t._options;
 
 		if (typeof n === 'string') {
@@ -100,7 +102,8 @@ return widget.create({
 		var active = t._active, evtProps = {
 			newTab: t._tabs.get(n),
 			newPanel: t._panels.get(n),
-			newActive: n
+			newActive: n,
+			sourceEvent: _e
 		};
 		if (active != null) {
 			evtProps.oldTab = t._tabs.get(active);
@@ -113,12 +116,13 @@ return widget.create({
 		 * @event beforeactivate
 		 * @for Tabs
 		 * @param {Object} e 事件对象
+		 *   @param {Object} e.sourceEvent 源事件对象
 		 *   @param {NodeList} e.newTab 即将被激活的选项卡
 		 *   @param {NodeList} e.newTab 即将被激活的内容面板
 		 *   @param {Number} e.newActive 即将被激活项的数字索引
-		 *   @param {NodeList} e.oldTab 即将被反激活的选项卡
-		 *   @param {NodeList} e.oldPanel 即将被反激活的内容面板
-		 *   @param {Number} e.oldActive 即将被反激活项的数字索引
+		 *   @param {NodeList} [e.oldTab] 即将被反激活的选项卡
+		 *   @param {NodeList} [e.oldPanel] 即将被反激活的内容面板
+		 *   @param {Number} [e.oldActive] 即将被反激活项的数字索引
 		 *   @param {Function} e.preventDefault 调用此方法可阻止activate动作
 		 */
 		if ( !t._trigger('beforeactivate', evtProps).isDefaultPrevented() ) {
@@ -156,12 +160,13 @@ return widget.create({
 			 * @event activate
 			 * @for Tabs
 			 * @param {Object} e 事件对象
+			 *   @param {Object} e.sourceEvent 源事件对象
 			 *   @param {NodeList} e.newTab 即将被激活的选项卡
 			 *   @param {NodeList} e.newTab 即将被激活的内容面板
 			 *   @param {Number} e.newActive 即将被激活项的数字索引
-			 *   @param {NodeList} e.oldTab 即将被反激活的选项卡
-			 *   @param {NodeList} e.oldPanel 即将被反激活的内容面板
-			 *   @param {Number} e.oldActive 即将被反激活项的数字索引
+			 *   @param {NodeList} [e.oldTab] 即将被反激活的选项卡
+			 *   @param {NodeList} [e.oldPanel] 即将被反激活的内容面板
+			 *   @param {Number} [e.oldActive] 即将被反激活项的数字索引
 			 */
 			t._trigger('activate', evtProps);
 		}
@@ -253,14 +258,14 @@ return widget.create({
 		}
 	}
 }, {
-	tabs: '.tabs__nav > *',
-	panels: '.tabs__panels > *',
+	tabs: '.tabs__tabs__item',
+	panels: '.tabs__panels__item',
 	active: 0,
 	event: uaDetector.isDevice('pc') ? 'mouseover' : 'click',
-	preventDefault: uaDetector.isDevice('pc') ? false : true,
+	preventDefault: !uaDetector.isDevice('pc'),
 	useHashStorage: false,
-	activeTabClass: 'tabs__tab--active',
-	activePanelClass: 'tabs__panel--active',
+	activeTabClass: 'tabs__tabs__item--active',
+	activePanelClass: 'tabs__panels__item--active',
 	activePanelStyle: { display: 'block' },
 	inactivePanelStyle: { display: 'none' },
 	next: function(current, total) {
