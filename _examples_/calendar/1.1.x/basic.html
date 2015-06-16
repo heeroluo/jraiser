@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Example Of calendar 1.0.x</title>
+<style type="text/css">
+body { margin: 0; }
+.header {
+	margin-top: 50px;
+	font-size: 16px;
+	text-align: center;
+	font-weight: bold;
+}
+.wrapper {
+	width: 230px;
+	padding: 4px;
+	margin: 20px auto 40px auto;
+	background: #eee;
+	border: 1px solid #ddd;
+	font-size: 14px;
+}
+.ui-calendar { width: 100%; }
+.ui-calendar__head__grid { padding-bottom: 8px; }
+.ui-calendar__body__date--next-month,
+.ui-calendar__body__date--last-month { opacity: 0.3; }
+.ui-calendar__body__date {
+	background: #fff;
+	border: 1px solid #ddd;
+	color: #0b559b;
+	height: 25px;
+	line-height: 25px;
+	text-decoration: none;
+	text-align: center;
+	cursor: pointer;
+}
+.ui-calendar__body__date:hover {
+	border: 1px solid #fed22f;
+	color: #eb8f00;
+}
+.ui-calendar__body__date--today { font-weight: bold; }
+.ui-calendar__body__date--week-sun { color: red; }
+.ui-calendar__body__date--week-sat { color: green; }
+</style>
+</head>
+
+<body>
+<div id="header" class="header"></div>
+<div id="wrapper" class="wrapper"></div>
+<div id="result" style="text-align: center;"></div>
+<script src="../../../bowl-debug.js"></script>
+<script src="../../config.js"></script>
+<script>
+require(['dom/1.1.x/', 'calendar/1.1.x/'], function($, Calendar) {
+	var calendar = new Calendar({
+		wrapper: $('#wrapper'),
+		tableAttrs: {
+			cellspacing: 4
+		},
+		events: {
+			dateselect: function(e) {
+				var dateObj = e.selectedDate;
+				$('#result').text(
+					dateObj.year + '年' +
+					dateObj.month + '月' +
+					dateObj.date + '日 ' +
+					'星期' + dateObj.dayName
+				);
+			}
+		}
+	});
+	$('#header').text(calendar.year() + '年' + calendar.month() + '月');
+	calendar.render();
+});
+</script>
+</body>
+</html>
