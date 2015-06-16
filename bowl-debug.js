@@ -1,6 +1,6 @@
 /*!
  * Bowl.js
- * Javascript module loader for browser - v1.0.0 (2015-04-03T10:26:13+0800)
+ * Javascript module loader for browser - v1.0.1 (2015-05-13T15:35:44+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 !function(global, undefined) { 'use strict';
@@ -9,7 +9,7 @@
 if (global.bowljs) { return; }
 
 var bowljs = global.bowljs = {
-	version: '1.0.0',
+	version: '1.0.1',
 	logs: [ ]
 };
 
@@ -625,19 +625,21 @@ global.define = function() {
  *   @param {String} [newConfig.appPath] 应用路径
  *   @param {String|Function} [newConfig.charset] 编码
  *   @param {Array} [newConfig.preload] 预加载脚本
- *   @param {Array} [newConfig.map] URL映射
+ *   @param {Array} [newConfig.map] URL映射，多次配置会合并
  *   @param {Boolean} [newConfig.debug] 是否调试模式
  */
 bowljs.config = function(newConfig) {
 	// 修复路径配置
-	function fixPath(path) {
+	var fixPath = function(path) {
 		if ( !isAbsPath(path) ) { path = toAbsPath(path); }
 		if ( path.charAt(path.length - 1) !== '/' ) { path += '/'; }
 		return path;
-	}
+	};
 
+	var map = config.map;
 	extend(config, newConfig);
 
+	if (map && config.map !== map) { config.map = map.concat(config.map); }
 	if (newConfig.libPath) { config.libPath = fixPath(config.libPath); }
 	if (newConfig.appPath) { config.appPath = fixPath(config.appPath); }
 };
