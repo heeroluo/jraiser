@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * calendar - v1.1.0 (2015-06-16T14:53:59+0800)
+ * calendar - v1.1.0 (2015-06-16T18:01:32+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -15,122 +15,6 @@ var base = require('base/1.1.x/'),
 	$ = require('dom/1.1.x/'),
 	Tmpl = require('tmpl/2.1.x/'),
 	widget = require('widget/1.1.x/');
-
-
-/**
- * 构建月历数据模型
- * @method buildModel
- * @static
- * @for Calendar
- * @param {Object} options 选项
- *   @param {Number} options.year 年份
- *   @param {Number} options.month 月份
- *   @param {Function|Array<Function>} [options.customTags] 返回定制标签的函数(数组)
- * @return {Object} 月历数据模型
- */
-function buildModel(options) {
-	var year = options.year,
-		month = options.month,
-		theMonth = new Date(year, month - 1, 1),
-		weekDay = theMonth.getDay(),
-		weekDayNames = ['sun', 'mon', 'tues', 'wed', 'thur', 'fri', 'sat'];
-
-	// 修正选项属性值
-	options = options || { };
-	if ( options.customTags && !base.isArray(options.customTags) ) {
-		options.customTags = [options.customTags];
-	}
-
-	// 月历开始时间为本月第一周的周一
-	var startTime = new Date(year, month - 1, 1 - weekDay).getTime();
-
-	// 设为下个月的-1天，即当前月的最后一天
-	theMonth.setMonth(month);
-	theMonth.setDate(0);
-	weekDay = theMonth.getDay();
-
-	// 月历结束时间为本月最后一周的周六
-	var endTime = new Date(year, month - 1, theMonth.getDate() + 6 - weekDay).getTime();
-
-	// 存放最终结果
-	var result = {
-		year: year,
-		month: month,
-		weeks: [ ]
-	};
-
-	var step = 24 * 60 * 60 * 1000,
-		theDate,
-		theWeek,
-		dateObj,
-		tag;
-
-	// 用于比较过去、当天、将来
-	var today = new Date();
-	today.setHours(0, 0, 0, 0);
-	today = today.getTime();
-
-	while (startTime <= endTime) {
-		theDate = new Date(startTime);
-
-		dateObj = {
-			year: theDate.getFullYear(),
-			month: theDate.getMonth() + 1,
-			date: theDate.getDate(),
-			day: theDate.getDay(),
-			timestamp: startTime,
-			tags: [ ]
-		};
-
-		dateObj.tags.push('week-' + weekDayNames[dateObj.day]);
-		dateObj.tags.push(dateObj.day > 0 && dateObj.day < 6 ? 'weekday' : 'weekend');
-
-		if (dateObj.year < year ||
-			(dateObj.year === year && dateObj.month < month)
-		) {
-			// 上个月
-			tag = 'last-month';
-		} else if (dateObj.year > year ||
-			(dateObj.year === year && dateObj.month > month)
-		) {
-			// 下个月
-			tag = 'next-month';
-		} else {
-			// 当前月
-			tag = 'current-month';
-		}
-		dateObj.tags.push(tag);
-
-		if (dateObj.timestamp > today) {
-			// 将来
-			tag = 'future';
-		} else if (dateObj.timestamp < today) {
-			// 过去
-			tag = 'past';
-		} else {
-			// 当天
-			tag = 'today';
-		}
-		dateObj.tags.push(tag);
-
-		// 处理定制标签
-		if (options.customTags) {
-			base.merge( dateObj.tags, options.customTags.map(function(fn) {
-				return fn( new Date(startTime) );
-			}) );
-		}
-
-		if (!theWeek || theWeek.length === 7) {
-			theWeek = [ ];
-			result.weeks.push(theWeek);
-		}
-		theWeek.push(dateObj);
-
-		startTime += step;
-	}
-
-	return result;
-}
 
 
 var tmpl = new Tmpl({
@@ -176,11 +60,15 @@ var re_relNumber = /^([+-])(\d+)$/;
  *   @param {Function|Array<Function>} [options.customTags] 返回定制标签的函数(数组)
  *   @param {Object} [options.tableAttrs] 月历表格属性
  */
-var Calendar = widget.create({
+return widget.create({
 	_init: function(options) {
 		var now = new Date();
 		this.year( options.year || now.getFullYear() );
 		this.month( options.month || now.getMonth() + 1 );
+
+		if ( options.customTags && !base.isArray(options.customTags) ) {
+			options.customTags = [options.customTags];
+		}
 	},
 
 	_destroy: function(options) {
@@ -188,26 +76,127 @@ var Calendar = widget.create({
 	},
 
 	/**
+	 * 构建月历数据模型
+	 * @method build
+	 * @protected
+	 * @for Calendar
+	 * @return {Object} 月历数据模型
+	 */
+	_buildModel: function() {
+		var options = this._options,
+			year = this.year(),
+			month = this.month(),
+			theMonth = new Date(year, month - 1, 1),
+			weekDay = theMonth.getDay(),
+			weekDayNames = ['sun', 'mon', 'tues', 'wed', 'thur', 'fri', 'sat'];
+
+		// 月历开始时间为本月第一周的周一
+		var startTime = new Date(year, month - 1, 1 - weekDay).getTime();
+
+		// 设为下个月的-1天，即当前月的最后一天
+		theMonth.setMonth(month);
+		theMonth.setDate(0);
+		weekDay = theMonth.getDay();
+
+		// 月历结束时间为本月最后一周的周六
+		var endTime = new Date(year, month - 1, theMonth.getDate() + 6 - weekDay).getTime();
+
+		// 存放最终结果
+		var result = {
+			year: year,
+			month: month,
+			weeks: [ ]
+		};
+
+		var step = 24 * 60 * 60 * 1000,
+			theDate,
+			theWeek,
+			dateObj,
+			tag;
+
+		// 用于比较过去、当天、将来
+		var today = new Date();
+		today.setHours(0, 0, 0, 0);
+		today = today.getTime();
+
+		while (startTime <= endTime) {
+			theDate = new Date(startTime);
+
+			dateObj = {
+				year: theDate.getFullYear(),
+				month: theDate.getMonth() + 1,
+				date: theDate.getDate(),
+				day: theDate.getDay(),
+				timestamp: startTime,
+				tags: [ ]
+			};
+
+			dateObj.tags.push('week-' + weekDayNames[dateObj.day]);
+			dateObj.tags.push(dateObj.day > 0 && dateObj.day < 6 ? 'weekday' : 'weekend');
+
+			if (dateObj.year < year ||
+				(dateObj.year === year && dateObj.month < month)
+			) {
+				// 上个月
+				tag = 'last-month';
+			} else if (dateObj.year > year ||
+				(dateObj.year === year && dateObj.month > month)
+			) {
+				// 下个月
+				tag = 'next-month';
+			} else {
+				// 当前月
+				tag = 'current-month';
+			}
+			dateObj.tags.push(tag);
+
+			if (dateObj.timestamp > today) {
+				// 将来
+				tag = 'future';
+			} else if (dateObj.timestamp < today) {
+				// 过去
+				tag = 'past';
+			} else {
+				// 当天
+				tag = 'today';
+			}
+			dateObj.tags.push(tag);
+
+			// 处理定制标签
+			if (options.customTags) {
+				base.merge( dateObj.tags, options.customTags.map(function(fn) {
+					return fn( new Date(startTime) );
+				}) );
+			}
+
+			if (!theWeek || theWeek.length === 7) {
+				theWeek = [ ];
+				result.weeks.push(theWeek);
+			}
+			theWeek.push(dateObj);
+
+			startTime += step;
+		}
+
+		return result;
+	},
+
+	/**
 	 * 渲染月历
 	 * @method render
 	 * @for Calendar
-	 * @param {Object} [model] 数据模型。如不指定则自动创建
 	 */
-	render: function(model) {
+	render: function() {
 		var t = this, options = t._options;
 
 		// 要重新渲染月历，原有的月历要清除，解绑所有DOM事件
 		t._offDOMEvent();
 
-		if (model) {
-			model = base.extend({ }, model);
-		} else {
-			model = buildModel({
-				year: t._year,
-				month: t._month,
-				customTags: options.customTags
-			});
-		}
+		var model = t._buildModel({
+			year: t._year,
+			month: t._month,
+			customTags: options.customTags
+		});
 		model.weekDayNames = options.weekDayNames;
 		model.tableAttrs = '';
 		if (options.tableAttrs) {
@@ -304,10 +293,5 @@ var Calendar = widget.create({
 }, {
 	weekDayNames: '日一二三四五六'.split('')
 });
-
-Calendar.buildModel = buildModel;
-
-
-return Calendar;
 
 });
