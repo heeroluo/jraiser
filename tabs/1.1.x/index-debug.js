@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * tabs - v1.1.0 (2015-06-15T11:21:20+0800)
+ * tabs - v1.1.0 (2015-06-16T11:08:51+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -26,16 +26,16 @@ var base = require('base/1.1.x/'),
  * @param {Object} options 组件设置
  *   @param {NodeList} [options.wrapper] 选项卡组件容器。
  *     如不指定，则tabs和panels参数必须为NodeList类型
- *   @param {NodeList|String} [options.tabs='.tabs__tabs__item'] 选项卡节点。
+ *   @param {NodeList|String} [options.tabs='.ui-tabs__tabs__item'] 选项卡节点。
  *     可以是节点集合或者以wrapper为上下文的选择器
- *   @param {NodeList|String} [options.panels='.tabs__panels__item'] 内容面板节点。
+ *   @param {NodeList|String} [options.panels='.ui-tabs__panels__item'] 内容面板节点。
  *     可以是节点集合或者以wrapper为上下文的选择器
  *   @param {Number} [options.active=0] 初始激活项
  *   @param {String} [options.event] 选项卡触发内容显示的事件，PC端默认为mouseover，移动端默认为click
  *   @param {Boolean} [options.isPreventDefault] 是否阻止event的默认动作。PC端默认为false，移动端默认为true
  *   @param {Boolean} [options.useHashStorage=false] 是否通过锚点记录当前选项卡
- *   @param {String} [options.activeTabClass='tabs__tabs__item--active'] 选项卡在激活状态下的CSS类
- *   @param {String} [options.activePanelClass='tabs__panels__item--active'] 内容面板在激活状态下的CSS类
+ *   @param {String} [options.activeTabClass='ui-tabs__tabs__item--active'] 选项卡在激活状态下的CSS类
+ *   @param {String} [options.activePanelClass='ui-tabs__panels__item--active'] 内容面板在激活状态下的CSS类
  *   @param {Object} [options.activePanelStyle] 内容面板在激活状态下的样式，默认为display:block
  *   @param {Object} [options.inactivePanelStyle] 内容面板在非激活状态下的样式，默认为display:none
  *   @param {Function(current,total)} [options.next] 返回下一个序号的函数，默认为当前序号加一
@@ -258,14 +258,14 @@ return widget.create({
 		}
 	}
 }, {
-	tabs: '.tabs__tabs__item',
-	panels: '.tabs__panels__item',
+	tabs: '.ui-tabs__tabs__item',
+	panels: '.ui-tabs__panels__item',
 	active: 0,
 	event: uaDetector.isDevice('pc') ? 'mouseover' : 'click',
 	preventDefault: !uaDetector.isDevice('pc'),
 	useHashStorage: false,
-	activeTabClass: 'tabs__tabs__item--active',
-	activePanelClass: 'tabs__panels__item--active',
+	activeTabClass: 'ui-tabs__tabs__item--active',
+	activePanelClass: 'ui-tabs__panels__item--active',
 	activePanelStyle: { display: 'block' },
 	inactivePanelStyle: { display: 'none' },
 	next: function(current, total) {
