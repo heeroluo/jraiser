@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * animation - v1.0.1 (2015-04-27T15:23:58+0800)
+ * animation - v1.0.1 (2015-06-19T11:36:21+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -304,7 +304,7 @@ return {
 		var taskId = ++autoId;
 
 		queue.push(
-			base.mix({
+			base.customExtend({
 				easing: easing,
 				id: taskId,
 				duration: options.duration || 400,
