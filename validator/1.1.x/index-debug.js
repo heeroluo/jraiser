@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * validator - v1.1.0 (2015-06-30T14:26:30+0800)
+ * validator - v1.1.0 (2015-06-30T14:37:41+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -364,7 +364,7 @@ return widget.create({
 				e.errorObjs.map(function(err) {
 					return err.message;
 				}).join('\r\n')
-			);x
+			);
 			$(e.errorObjs[0].elements[0]).focus();
 		}
 	}
