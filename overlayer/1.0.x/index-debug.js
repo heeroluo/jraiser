@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * overlayer - v1.0.0 (2014-07-03T12:33:38+0800)
+ * overlayer - v1.0.0 (2015-06-30T09:33:33+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -31,7 +31,7 @@ var isOldIE = /MSIE\s(\d+)/.test(window.navigator.userAgent) &&
  *   @param {NodeList} options.wrapper 覆盖目标
  *   @param {Number} [options.opacity=0.6] 覆盖层不透明度
  *   @param {String} [options.backgroundColor='black'] 覆盖层背景色
- *   @param {String} [options.zIndex='black'] 覆盖层z-index
+ *   @param {String} [options.zIndex=1000] 覆盖层z-index
  *   @param {String} [options.className='overlayer'] 覆盖层的样式类
  *   @param {Boolean} [options.visible=true] 初始状态下是否可见
  *   @param {Object|Boolean} [options.fade] 渐显渐隐动画参数，默认为按动画默认参数，
