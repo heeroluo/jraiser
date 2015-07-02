@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * validator - v1.1.0 (2015-06-30T14:37:41+0800)
+ * validator - v1.1.0 (2015-07-02T14:32:37+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -136,7 +136,6 @@ return widget.create({
 		}
 
 		t._onDOMEvent(t._form, 'submit', function(e) {
-			e.preventDefault(); 
 			var errObjs = t.validateAll(true, e);
 			if (errObjs && errObjs.length) {
 				e.preventDefault();
@@ -146,14 +145,16 @@ return widget.create({
 				 * @event submiterror
 				 * @for Validator
 				 * @param {Object} e 事件对象
+				 *   @param {Boolean} e.isRemote 是否远程验证
 				 *   @param {Object} e.sourceEvent 源事件对象
-				 *   @param {Array<String>} e.errorSteps 验证错误的步骤
-				 *   @param {String} e.target 目标表单
+				 *   @param {Array} e.errObjs 错误对象
+				 *   @param {NodeList} e.form 目标表单
 				 */
 				t._trigger('submiterror', {
+					isRemote: false,
 					sourceEvent: e,
 					errorObjs: errObjs,
-					target: e.target
+					form: t._form
 				});
 			} else {
 				/**
@@ -162,12 +163,12 @@ return widget.create({
 				 * @for Validator
 				 * @param {Object} e 事件对象
 				 *   @param {Object} e.sourceEvent 源事件对象
-				 *   @param {String} e.target 目标表单
+				 *   @param {NodeList} e.form 目标表单
 				 *   @param {Function} e.preventDefault() 可以调用此方法阻止表单提交
 				 */
 				var isDefaultPrevented = t._trigger('beforesubmit', {
 					sourceEvent: e,
-					target: e.target
+					form: t._form
 				}).isDefaultPrevented();
 
 				if (isDefaultPrevented) {
@@ -177,7 +178,21 @@ return widget.create({
 
 				if (options.submitProxy) {
 					e.preventDefault();
-					options.submitProxy.call(window, ajax.serializeForm(this), t._form);
+					options.submitProxy.call(
+						window, ajax.serializeForm(this), t._form, function(errorObjs) {
+							if (errorObjs) {
+								errorObjs.forEach(function(errorObj) {
+									errorObj.elements = t._getFields(errorObj.elements).elements;
+								});
+							}
+							t._trigger('submiterror', {
+								isRemote: true,
+								sourceEvent: e,
+								errorObjs: errorObjs,
+								form: t._form
+							});
+						}
+					);
 				}
 			}
 		});
@@ -280,6 +295,7 @@ return widget.create({
 	 * @param {Object} e 错误事件对象
 	 */
 	_stepError: function(e) {
+		e.form = this._form;
 		if (e.isRemote) {
 			this._remoteErrors = this._remoteErrors || { };
 			this._remoteErrors[e.stepId] = e;
@@ -292,6 +308,7 @@ return widget.create({
 		 * @param {Object} e 事件对象
 		 *   @param {Object} e.sourceEvent 源事件对象
 		 *   @param {Array<Element>} e.elements 相关字段元素
+		 *   @param {NodeList} e.form 目标表单
 		 *   @param {Boolean} e.isRemote 是否远程验证
 		 *   @param {String} e.message 错误信息
 		 */
@@ -306,6 +323,7 @@ return widget.create({
 	 * @param {Object} e 事件对象
 	 */
 	_stepCorrect: function(e) {
+		e.form = this._form;
 		if (e.isRemote && this._remoteErrors) {
 			delete this._remoteErrors[e.stepId];
 		}
@@ -317,6 +335,7 @@ return widget.create({
 		 * @param {Object} e 事件对象
 		 *   @param {Object} e.sourceEvent 源事件对象
 		 *   @param {Array<Element>} e.elements 相关字段元素
+		 *   @param {NodeList} e.form 目标表单
 		 *   @param {Boolean} e.isRemote 是否远程验证
 		 */
 		this._trigger('stepcorrect', e);
@@ -327,7 +346,7 @@ return widget.create({
 	 * @method _getFields
 	 * @for Validator
 	 * @protected
-	 * @param {Array<String>} fields 字段名
+	 * @param {String|Array<String>} fields 字段名。为'*'时获取全部字段
 	 * @return {Object} 字段元素（数组）和字段值（{字段名:字段值数组}）
 	 */
 	_getFields: function(fields) {
@@ -336,7 +355,7 @@ return widget.create({
 		if (fields && fields.length) {
 			var elements = this._form.get(0).elements;
 			for (var i = 0, elt, val; elt = elements[i]; i++) {
-				if (elt.disabled || !elt.name || fields.indexOf(elt.name) === -1) {
+				if ( elt.disabled || !elt.name || (fields !== '*' && fields.indexOf(elt.name) === -1) ) {
 					continue;
 				}
 
