@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * widget - v1.1.0 (2015-06-03T17:22:57+0800)
+ * widget - v1.1.0 (2015-07-06T17:09:44+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -58,6 +58,14 @@ var WidgetBase = exports.WidgetBase = base.createClass(function() {
 	 * @param {Object} options 组件选项
 	 */
 	_init: function(options) { },
+
+	/**
+	 * 获取组件是否已初始化
+	 * @method inited
+	 * @for WidgetBase
+	 * @return {Boolean} 组件是否已初始化
+	 */
+	inited: function() { return !!this.__inited; },
 
 	/**
 	 * 注册DOM事件监听
