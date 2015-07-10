@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-offset - v1.1.0 (2014-12-08T11:39:30+0800)
+ * dom-offset - v1.1.1 (2015-07-10T17:42:37+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -24,7 +24,7 @@ function getOffset(node) {
 
 	var doc = node.ownerDocument, docElt = doc.documentElement;
 	// 检查节点是否在文档中
-	if ( !doc || !Sizzle.contains(docElt, node) ) { return { }; }
+	if ( !doc || ( node !== docElt && !Sizzle.contains(docElt, node) ) ) { return { }; }
 
 	var box = node.getBoundingClientRect(), win = domBase.getWindow(doc);
 	return {
