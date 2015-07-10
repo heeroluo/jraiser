@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * widget - v1.1.0 (2015-07-06T17:09:44+0800)
+ * widget - v1.1.0 (2015-07-10T15:37:57+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -94,6 +94,8 @@ var WidgetBase = exports.WidgetBase = base.createClass(function() {
 			handler.fn = function() {
 				t[fnName].apply(t, arguments);
 			};
+		} else if (handler.id && !handler.fn) {
+			handler = handler.id;
 		}
 
 		t.__domEventProxy.on(elements, types, handler, options);

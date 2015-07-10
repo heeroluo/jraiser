@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-event-proxy - v1.0.0 (2015-06-01T12:02:12+0800)
+ * dom-event-proxy - v1.0.0 (2015-07-10T15:41:02+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -91,8 +91,12 @@ return base.createClass(function() {
 		}
 
 		obj.id = obj.id || base.randomStr(); // 没有指定id，随机生成一个
-		obj.counter = 0; // 记录此处理对象被引用的次数
+		// 检查id是否重复
+		if (handlerRecords[obj.id]) {
+			throw new Error('handler "' + obj + '" already exists');
+		}
 
+		obj.counter = 0; // 记录此处理对象被引用的次数
 		handlerRecords[obj.id] = obj;
 
 		return obj;
