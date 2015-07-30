@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * calendar - v1.1.0 (2015-07-30T17:13:21+0800)
+ * calendar - v1.1.0 (2015-07-30T17:40:29+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -24,7 +24,9 @@ var tmpl = new Tmpl({
 	'<thead class="ui-calendar__head">' +
 		'<tr>' +
 	'<% weekDayNames.forEach(function(name) { %>' +
-			'<th class="ui-calendar__head__grid"><%=name%></span></th>' +
+			'<th class="ui-calendar__head__grid">' +
+				'<span class="ui-calendar__head__grid__inner"><%=name%></span>' +
+			'</th>' +
 	'<% }); %>' +
 		'</tr>' +
 	'</thead>' +
@@ -34,7 +36,7 @@ var tmpl = new Tmpl({
 		'<tr>' +
 	'<% week.forEach(function(dateObj) { %>' +
 			'<td class="ui-calendar__body__date<% if (dateObj.tags) { %> <%=dateObj.tags.map(function(tag) { return "ui-calendar__body__date--" + tag; }).join(" ")%><% } %>">' +
-				'<%=dateObj.date%>' +
+				'<span class="ui-calendar__body__date__inner"><%=dateObj.date%></span>' +
 			'</td>' +
 	'<% }); %>' +
 		'</tr>' +
@@ -164,9 +166,12 @@ return widget.create({
 
 			// 处理定制标签
 			if (options.customTags) {
-				base.merge( dateObj.tags, options.customTags.map(function(fn) {
-					return fn( new Date(startTime) );
-				}) );
+				options.customTags.forEach(function(fn) {
+					var tag = fn( new Date(startTime) );
+					if (tag != null && tag !== '') {
+						dateObj.tags.push(tag);
+					}
+				});
 			}
 
 			if (!theWeek || theWeek.length === 7) {
