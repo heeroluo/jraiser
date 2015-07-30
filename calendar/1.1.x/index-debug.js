@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * calendar - v1.1.0 (2015-06-29T15:31:08+0800)
+ * calendar - v1.1.0 (2015-07-30T17:13:21+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -33,7 +33,7 @@ var tmpl = new Tmpl({
 '<% weeks.forEach(function(week) { %>' +
 		'<tr>' +
 	'<% week.forEach(function(dateObj) { %>' +
-			'<td class="ui-calendar__body__date<% if (dateObj.tags) { %> <%=dateObj.tags.map(function(tag) { return "ui-calendar__body__date--" + tag; }).join(" ")%><% } %>"">' +
+			'<td class="ui-calendar__body__date<% if (dateObj.tags) { %> <%=dateObj.tags.map(function(tag) { return "ui-calendar__body__date--" + tag; }).join(" ")%><% } %>">' +
 				'<%=dateObj.date%>' +
 			'</td>' +
 	'<% }); %>' +
