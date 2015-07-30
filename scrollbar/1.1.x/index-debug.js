@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * scrollbar - v1.1.0 (2015-07-29T15:29:47+0800)
+ * scrollbar - v1.1.0 (2015-07-30T11:54:53+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -17,7 +17,7 @@ var base = require('base/1.1.x/'),
 	Draggable = require('draggable/1.1.x/');
 
 
-var TEMPLATE = '<div class="ui-scrollbar">' +
+var TEMPLATE = '<div class="ui-scrollbar" style="position: absolute;">' +
 	'<div class="ui-scrollbar__track" style="position: relative;">' +
 		'<div class="ui-scrollbar__track__thumb"></div>' +
 	'</div>' +
@@ -154,6 +154,7 @@ return widget.create({
 
 	_destroy: function() {
 		var t = this;
+		t._scrollOuter.removeClass('ui-scrollbar-outer--unscrollable');
 		if (t._overflowStyle) {
 			base.each(t._overflowStyle, function(val, key) {
 				t._scrollOuter.css(key, '');
@@ -189,7 +190,7 @@ return widget.create({
 		t._bodySize = bodySize;
 
 		// 滚动主体最大滚动距离
-		t._scrollBodyLimit = bodySize - outerSize;
+		t._scrollBodyLimit = Math.max(bodySize - outerSize, 0);
 		// 滚动主体尺寸大于可视区域尺寸时才需要滚动条
 		t._scrollbarAvailable = t._scrollBodyLimit > 0;
 
@@ -211,9 +212,9 @@ return widget.create({
 
 
 		if (t._scrollbarAvailable) {
-			scrollOuter.removeClass('scrollbar-outer--unscrollable');
+			scrollOuter.removeClass('ui-scrollbar-outer--unscrollable');
 		} else {
-			scrollOuter.addClass('scrollbar-outer--unscrollable');
+			scrollOuter.addClass('ui-scrollbar-outer--unscrollable');
 		}
 
 		if (!supportOverflowScrolling) {
@@ -267,7 +268,7 @@ return widget.create({
 					}
 				});
 
-				t._scrollbar.removeClass('scrollbar--unavailable');
+				t._scrollbar.removeClass('ui-scrollbar--unavailable');
 			} else {
 				// 滚动条无效，也不需要拖动功能了
 				if (t._draggable) {
@@ -275,7 +276,7 @@ return widget.create({
 					delete t._draggable;
 				}
 
-				t._scrollbar.addClass('scrollbar--unavailable');
+				t._scrollbar.addClass('ui-scrollbar--unavailable');
 			}
 
 			t.scrollTo(scrollPosition || 0);
@@ -376,6 +377,7 @@ return widget.create({
 				styleName = 'top';
 				break;
 		}
+
 		t._scrollBody.css(styleName, -pos);
 		t._scrollPosition = pos;
 
