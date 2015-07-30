@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * selectmenu - v1.1.0 (2015-07-30T11:52:31+0800)
+ * selectmenu - v1.1.0 (2015-07-30T14:19:51+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -205,15 +205,6 @@ return widget.create({
 				t._scrollbar = new Scrollbar({
 					scrollBody: t._menuList,
 					mouseWheelStep: 35
-					// ,
-					// events: {
-					// 	scroll: function() {
-					// 		t._clickOnMe = true;
-					// 		if (t._scrollTimer) { clearTimeout(t._scrollTimer); }
-					// 		// 一定时间后吧clickOnMe设为false，否则滚轮滚动后在其他地方必须点两下才能关闭菜单
-					// 		t._scrollTimer = setTimeout(function() { t._clickOnMe = false; }, 120);
-					// 	}
-					// }
 				});
 			}
 		}
