@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * selectmenu - v1.1.0 (2015-07-30T14:19:51+0800)
+ * selectmenu - v1.1.0 (2015-08-03T16:55:27+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -98,8 +98,10 @@ return widget.create({
 	showLayer: function() {
 		var t = this;
 
+		if (t._layerVisible) { return; }
+
 		t._wrapper.addClass('ui-selectmenu--expanded');
-		t._menuVisible = true;
+		t._layerVisible = true;
 
 		if (!t._menuItems || !t._menuItems.length) { return; }
 
@@ -114,10 +116,12 @@ return widget.create({
 	 * @for SelectMenu
 	 */
 	hideLayer: function() {
+		if (!this._layerVisible) { return; }
+
 		this._wrapper.removeClass('ui-selectmenu--expanded')
 			.find('.ui-selectmenu__layer').css('display', 'none');
 
-		this._menuVisible = false;
+		this._layerVisible = false;
 	},
 
 	/**
@@ -126,7 +130,7 @@ return widget.create({
 	 * @for SelectMenu
 	 */
 	toggleLayer: function() {
-		if (this._menuVisible) {
+		if (this._layerVisible) {
 			this.hideLayer();
 		} else {
 			this.showLayer();
@@ -180,7 +184,7 @@ return widget.create({
 		t._wrapper.find('.ui-selectmenu__button__text').text(text);
 
 		// 菜单可见的时候才进行弹出层内容渲染
-		if (t._menuVisible) {
+		if (t._layerVisible) {
 			if (!t._menuList.rendered) {
 				t._menuList.html( tmpl.render('MENU_ITEMS', { data: menuItems }) );
 
@@ -188,7 +192,14 @@ return widget.create({
 					actualHeight = t._menuList.outerHeight(true);
 
 				// 当列表高度小于外部高度时，重设为列表高度
-				if ( actualHeight <= menuLayer.height() ) { menuLayer.css('height', actualHeight); }
+				if ( actualHeight <= menuLayer.height() ) {
+					// 考虑box-sizing为border-box的情况，要加上padding和border
+					if (menuLayer.css('box-sizing') === 'border-box') {
+						actualHeight += menuLayer.outerHeight() - menuLayer.height();
+					}
+
+					menuLayer.css('height', actualHeight);
+				}
 
 				t._menuList.rendered = true;
 			}
@@ -204,7 +215,8 @@ return widget.create({
 			} else {
 				t._scrollbar = new Scrollbar({
 					scrollBody: t._menuList,
-					mouseWheelStep: 35
+					mouseWheelStep: 35,
+					scrollPageOnEnd: false
 				});
 			}
 		}
