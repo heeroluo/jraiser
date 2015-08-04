@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * calendar - v1.1.0 (2015-07-30T17:40:29+0800)
+ * calendar - v1.1.0 (2015-08-04T10:40:03+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -55,7 +55,7 @@ var re_relNumber = /^([+-])(\d+)$/;
  * @extends widget/1.1.x/{WidgetBase}
  * @exports
  * @param {Object} options 组件设置
- *   @param {NodeList} options.wrapper 月历所在容器
+ *   @param {NodeList} options.appendTo 月历所在容器
  *   @param {Number} [options.year] 年份。默认为当前年份
  *   @param {Number} [options.month] 月份。从1开始算，默认为当前月份
  *   @param {Array} [options.weekDayNames] 星期日到星期六对应文字
@@ -74,7 +74,7 @@ return widget.create({
 	},
 
 	_destroy: function(options) {
-		options.wrapper.empty();
+		this._calendarTable.remove();
 	},
 
 	/**
@@ -210,9 +210,11 @@ return widget.create({
 			});
 		}
 
-		var table = $( tmpl.render('table', model) );
-		
-		t._onDOMEvent(table.find('.ui-calendar__body__date'), 'click', function(e) {
+		// 清空原有月历元素，创建新月历元素
+		if (t._calendarTable) { t._calendarTable.remove(); }
+		t._calendarTable = $( tmpl.render('table', model) ).appendTo(options.appendTo);
+
+		t._onDOMEvent(t._calendarTable.find('.ui-calendar__body__date'), 'click', function(e) {
 			e.preventDefault();
 
 			var self = $(this),
@@ -236,8 +238,7 @@ return widget.create({
 			});
 		});
 
-		// 清空原有月历，添加新月历
-		options.wrapper.html('').append(table);
+		
 
 		/**
 		 * 渲染月历时触发
@@ -247,7 +248,7 @@ return widget.create({
 		 *   @param {Object} e.table 月历表格HTML元素
 		 */
 		t._trigger('render', {
-			table: table
+			table: t._calendarTable
 		});
 	},
 

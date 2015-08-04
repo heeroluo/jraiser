@@ -52,7 +52,7 @@ body { margin: 0; }
 <script>
 require(['dom/1.1.x/', 'calendar/1.1.x/'], function($, Calendar) {
 	var calendar = new Calendar({
-		wrapper: $('#wrapper'),
+		appendTo: $('#wrapper'),
 		tableAttrs: {
 			cellspacing: 4
 		},
