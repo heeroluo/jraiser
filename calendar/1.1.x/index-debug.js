@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * calendar - v1.1.0 (2015-08-04T10:40:03+0800)
+ * calendar - v1.1.0 (2015-08-04T17:52:35+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -79,7 +79,7 @@ return widget.create({
 
 	/**
 	 * 构建月历数据模型
-	 * @method build
+	 * @method _buildModel
 	 * @protected
 	 * @for Calendar
 	 * @return {Object} 月历数据模型
@@ -194,9 +194,6 @@ return widget.create({
 	render: function() {
 		var t = this, options = t._options;
 
-		// 要重新渲染月历，原有的月历要清除，解绑所有DOM事件
-		t._offDOMEvent();
-
 		var model = t._buildModel({
 			year: t._year,
 			month: t._month,
@@ -214,7 +211,7 @@ return widget.create({
 		if (t._calendarTable) { t._calendarTable.remove(); }
 		t._calendarTable = $( tmpl.render('table', model) ).appendTo(options.appendTo);
 
-		t._onDOMEvent(t._calendarTable.find('.ui-calendar__body__date'), 'click', function(e) {
+		t._calendarTable.find('.ui-calendar__body__date').click(function(e) {
 			e.preventDefault();
 
 			var self = $(this),
@@ -237,8 +234,6 @@ return widget.create({
 				}, dateObj)
 			});
 		});
-
-		
 
 		/**
 		 * 渲染月历时触发

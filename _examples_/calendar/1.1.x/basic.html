@@ -11,6 +11,7 @@ body { margin: 0; }
 	text-align: center;
 	font-weight: bold;
 }
+.header select { font-size: inherit; }
 .wrapper {
 	width: 230px;
 	padding: 4px;
@@ -44,7 +45,29 @@ body { margin: 0; }
 </head>
 
 <body>
-<div id="header" class="header"></div>
+<div id="header" class="header">
+	<select id="year">
+		<option value="2013">2013</option>
+		<option value="2014">2014</option>
+		<option value="2015">2015</option>
+	</select>
+	年
+	<select id="month">
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+		<option value="6">6</option>
+		<option value="7">7</option>
+		<option value="8">8</option>
+		<option value="9">9</option>
+		<option value="10">10</option>
+		<option value="11">11</option>
+		<option value="12">12</option>
+	</select>
+	月
+</div>
 <div id="wrapper" class="wrapper"></div>
 <div id="result" style="text-align: center;"></div>
 <script src="../../../bowl-debug.js"></script>
@@ -53,6 +76,8 @@ body { margin: 0; }
 require(['dom/1.1.x/', 'calendar/1.1.x/'], function($, Calendar) {
 	var calendar = new Calendar({
 		appendTo: $('#wrapper'),
+		year: $('#year').val(),
+		month: $('#month').val(),
 		tableAttrs: {
 			cellspacing: 4
 		},
@@ -68,7 +93,16 @@ require(['dom/1.1.x/', 'calendar/1.1.x/'], function($, Calendar) {
 			}
 		}
 	});
-	$('#header').text(calendar.year() + '年' + calendar.month() + '月');
+
+	$('#year').change(function() {
+		calendar.year(this.value);
+		calendar.render();
+	});
+	$('#month').change(function() {
+		calendar.month(this.value);
+		calendar.render();
+	});
+
 	calendar.render();
 });
 </script>
