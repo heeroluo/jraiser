@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * querystring - v1.0.3 (2015-08-04T17:04:40+0800)
+ * querystring - v1.0.4 (2015-08-04T17:09:54+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
