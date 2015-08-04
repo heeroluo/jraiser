@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.2.2 (2015-07-02T16:34:49+0800)
+ * ajax - v1.2.2 (2015-08-04T17:40:40+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -46,7 +46,7 @@ var scriptOnloadEvent = 'onload' in document.createElement('script') ? 'onload' 
  * 加载脚本文件
  * @method getScript
  * @param {String} src 文件URL
- * @param {Function(statusCode,statusText)} [onload] 加载完成（无论成功与否）后的回调函数
+ * @param {Function(statusText)} [onload] 加载完成（无论成功与否）后的回调函数
  * @return {Object} 请求对象
  */
 /**
@@ -293,7 +293,7 @@ var createXHR = window.ActiveXObject ? function() {
 
 
 return {
-	// See line 276
+	// See line 279
 	createXHR: createXHR,
 
 	/**
@@ -302,7 +302,7 @@ return {
 	 * @param {NodeList|Element} form 表单
 	 * @param {String} [dataType] 返回数据类型，默认为数组。
 	 *   参数值为'string'时返回序列化后的字符串；
-	 *   参数值为'map'时返回键值对（一键多个值时只记录其最后一个值）
+	 *   参数值为'map'时返回键值对（一键多值时只记录其最后一个值）
 	 * @return {Array|Object|String} 表单数据
 	 */
 	serializeForm: function(form, dataType) {
@@ -347,7 +347,7 @@ return {
 	// See line 45
 	getScript: getScript,
 
-	// See line 212
+	// See line 214
 	jsonp: jsonp,
 
 	/**
@@ -371,7 +371,7 @@ return {
 		);
 	},
 
-	// See line 252
+	// See line 255
 	getImage: getImage,
 
 	/**
