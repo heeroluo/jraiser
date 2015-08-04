@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * querystring - v1.0.3 (2015-04-27T11:08:12+0800)
+ * querystring - v1.0.3 (2015-08-04T17:04:40+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -74,11 +74,11 @@ return {
 
 				if (returnArray) {
 					data.push({
-						name: pair[0],
-						value: pair[1]
+						name: o.decode(pair[0]),
+						value: o.decode(pair[1])
 					});
 				} else {
-					data[ pair[0] ] = pair[1];
+					data[o.decode(pair[0])] = o.decode(pair[1]);
 				}
 			});
 
