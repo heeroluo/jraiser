@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * jquery - v1.11.2 (2015-04-23T17:35:26+0800)
+ * jquery - v1.11.3 (2015-08-04T18:14:46+0800)
  * http://jraiser.org/ | Released under MIT license
  *
  * Include jQuery (http://jquery.com/)
@@ -66,7 +66,7 @@ var support = {};
 
 
 var
-	version = "1.11.2",
+	version = "1.11.3",
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
@@ -571,7 +571,12 @@ jQuery.each("Boolean Number String Function Array Date RegExp Object Error".spli
 });
 
 function isArraylike( obj ) {
-	var length = obj.length,
+
+	// Support: iOS 8.2 (not reproducible in simulator)
+	// `in` check used to prevent JIT error (gh-2145)
+	// hasOwn isn't used here due to false negatives
+	// regarding Nodelist length in IE
+	var length = "length" in obj && obj.length,
 		type = jQuery.type( obj );
 
 	if ( type === "function" || jQuery.isWindow( obj ) ) {
