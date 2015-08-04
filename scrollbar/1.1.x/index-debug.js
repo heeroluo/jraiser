@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * scrollbar - v1.1.0 (2015-07-30T11:54:53+0800)
+ * scrollbar - v1.1.0 (2015-08-04T10:04:57+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -19,7 +19,7 @@ var base = require('base/1.1.x/'),
 
 var TEMPLATE = '<div class="ui-scrollbar" style="position: absolute;">' +
 	'<div class="ui-scrollbar__track" style="position: relative;">' +
-		'<div class="ui-scrollbar__track__thumb"></div>' +
+		'<div class="ui-scrollbar__track__thumb" style="position: absolute;"></div>' +
 	'</div>' +
 '</div>';
 
