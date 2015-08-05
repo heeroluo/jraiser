@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * xtemplate wrapper - v4.3.0 (2015-06-12T14:34:42+0800)
+ * xtemplate wrapper - v4.3.0 (2015-08-05T10:04:13+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -90,6 +90,7 @@ var XTpl = base.createClass(function(templates, config) {
 	/**
 	 * 寻找模板（如果找不到，则抛出异常）
 	 * @method _findTpl
+	 * @protected
 	 * @for XTpl
 	 * @param {String} key 模板名
 	 * @return {String} 模板

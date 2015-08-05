@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * widget - v1.1.0 (2015-07-10T15:37:57+0800)
+ * widget - v1.1.0 (2015-08-05T10:11:55+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -70,6 +70,7 @@ var WidgetBase = exports.WidgetBase = base.createClass(function() {
 	/**
 	 * 注册DOM事件监听
 	 * @method _onDOMEvent
+	 * @protected
 	 * @for WidgetBase
 	 * @param {NodeList|Array} elements HTML元素
 	 * @param {String|Array} types 事件类型
@@ -106,6 +107,7 @@ var WidgetBase = exports.WidgetBase = base.createClass(function() {
 	/**
 	 * 注销DOM事件监听
 	 * @method _offDOMEvent
+	 * @protected
 	 * @for WidgetBase
 	 * @param {NodeList|Array} [elements] HTML元素。为空时移除所有监听
 	 * @param {String|Array} [types] 事件类型。为空时移除指定元素的所有监听

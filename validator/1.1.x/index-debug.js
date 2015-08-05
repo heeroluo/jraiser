@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * validator - v1.1.0 (2015-07-02T14:32:37+0800)
+ * validator - v1.1.0 (2015-08-05T10:25:05+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -89,7 +89,7 @@ return widget.create({
 			/**
 			 * 发送远程验证前触发
 			 * @event beforesend
-			 * @for Step
+			 * @for Validator
 			 * @param {Object} e 事件参数
 			 *   @param {Object} e.sourceEvent 源事件对象
 			 *   @param {Array<Element>} e.elements 相关字段元素
