@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom-event - v1.1.1 (2015-04-29T10:20:17+0800)
+ * dom-event - v1.1.1 (2015-08-05T09:57:13+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -341,6 +341,10 @@ var listenerManager = (function() {
 // 在指定节点上注册事件监听
 function on(node, types, handler, options) {
 	if ( !supportEvent(node) ) { return; }
+
+	if (typeof handler !== 'function') {
+		throw new Error('handler must be a function');
+	}
 
 	types.forEach(function(type) {
 		type = type.split('.');
