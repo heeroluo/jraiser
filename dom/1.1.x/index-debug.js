@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom - v1.1.1 (2015-04-27T15:37:00+0800)
+ * dom - v1.1.1 (2015-08-28T16:39:35+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -11,7 +11,7 @@ define(function(require, exports, module) { 'use strict';
  * @category Infrastructure
  * @includeFor {NodeList} ./dom-attr-debug.js,
  *   ./dom-data-debug.js,
- *   ./dom-traversal-debug.js
+ *   ./dom-traversal-debug.js,
  *   ./dom-insertion-debug.js,
  *   ./dom-style-debug.js,
  *   ./dom-offset-debug.js,

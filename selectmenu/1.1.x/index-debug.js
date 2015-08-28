@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * selectmenu - v1.1.0 (2015-08-03T18:06:14+0800)
+ * selectmenu - v1.1.0 (2015-08-28T16:49:48+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -159,7 +159,7 @@ return widget.create({
 
 	/**
 	 * 刷新菜单
-	 * @method refresh
+	 * @method _refresh
 	 * @protected
 	 * @for SelectMenu
 	 */
