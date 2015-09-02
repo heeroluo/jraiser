@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * event-driven - v1.1.0 (2015-04-29T18:04:00+0800)
+ * event-driven - v1.1.0 (2015-09-02T14:42:46+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -27,7 +27,7 @@ return base.createClass(function(handlers) {
 
 	if (handlers) {
 		for (var e in handlers) {
-			if ( handlers.hasOwnProperty(e) ) {
+			if (handlers.hasOwnProperty(e) && handlers[e]) {
 				this.on(e, handlers[e]);
 			}
 		}
