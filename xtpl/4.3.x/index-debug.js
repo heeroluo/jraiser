@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * xtemplate wrapper - v4.3.0 (2015-08-05T10:04:13+0800)
+ * xtemplate wrapper - v4.3.0 (2015-09-07T21:59:31+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -8,7 +8,7 @@ define(function(require, exports, module) { 'use strict';
 /**
  * XTemplate模板引擎包装器
  * @module xtpl/4.3.x/
- * @category Infrastructure
+ * @category Utility
  */
 
 var base = require('base/1.1.x/'),

@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * xtemplate engine - v4.3.0 (2015-06-10T14:16:38+0800)
+ * xtemplate engine - v4.3.0 (2015-09-07T21:59:34+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) {
@@ -8,7 +8,7 @@ define(function(require, exports, module) {
 /**
  * XTemplate模板引擎
  * @module xtpl/4.3.x/xtemplate
- * @category Infrastructure
+ * @category Utility
  * @ignore
  */
 
