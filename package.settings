@@ -1,36 +1,21 @@
 {
 	"app_path": "./_examples_/",
 	"lib_path": "./",
+	"include_subs": true,
 	"list": [
-		{ "target": "^base/.*/(index(.js)?)?$" },
-		{ "target": "^dom/.*/(index(.js)?)?$" },
+		{ "target": "^dom/.*/$" },
 		{
-			"target": "^ajax/.*/(index(.js)?)?$",
+			"target": "^dom/.*/dom-",
+			"excepts": ["."]
+		},
+		{
+			"target": "^ajax/.*/$",
 			"excepts": ["^base/.*"]
 		},
 		{
-			"target": "^event-driven/.*/(index(.js)?)?$",
-			"includes": ["^event-driven/"]
-		},
-		{
-			"target": "^xtpl/.*/(index(.js)?)?$",
-			"excepts": ["^base/.*"]
-		},
-		{
-			"target": "^widget/.*/(index(.js)?)?$",
-			"includes": ["^event-driven/"]
-		},
-		{
-			"target": "^widget/.*/(index(.js)?)?$",
+			"target": "^widget/.*/$",
+			"includes": ["^event-driven/"],
 			"excepts": ["^base/.*", "^dom/.*"]
-		},
-		{
-			"target": "^slideshow/.*/(index(.js)?)?$",
-			"excepts": ["^base/.*", "^dom/.*", "^widget/.*"]
-		},
-		{
-			"target": "^validator/.*/(index(.js)?)?$",
-			"excepts": ["^base/.*", "^dom/.*", "^ajax/.*", "^widget/.*"]
 		}
 	],
 	"ignored_paths": ["_examples_", "bowl"]
