@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * dom - v1.1.1 (2015-08-28T16:39:35+0800)
+ * dom - v1.1.1 (2015-10-10T17:47:19+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -52,6 +52,7 @@ function query(selector, context) {
 	var result;
 
 	if ( typeof selector === 'string' ) {
+		selector = selector.trim();
 		if (selector.charAt(0) === '<' && selector.charAt(selector.length - 1) === '>') {
 			result = selector.length >= 3 ? domIns.htmlToNodes(selector, context) : [ ];
 		} else {
