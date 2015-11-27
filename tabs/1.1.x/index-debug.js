@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * tabs - v1.1.0 (2015-06-16T11:08:51+0800)
+ * tabs - v1.1.0 (2015-11-26T09:35:56+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -91,7 +91,9 @@ return widget.create({
 
 		if (typeof n === 'string') {
 			var hasPanel = t._panels.some(function(panel, i) {
-				if (panel.id === n) {
+				// id与location.hash相同时，页面会跳动；
+				// 如果不想出现跳动情况，可以用data-id
+				if (panel.id === n || panel.getAttribute('data-id') === n) {
 					n = i;
 					return true;
 				}
@@ -99,12 +101,15 @@ return widget.create({
 			if (!hasPanel) { n = 0; }
 		}
 
-		var active = t._active, evtProps = {
-			newTab: t._tabs.get(n),
-			newPanel: t._panels.get(n),
-			newActive: n,
-			sourceEvent: _e
-		};
+		var newPanel = t._panels.eq(n),
+			active = t._active,
+			evtProps = {
+				newTab: t._tabs.get(n),
+				newPanel: newPanel.get(0),
+				newActive: n,
+				sourceEvent: _e
+			};
+
 		if (active != null) {
 			evtProps.oldTab = t._tabs.get(active);
 			evtProps.oldPanel = t._panels.get(active);
@@ -144,14 +149,13 @@ return widget.create({
 			t._active = n;
 
 			if (options.useHashStorage) {
-				if (n === 0) {
-					// 默认就是第一个，不需要记录
-					location.hash = '';
-				} else {
-					var newPanelId = t._panels.eq(n).attr('id');
-					if ( newPanelId && newPanelId !== location.hash.substr(1) ) {
-						location.hash = newPanelId;
-					}
+				var newPanelId = newPanel.attr('data-id') || newPanel.attr('id'),
+					currentHash = location.hash.substr(1);
+
+				if ( (n === 0 && currentHash && currentHash !== newPanelId) ||
+					(n > 0 && currentHash !== newPanelId)
+				) {
+					location.hash = newPanelId;
 				}
 			}
 

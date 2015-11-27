@@ -45,13 +45,13 @@ ul, li { list-style-type: none; padding: 0; margin: 0; }
 		<li class="ui-tabs__tabs__item">Three</li>
 	</ul>
 	<div class="ui-tabs__panels">
-		<div class="ui-tabs__panels__item">
+		<div class="ui-tabs__panels__item" data-id="one">
 			内容1
 		</div>
-		<div class="ui-tabs__panels__item">
+		<div class="ui-tabs__panels__item" data-id="two">
 			内容2
 		</div>
-		<div class="ui-tabs__panels__item">
+		<div class="ui-tabs__panels__item" data-id="three">
 			内容3
 		</div>
 	</div>
@@ -61,16 +61,17 @@ ul, li { list-style-type: none; padding: 0; margin: 0; }
 <script>
 require(['dom/1.1.x/', 'tabs/1.1.x/'], function($, Tabs) {
 
-new Tabs({
-	wrapper: $('#tabs1')
+var tabs1 = new Tabs({
+	wrapper: $('#tabs1'),
+	playInterval: 3000
 });
+tabs1.play();
 
 var tabs2 = new Tabs({
 	wrapper: $('#tabs2'),
-	playInterval: 3000,
-	event: 'click'
+	event: 'click',
+	useHashStorage: true
 });
-tabs2.play();
 
 });
 </script>
