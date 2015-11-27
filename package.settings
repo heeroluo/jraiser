@@ -18,5 +18,8 @@
 			"excepts": ["^base/.*", "^dom/.*"]
 		}
 	],
-	"ignored_paths": ["_examples_", "bowl"]
+	"ignored_paths": ["_examples_", "bowl"],
+	"uglify_options": {
+		"comments": "^\\!"
+	}
 }
