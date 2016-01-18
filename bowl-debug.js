@@ -1,6 +1,6 @@
 /*!
  * Bowl.js
- * Javascript module loader for browser - v1.0.1 (2015-05-13T15:35:44+0800)
+ * Javascript module loader for browser - v1.0.3 (2015-12-18T17:11:04+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 !function(global, undefined) { 'use strict';
@@ -9,7 +9,7 @@
 if (global.bowljs) { return; }
 
 var bowljs = global.bowljs = {
-	version: '1.0.1',
+	version: '1.0.3',
 	logs: [ ]
 };
 
@@ -44,6 +44,11 @@ function extend(target, src) {
 	return target;
 }
 
+// 移除前后空格
+function trim(str) {
+	return String(str).replace(/^\s+/, '').replace(/\s+$/, '');
+}
+
 // 判断是否数组
 var toString = Object.prototype.toString,
 	isArray = Array.isArray ||
@@ -70,7 +75,7 @@ function parseDeps(code) {
 
 
 // 检查是否绝对路径
-function isAbsPath(path) { return /^(?:[a-z]+):\/{2,}/i.test(path); }
+function isAbsPath(path) { return /^(?:[a-z]+:)?\/{2,}/i.test(path); }
 
 // 转换为绝对路径
 function toAbsPath(path) {
@@ -79,19 +84,6 @@ function toAbsPath(path) {
 	div.innerHTML = '<a href="' + path + '"></a>';
 	path = div.firstChild.href;
 	div = null;
-
-	return path;
-}
-
-// 移除URL中的参数和锚点
-function trimURL(path) {
-	var temp = path.indexOf('?');
-	// 移除参数
-	if (temp !== -1) { path = path.substr(0, temp); }
-
-	temp = path.indexOf('#');
-	// 移除锚点
-	if (temp !== -1) { path = path.substr(0, temp); }
 
 	return path;
 }
@@ -111,8 +103,34 @@ function resolvePath(path, ref) {
 }
 
 // 把模块ID转换成URL
-function idToURL(id, ref) {
-	id = trimURL(id).split('/');
+var idURLMapping = { };
+function idToURL(id, ref, keepFlags) {
+	var cacheKey = id = trim(id);
+
+	// 缓存简单id（非相对路径）的解析结果
+	var canBeCached = !/^\./.test(id);
+
+	if (canBeCached && idURLMapping[cacheKey]) { return idURLMapping[cacheKey]; }
+
+	// 临时记录URL中的锚点和参数
+	var hash = '', qs = '';
+
+	id = id
+		// 请求JS资源的时候，锚点是没用的。可以用作id中的标记
+		.replace(/#(.*)$/, function(match, $1) {
+			if ( trim($1) ) { hash = match; }
+			return '';
+		})
+		// 暂时移除参数，便于解析
+		.replace(/\?(.*)$/, function(match, $1) {
+			if ( trim($1) ) { qs = match; }
+			return '';
+		})
+		// 解析 module@version 为 module/version/module
+		.replace(/([^\\\/]+)@([^\\\/]+)/g, function(match, module, version) {
+			return module + '/' + version + '/' + module;
+		})
+		.split('/');
 
 	// 如果没有指定文件，则加载目录下的index
 	var filename = id.pop() || 'index', extname;
@@ -127,26 +145,33 @@ function idToURL(id, ref) {
 
 	// 处理调试后缀
 	var re_debug = /-debug$/;
-	if (config.debug && !re_debug.test(filename)) {
+	if (hash !== '#nondebug' && config.debug && !re_debug.test(filename)) {
 		filename += '-debug';
 	} else if (!config.debug && re_debug.test(filename)) {
 		filename = filename.replace(re_debug, '');
 	}
 
 	id.push(filename + '.' + extname);
-	var url = id.join('/');
+	var url = id.join('/') + qs;
 	if ( !isAbsPath(url) ) { url = resolvePath(url, ref || ''); }
 
-	// 地址映射
-	var map = config.map;
-	if (map) {
-		for (var i = 0; i < map.length; i++) {
-			if (typeof map[i] === 'function') {
-				url = map[i](url);
-			} else if ( isArray(map[i]) ) {
-				url = url.replace(map[i][0], map[i][1]);
+	if (keepFlags && hash) {
+		url += hash;
+	} else {
+		// 地址映射
+		var map = config.map;
+		if (map) {
+			for (var i = 0; i < map.length; i++) {
+				if (typeof map[i] === 'function') {
+					url = map[i](url);
+				} else if ( isArray(map[i]) ) {
+					url = url.replace(map[i][0], map[i][1]);
+				}
 			}
 		}
+
+		// 记录解析结果
+		if (canBeCached) { idURLMapping[cacheKey] = url; }
 	}
 
 	return url;
@@ -553,7 +578,7 @@ extend(Module.prototype, {
 				myRequire.async = function(ids, callback) {
 					if ( !isArray(ids) ) { ids = [ids]; }
 					for (var i = ids.length - 1; i >= 0; i--) {
-						ids[i] = idToURL(ids[i], t._dirname);
+						ids[i] = idToURL(ids[i], t._dirname, true);
 					}
 					require(ids, callback);
 				};
@@ -613,6 +638,7 @@ global.define = function() {
 
 	new Module(id, factory, isArray(deps) ? deps : [deps]);
 };
+global.define.amd = { };
 
 
 /**
