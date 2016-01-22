@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * xtemplate engine - v4.5.0 (2016-01-18T15:52:58+0800)
+ * xtemplate engine - v4.5.0 (2016-01-19T15:19:03+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 /**
@@ -9,16 +9,7 @@
  * @category Utility
  * @ignore
  */
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else if(typeof exports === 'object')
-		exports["xtemplate"] = factory();
-	else
-		root["xtemplate"] = factory();
-})(this, function() {
+define(function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -2574,4 +2565,3 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ }
 /******/ ])
 });
-;
