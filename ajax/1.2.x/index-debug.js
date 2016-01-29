@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.2.2 (2015-08-04T17:40:40+0800)
+ * ajax - v1.2.3 (2016-01-29T14:50:05+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -547,6 +547,12 @@ return {
 			}
 
 			xhr.onreadystatechange = onreadystatechange;
+
+			if ('onerror' in xhr) {
+				xhr.onerror = function() {
+					onreadystatechange.call(xhr, null, 'error');
+				};
+			}
 		}
 
 		if (options.username) {
