@@ -1,11 +1,11 @@
 /*!
  * Bowl.js
- * Javascript module loader for browser - v1.0.3 (2015-12-18T17:11:04+0800)
+ * Javascript module loader for browser - v1.0.3 (2016-02-07T17:56:23+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 !function(global, undefined) { 'use strict';
 
-// 防止重复加载
+// 防止重复初始化
 if (global.bowljs) { return; }
 
 var bowljs = global.bowljs = {
@@ -13,15 +13,14 @@ var bowljs = global.bowljs = {
 	logs: [ ]
 };
 
-var config = { };
-
-// 打印日志
+// 记录日志
 function log(from, message) {
 	bowljs.logs.push('[' + from + ']' + message);
 }
 
 
-var doc = global.document,
+var config = { },
+	doc = global.document,
 	useInteractive = global.attachEvent &&
 		!(global.opera != null && global.opera.toString() === '[object Opera]');
 
@@ -37,41 +36,28 @@ function isEmptyObject(obj) {
 // 扩展对象
 function extend(target, src) {
 	for (var p in src) {
-		if ( src.hasOwnProperty(p) ) {
-			target[p] = src[p];
-		}
+		if ( src.hasOwnProperty(p) ) { target[p] = src[p]; }
 	}
 	return target;
 }
 
 // 移除前后空格
 function trim(str) {
-	return String(str).replace(/^\s+/, '').replace(/\s+$/, '');
+	return str == null ?
+		'' :
+		String(str).replace(/^\s+/, '').replace(/\s+$/, '');
 }
 
 // 判断是否数组
-var toString = Object.prototype.toString,
-	isArray = Array.isArray ||
-		function(value) { return toString.call(value) === '[object Array]'; };
+var isArray = Array.isArray || (function() {
+	var toString = Object.prototype.toString;
+	return function(val) {
+		return toString.call(val) === '[object Array]';
+	};
+})();
 
-
-// 分析出依赖（require）的模块
-function parseDeps(code) {
-	var pattern = /(?:^|[^.$])\brequire\s*\(\s*(["'])([^"'\s\)]+)\1\s*\)/g,
-		result = [ ],
-		match;
-
-	// 粗略移除代码中的注释
-	code = code
-		.replace(/^\s*\/\*[\s\S]*?\*\/\s*$/mg, '') 	// 多行注释
-		.replace(/^\s*\/\/.*$/mg, '');				// 单行注释
-
-	while ( match = pattern.exec(code) ) {
-		if (match[2]) { result.push(match[2]); }
-	}
-
-	return result;
-}
+// 统一为数组结构
+function unifyArray(val) { return isArray(val) ? val : [val]; }
 
 
 // 检查是否绝对路径
@@ -104,10 +90,10 @@ function resolvePath(path, ref) {
 
 // 把模块ID转换成URL
 var idURLMapping = { };
-function idToURL(id, ref, keepFlags) {
+function idToURL(id, ref) {
 	var cacheKey = id = trim(id);
 
-	// 缓存简单id（非相对路径）的解析结果
+	// 缓存非相对路径id的解析结果
 	var canBeCached = !/^\./.test(id);
 
 	if (canBeCached && idURLMapping[cacheKey]) { return idURLMapping[cacheKey]; }
@@ -132,7 +118,7 @@ function idToURL(id, ref, keepFlags) {
 		})
 		.split('/');
 
-	// 如果没有指定文件，则加载目录下的index
+	// 如果没有指定具体文件，则加载目录下的index
 	var filename = id.pop() || 'index', extname;
 
 	// 解析出文件名和扩展名
@@ -145,40 +131,54 @@ function idToURL(id, ref, keepFlags) {
 
 	// 处理调试后缀
 	var re_debug = /-debug$/;
-	if (hash !== '#nondebug' && config.debug && !re_debug.test(filename)) {
+	if ( hash !== '#nondebug' && config.debug && !re_debug.test(filename) ) {
 		filename += '-debug';
-	} else if (!config.debug && re_debug.test(filename)) {
+	} else if ( !config.debug && re_debug.test(filename) ) {
 		filename = filename.replace(re_debug, '');
 	}
-
 	id.push(filename + '.' + extname);
+
 	var url = id.join('/') + qs;
 	if ( !isAbsPath(url) ) { url = resolvePath(url, ref || ''); }
 
-	if (keepFlags && hash) {
-		url += hash;
-	} else {
-		// 地址映射
-		var map = config.map;
-		if (map) {
-			for (var i = 0; i < map.length; i++) {
-				if (typeof map[i] === 'function') {
-					url = map[i](url);
-				} else if ( isArray(map[i]) ) {
-					url = url.replace(map[i][0], map[i][1]);
-				}
+	// 地址映射
+	var map = config.map;
+	if (map) {
+		for (var i = 0; i < map.length; i++) {
+			if (typeof map[i] === 'function') {
+				url = map[i](url);
+			} else if ( isArray(map[i]) ) {
+				url = url.replace(map[i][0], map[i][1]);
 			}
 		}
-
-		// 记录解析结果
-		if (canBeCached) { idURLMapping[cacheKey] = url; }
 	}
+
+	// 记录解析结果
+	if (canBeCached) { idURLMapping[cacheKey] = url; }
 
 	return url;
 }
 
+// 分析出依赖（require）的模块
+function parseDeps(code) {
+	var pattern = /(?:^|[^.$])\brequire\s*\(\s*(["'])([^"'\s\)]+)\1\s*\)/g,
+		result = [ ],
+		match;
 
-// 脚本加载器
+	// 粗略移除代码中的注释
+	code = code
+		.replace(/^\s*\/\*[\s\S]*?\*\/\s*$/mg, '') 	// 多行注释
+		.replace(/^\s*\/\/.*$/mg, '');				// 单行注释
+
+	while ( match = pattern.exec(code) ) {
+		if (match[2]) { result.push(match[2]); }
+	}
+
+	return result;
+}
+
+
+// JS文件加载器
 var scriptLoader = (function() {
 	var onloadEvent = 'onload' in doc.createElement('script') ? 'onload' : 'onreadystatechange',
 		head = doc.head || doc.getElementsByTagName('head')[0],
@@ -188,7 +188,7 @@ var scriptLoader = (function() {
 		interactiveScript;
 
 	return {
-		// 获取正在执行的脚本
+		// 获取正在执行的JS
 		getCurrentScript: function() {
 			if (currentlyAddingScript) { return currentlyAddingScript; }
 
@@ -204,7 +204,7 @@ var scriptLoader = (function() {
 			}
 		},
 
-		// 加载脚本
+		// 加载JS
 		load: function(src, onload) {
 			var currentStatus = status[src];
 
@@ -231,7 +231,7 @@ var scriptLoader = (function() {
 						script.charset = config.charset;
 						break;
 				}
-				script.async = 'async';
+				script.async = true;
 				script.src = src;
 
 				script[onloadEvent] = script.onerror = function() {
@@ -383,7 +383,7 @@ var require = global.require = function(ids, callback) {
 	log('globalRequire', ids);
 
 	taskManager.add(
-		new Module(null, callback, isArray(ids) ? ids : [ids])
+		new Module( null, callback, unifyArray(ids) )
 	);
 };
 
@@ -396,10 +396,11 @@ var require = global.require = function(ids, callback) {
 require.resolve = function(id) { return idToURL(id); };
 
 
-// 模块类（模块id，构造器，依赖的模块）
-function Module(id, factory, deps) {
+// 模块类（模块id，构造器，依赖的模块，模块所在目录）
+function Module(id, factory, deps, dirname) {
 	this._factory = factory;
 	this._deps = deps;
+	this._dirname = dirname;
 
 	log( 'module', 'create: ' + (id || '') );
 
@@ -412,8 +413,7 @@ function Module(id, factory, deps) {
 // Module类静态方法
 extend(Module, {
 	// 请求模块
-	require: function(id, ref) {
-		id = idToURL(id, ref);
+	require: function(id) {
 		var module = Module.all[id];
 		if (module) {
 			return module.exports();
@@ -471,26 +471,26 @@ extend(Module.prototype, {
 		}
 
 		// 解析模块所在目录
-		t._dirname = t.isTask() ? '' : id.substr(0, id.lastIndexOf('/') + 1);
+		t._dirname = t._dirname || ( t.isTask() ? '' : id.substr(0, id.lastIndexOf('/') + 1) );
 
 		var deps = t._deps;
 		if (deps) {
-			var readyStates = t._readyStates = { }, depURL;
+			var readyStates = t._readyStates = { }, dep;
 			for (var i = 0; i < deps.length; i++) {
 				if (!deps[i]) { continue; }
 
-				deps[i] = depURL = idToURL(deps[i], t._dirname);
+				t._deps[i] = dep = idToURL(deps[i], t._dirname);
 
 				// 模块不存在或尚未就绪
-				if ( !Module.isReady(depURL) ) {
+				if ( !Module.isReady(dep) ) {
 					// 记录到依赖链
-					dependentChain.add(id, depURL);
+					dependentChain.add(id, dep);
 					// 记录此模块尚未就绪
-					readyStates[depURL] = true;
+					readyStates[dep] = true;
 
-					log('module', 'notReady: ' + depURL);
+					log('module', 'notReady: ' + dep);
 
-					Module.load(depURL);
+					Module.load(dep);
 				}
 			}
 
@@ -573,18 +573,16 @@ extend(Module.prototype, {
 			if (typeof t._factory === 'function') {
 				module.exports = { };
 				var myRequire = function(id) {
-					return Module.require(id, t._dirname);
+					return Module.require( idToURL(id, t._dirname) );
 				};
 				myRequire.async = function(ids, callback) {
-					if ( !isArray(ids) ) { ids = [ids]; }
-					for (var i = ids.length - 1; i >= 0; i--) {
-						ids[i] = idToURL(ids[i], t._dirname, true);
-					}
-					require(ids, callback);
+					log('asyncRequire', ids);
+					taskManager.add(
+						new Module(null, callback, unifyArray(ids), t._dirname)
+					);
 				};
-				myRequire.resolve = function(id) {
-					return idToURL(id, t._dirname);
-				};
+				myRequire.resolve = function(id) { return idToURL(id, t._dirname); };
+
 				var result = t._factory.call(window, myRequire, module.exports, module);
 
 				// 如果构造器函数的执行结果的布尔值为true，则module.exports为该执行结果
@@ -636,8 +634,9 @@ global.define = function() {
 
 	log('globalDefine', id || '');
 
-	new Module(id, factory, isArray(deps) ? deps : [deps]);
+	new Module( id, factory, unifyArray(deps) );
 };
+// 兼容AMD规范，没什么实质的作用
 global.define.amd = { };
 
 
