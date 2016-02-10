@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * micro-templating - v2.1.2 (2015-06-12T14:46:08+0800)
+ * micro-templating - v2.1.2 (2016-02-10T20:23:22+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -199,10 +199,9 @@ var defaultTpl;
  * @return {String} 渲染结果
  */
 Tmpl.render = function(tpl, data, cached) {
-	var key = base.randomStr('tmpl_');
 	defaultTpl = defaultTpl || new Tmpl();
-	if ( !defaultTpl.has(tpl) ) { defaultTpl.add(key, tpl); }
-	return defaultTpl.render(key, data, cached);
+	if ( !defaultTpl.has(tpl) ) { defaultTpl.add(tpl, tpl); }
+	return defaultTpl.render(tpl, data, cached);
 };
 /**
  * 把字符串中的HTML特殊字符编码为HTML实体
