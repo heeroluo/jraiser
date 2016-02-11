@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * paginator - v1.1.0 (2016-02-11T10:01:44+0800)
+ * paginator - v1.1.0 (2016-02-11T10:25:36+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -144,23 +144,23 @@ return widget.create({
 	template:
 '<ol class="paginator">' +
 '<% if (currentPage > 1) { %>' +
-	'<li class="paginator__item paginator__item-prev"><a href="#" data-page="<%=(currentPage - 1)%>"><%=prevText%></a></li>' +
+	'<li class="paginator__item paginator__item-prev"><a href="#" data-page="<%=(currentPage - 1)%>" class="paginator__item__inner"><%=prevText%></a></li>' +
 '<% } else { %>' +
-	'<li class="paginator__item paginator__item-prev paginator__item--disabled"><span><%=prevText%></span></li>' +
+	'<li class="paginator__item paginator__item-prev paginator__item--disabled"><span class="paginator__item__inner"><%=prevText%></span></li>' +
 '<% } %>' +
 '<% pageItems.forEach(function(obj) { %>' +
 	'<% if (obj.current) { %>' +
-	'<li class="paginator__item paginator__item-number paginator__item--current"><span><%=obj.page%></span></li>' +
+	'<li class="paginator__item paginator__item-number paginator__item--current"><span class="paginator__item__inner"><%=obj.page%></span></li>' +
 	'<% } else if (obj.page === "...") { %>' +
-	'<li class="paginator__item paginator__item-ellipsis"><span><%=ellipsisText%></span></li>' +
+	'<li class="paginator__item paginator__item-ellipsis"><span class="paginator__item__inner"><%=ellipsisText%></span></li>' +
 	'<% } else { %>' +
-	'<li class="paginator__item paginator__item-number"><a href="#" data-page="<%=obj.page%>"><%=obj.page%></a></li>' +
+	'<li class="paginator__item paginator__item-number"><a href="#" data-page="<%=obj.page%>" class="paginator__item__inner"><%=obj.page%></a></li>' +
 	'<% } %>' +
 '<% }); %>' +
 '<% if (currentPage < totalPages) { %>' +
-	'<li class="paginator__item paginator__item-next"><a href="#" data-page="<%=(currentPage + 1)%>"><%=nextText%></a></li>' +
+	'<li class="paginator__item paginator__item-next"><a href="#" data-page="<%=(currentPage + 1)%>" class="paginator__item__inner"><%=nextText%></a></li>' +
 '<% } else { %>' +
-	'<li class="paginator__item paginator__item-next paginator__item--disabled"><span><%=nextText%></span></li>' +
+	'<li class="paginator__item paginator__item-next paginator__item--disabled"><span class="paginator__item__inner"><%=nextText%></span></li>' +
 '<% } %>' +
 '</ol>'
 });
