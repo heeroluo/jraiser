@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * paginator - v1.1.0 (2016-02-10T20:08:42+0800)
+ * paginator - v1.1.0 (2016-02-11T10:01:44+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -107,22 +107,13 @@ return widget.create({
 		if (end < totalPages) { end--; }
 
 		// 补充第一页到开始页
-		var temp = start - 1;
-		if (temp) {
+		if (start - 1) {
 			data.push({
 				page: 1,
 				current: false
+			}, {
+				page: '...'
 			});
-			if (temp > 2) {
-				data.push({
-					page: '...'
-				});
-			} else {
-				data.push({
-					page: start - 1,
-					current: false
-				});
-			}
 		}
 
 		for (var i = start; i <= end; i++) {
@@ -133,20 +124,10 @@ return widget.create({
 		}
 
 		// 补充结束页到末页
-		temp = totalPages - end;
-		if (temp) {
-			if (temp > 2) {
-				data.push({
-					page: '...'
-				});
-			} else {
-				data.push({
-					page: end + 1,
-					current: false
-				});
-			}
-
+		if (totalPages - end) {
 			data.push({
+				page: '...'
+			}, {
 				page: totalPages,
 				current: false
 			});
