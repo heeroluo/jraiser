@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.2.3 (2016-01-29T14:50:05+0800)
+ * ajax - v1.2.4 (2016-02-18T11:51:15+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -323,7 +323,7 @@ return {
 
 			data.push({
 				name: elt.name,
-				value: elt.value.trim()
+				value: elt.type === 'password' ? elt.value : elt.value.trim()
 			});
 		}
 
