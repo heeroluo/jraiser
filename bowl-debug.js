@@ -1,6 +1,6 @@
 /*!
  * Bowl.js
- * Javascript module loader for browser - v1.0.3 (2016-02-07T17:56:23+0800)
+ * Javascript module loader for browser - v1.1.0 (2016-02-10T11:57:42+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 !function(global, undefined) { 'use strict';
@@ -9,7 +9,7 @@
 if (global.bowljs) { return; }
 
 var bowljs = global.bowljs = {
-	version: '1.0.3',
+	version: '1.1.0',
 	logs: [ ]
 };
 
@@ -59,33 +59,76 @@ var isArray = Array.isArray || (function() {
 // 统一为数组结构
 function unifyArray(val) { return isArray(val) ? val : [val]; }
 
+// 保证字符串以某字符开头
+function ensurePrefix(str, prefix) {
+	str = trim(str);
+	return !str || str.charAt(0) == prefix ? str : prefix + str;
+}
+
+// 保证字符串以某字符结尾
+function ensureSuffix(str, suffix) {
+	str = trim(str);
+	return !str || str.charAt(str.length - 1) === suffix ? str : str + suffix;
+}
+
 
 // 检查是否绝对路径
 function isAbsPath(path) { return /^(?:[a-z]+:)?\/{2,}/i.test(path); }
 
-// 转换为绝对路径
-function toAbsPath(path) {
+// 创建一个包含a元素的div，用于获取绝对路径
+function createDivContainsA(href) {
 	// 旧IE下必须使用innerHTML注入a标签（不能只创建a元素），才能获得其绝对路径
 	var div = doc.createElement('div');
-	div.innerHTML = '<a href="' + path + '"></a>';
+	div.innerHTML = '<a href="' + href + '"></a>';
+	return div;
+}
+
+// 转换为绝对路径
+function toAbsPath(path) {
+	var div = createDivContainsA(path);
 	path = div.firstChild.href;
 	div = null;
-
 	return path;
 }
 
+// URL类，记录URL的解析结果，也可以修改某个部分形成新的URL
+function URL(url) {
+	var div = createDivContainsA(url), a = div.firstChild;
+	a.href = a.href;
+
+	var t = this;
+	// 解析出URL的各个部分
+	t.protocol = a.protocol;
+	t.host = a.host.replace(/:80$/, '');
+	t.hostname = a.hostname;
+	t.port = a.port;
+	t.pathname = ensurePrefix(a.pathname, '/');
+	t.search = a.search;
+	t.hash = a.hash;
+
+	div = a = null;
+}
+URL.prototype.toString = function() {
+	return ensureSuffix(this.protocol, ':') +
+		'//' + this.host +
+		ensurePrefix(this.pathname, '/') +
+		ensurePrefix(this.search, '?') +
+		ensurePrefix(this.hash, '#');
+};
+
+
 // 解析相对路径（ref必须以/结尾）
-function resolvePath(path, ref) {
-	if ( /^\//.test(path) ) {
-		// 以“/”开头的路径，参考路径为应用路径
-		ref = config.appPath;
-		path = path.substr(1);
-	} else if ( !/^\./.test(path) ) {
-		// 非相对路径情况下，参考路径为类库路径
-		ref = config.libPath;
+function resolvePath(to, from) {
+	if ( /^\//.test(to) ) {
+		// 以“/”开头的路径，上下文路径为应用路径
+		from = config.appPath;
+		to = to.substr(1);
+	} else if ( !/^\./.test(to) ) {
+		// 非相对路径情况下，上下文路径为类库路径
+		from = config.libPath;
 	}
 
-	return toAbsPath(ref + path);
+	return toAbsPath(from + to);
 }
 
 // 把模块ID转换成URL
@@ -93,23 +136,18 @@ var idURLMapping = { };
 function idToURL(id, ref) {
 	var cacheKey = id = trim(id);
 
-	// 缓存非相对路径id的解析结果
+	// 缓存非相对路径id的转换结果
 	var canBeCached = !/^\./.test(id);
 
 	if (canBeCached && idURLMapping[cacheKey]) { return idURLMapping[cacheKey]; }
 
-	// 临时记录URL中的锚点和参数
-	var hash = '', qs = '';
+	// 临时记录URL中的参数和锚点
+	var suffix = '';
 
 	id = id
-		// 请求JS资源的时候，锚点是没用的。可以用作id中的标记
-		.replace(/#(.*)$/, function(match, $1) {
-			if ( trim($1) ) { hash = match; }
-			return '';
-		})
-		// 暂时移除参数，便于解析
-		.replace(/\?(.*)$/, function(match, $1) {
-			if ( trim($1) ) { qs = match; }
+		// 暂时移除锚点和参数，便于解析
+		.replace(/(?:\?.*)?(?:#.*)?$/, function(match) {
+			suffix = match;
 			return '';
 		})
 		// 解析 module@version 为 module/version/module
@@ -131,26 +169,24 @@ function idToURL(id, ref) {
 
 	// 处理调试后缀
 	var re_debug = /-debug$/;
-	if ( hash !== '#nondebug' && config.debug && !re_debug.test(filename) ) {
+	if ( config.debug && !re_debug.test(filename) ) {
 		filename += '-debug';
 	} else if ( !config.debug && re_debug.test(filename) ) {
 		filename = filename.replace(re_debug, '');
 	}
 	id.push(filename + '.' + extname);
 
-	var url = id.join('/') + qs;
+	var url = id.join('/') + suffix;
 	if ( !isAbsPath(url) ) { url = resolvePath(url, ref || ''); }
 
 	// 地址映射
 	var map = config.map;
 	if (map) {
+		url = new URL(url);
 		for (var i = 0; i < map.length; i++) {
-			if (typeof map[i] === 'function') {
-				url = map[i](url);
-			} else if ( isArray(map[i]) ) {
-				url = url.replace(map[i][0], map[i][1]);
-			}
+			map[i](url);
 		}
+		url = url.toString();
 	}
 
 	// 记录解析结果
@@ -208,8 +244,7 @@ var scriptLoader = (function() {
 		load: function(src, onload) {
 			var currentStatus = status[src];
 
-			log('scriptLoader', 'load: ' + src);
-			log('scriptLoader', 'status: ' + currentStatus);
+			log('scriptLoader.load', 'src(' + src + '), status(' + currentStatus + ')');
 
 			if (currentStatus) {
 				// status为1时表示此文件加载中，无须二次加载
@@ -240,7 +275,7 @@ var scriptLoader = (function() {
 						// 记录加载完成
 						status[src] = 2;
 
-						log('scriptLoader', 'onload: ' + src);
+						log('scriptLoader.load(onload)', src);
 
 						script[onloadEvent] = script.onerror = null;
 						head.removeChild(script);
@@ -276,9 +311,7 @@ var dependentChain = (function() {
 	return {
 		// 添加依赖记录
 		add: function(moduleId, depId) {
-			log('dependentChain', 'add');
-			log('dependentChain', 'moduleId: ' + moduleId);
-			log('dependentChain', 'depId: ' + depId);
+			log('dependentChain.add', 'moduleId(' + moduleId + '), depId(' + depId + ')');
 
 			var which = whichDepOnMe[depId] = whichDepOnMe[depId] || [ ];
 			which.push(moduleId);
@@ -289,8 +322,7 @@ var dependentChain = (function() {
 
 		// 清除依赖于某个模块的记录（当被依赖模块就绪时，即可清除）
 		clear: function(depId) {
-			log('dependentChain', 'remove');
-			log('dependentChain', 'depId: ' + depId);
+			log('dependentChain.remove', 'depId(' + depId + ')');
 
 			delete whichDepOnMe[depId];
 		}
@@ -334,8 +366,6 @@ var taskManager = (function() {
 						counter++;
 						// 所有script已经就绪
 						if (counter >= total) {
-							log('taskManager', 'preload complete');
-
 							delete t._scripts;
 							tryExecute();
 						}
@@ -402,7 +432,7 @@ function Module(id, factory, deps, dirname) {
 	this._deps = deps;
 	this._dirname = dirname;
 
-	log( 'module', 'create: ' + (id || '') );
+	log('Module(constructor)', id || '');
 
 	if (id) {
 		this.setId(id);
@@ -432,7 +462,7 @@ extend(Module, {
 	load: function(id) {
 		if (Module.all[id]) { return; }
 
-		log('Module', 'load: ' + id);
+		log('Module.load', id);
 
 		scriptLoader.load(id, function() {
 			if (Module.all[id]) { return; }
@@ -458,7 +488,7 @@ extend(Module.prototype, {
 
 		if (t._id) { throw new Error('module id cannot be changed'); }
 
-		log('module', 'setId: ' + id);
+		log('module.setId', id);
 
 		t._id = id;
 
@@ -488,7 +518,7 @@ extend(Module.prototype, {
 					// 记录此模块尚未就绪
 					readyStates[dep] = true;
 
-					log('module', 'notReady: ' + dep);
+					log('module(depNotReady)', 'id(' + id + '), dep(' + dep + ')');
 
 					Module.load(dep);
 				}
@@ -504,8 +534,7 @@ extend(Module.prototype, {
 	_checkReady: function() {
 		var isReady = this.isReady(), id = this.id();
 
-		log('module', 'id: ' + id);
-		log('module', 'checkReady: ' + isReady);
+		log('module._checkReady', 'id(' + id + '), isReady(' + isReady + ')');
 
 		if (isReady) {
 			if ( this.isTask() ) {
@@ -518,7 +547,7 @@ extend(Module.prototype, {
 						module = Module.all[ moduleIds[i] ];
 						if (module) {
 							module.notifyReady(id);
-							log('module', 'notifyTo: ' + moduleIds[i]);
+							log('module(notifyTo)', 'from(' + id + '), to(' + moduleIds[i] + ')');
 						}
 					}
 					dependentChain.clear(id);
@@ -551,7 +580,7 @@ extend(Module.prototype, {
 
 	// 执行任务回调
 	execute: function() {
-		log('module', 'execute: ' + this.id());
+		log( 'module.execute', this.id() );
 
 		var deps = this._deps, modules = [ ];
 		for (var i = deps.length - 1; i >= 0; i--) {
@@ -568,7 +597,7 @@ extend(Module.prototype, {
 		if (!module) {
 			module = { id: t.id() };
 
-			log('module', 'export: ' + module.id);
+			log('module.exports', module.id);
 
 			if (typeof t._factory === 'function') {
 				module.exports = { };
@@ -576,7 +605,7 @@ extend(Module.prototype, {
 					return Module.require( idToURL(id, t._dirname) );
 				};
 				myRequire.async = function(ids, callback) {
-					log('asyncRequire', ids);
+					log('asyncRequire', 'require(' + ids + '), moduleId(' + t.id() + ')');
 					taskManager.add(
 						new Module(null, callback, unifyArray(ids), t._dirname)
 					);
@@ -648,26 +677,37 @@ global.define.amd = { };
  * @param {Object} newConfig 新配置
  *   @param {String} [newConfig.libPath] 类库路径
  *   @param {String} [newConfig.appPath] 应用路径
+ *   @param {Boolean} [newConfig.debug] 是否调试模式
+ *   @param {Array} [newConfig.map] URL映射，多次配置会合并
  *   @param {String|Function} [newConfig.charset] 编码
  *   @param {Array} [newConfig.preload] 预加载脚本
- *   @param {Array} [newConfig.map] URL映射，多次配置会合并
- *   @param {Boolean} [newConfig.debug] 是否调试模式
  */
 bowljs.config = function(newConfig) {
-	// 修复路径配置
+	// 处理路径配置（转成绝对路径，路径末尾加上/）
 	var fixPath = function(path) {
 		if ( !isAbsPath(path) ) { path = toAbsPath(path); }
-		if ( path.charAt(path.length - 1) !== '/' ) { path += '/'; }
-		return path;
+		return ensureSuffix(path, '/');
 	};
 
-	var map = config.map;
-	extend(config, newConfig);
+	if (newConfig.libPath) { config.libPath = fixPath(newConfig.libPath); }
+	if (newConfig.appPath) { config.appPath = fixPath(newConfig.appPath); }
 
-	if (map && config.map !== map) { config.map = map.concat(config.map); }
-	if (newConfig.libPath) { config.libPath = fixPath(config.libPath); }
-	if (newConfig.appPath) { config.appPath = fixPath(config.appPath); }
+	var search = global.location.search;
+	// 指定调试模式，优先级：URL参数>配置参数>默认值 
+	if ( /[?|&]debug(&|$)/.test(search) ) {
+		config.debug = true;
+	} else if ( /[?|&]nondebug(&|$)/.test(search) ) {
+		config.debug = false;
+	} else if (newConfig.debug != null) {
+		config.debug = !!newConfig.debug;
+	}
+
+	if (newConfig.map) { config.map = (config.map || [ ]).concat(newConfig.map); }
+
+	config.charset = newConfig.charset;
+	config.preload = newConfig.preload;
 };
+
 
 // 初始配置
 bowljs.config({
@@ -675,29 +715,10 @@ bowljs.config({
 	libPath: './',
 	// 应用路径
 	appPath: './',
-	// debug参数启用调试模式；nondebug参数禁用调试模式
-	debug: (function() {
-		var isDebug = true, search = global.location.search;
-		if ( /[?|&]debug(&|$)/.test(search) ) {
-			isDebug = true;
-		} else if ( /[?|&]nondebug(&|$)/.test(search) ) {
-			isDebug = false;
-		}
-		return isDebug;
-	})()
+	// 调试模式，构建时替换成false
+	debug: true
 });
 
-
-// 加载data-main属性指定的js
-!function() {
-	var scripts = doc.getElementsByTagName('script'), dataMain;
-	for (var i = 0; i < scripts.length; i++) {
-		dataMain = scripts[i].getAttribute('data-main');
-		if ( dataMain && /bowl|jraiser/i.test(scripts[i].src) ) {
-			require(dataMain);
-			break;
-		}
-	}
-}();
+log('bowljs(ready)', 'version(' + bowljs.version + ')');
 
 }(window);
