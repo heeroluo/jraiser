@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * uadetector - v1.0.1 (2014-04-11T14:03:33+0800)
+ * uadetector - v1.0.2 (2016-04-18T16:03:30+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -127,6 +127,24 @@ device.pc = !device.mobile;
 
 
 return {
+	/**
+	 * 检查Useragent是否符合特定条件
+	 * @method is
+	 * @param {Function|String|RegExp} tester 为函数时，以函数返回值作为结果；
+	 *   为字符串时，返回Useragent中是否包含该字符串；
+	 *   为正则表达式时，返回正则匹配结果
+	 * @return {Boolean} Useragent是否符合特定条件
+	 */
+	is: function(tester) {
+		if (typeof tester === 'function') {
+			return !!tester(ua);
+		} else if (typeof tester === 'string') {
+			return ua.indexOf(tester) !== -1;
+		} else if (tester instanceof RegExp) {
+			return tester.test(ua);
+		}
+	},
+
 	/**
 	 * 检测是否特定设备
 	 * @method isDevice
