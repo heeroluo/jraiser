@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * promise - v1.0.0 (2016-04-25T17:42:15+0800)
+ * promise - v1.0.0 (2016-04-26T10:56:30+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -12,20 +12,29 @@ define(function(require, exports, module) { 'use strict';
  */
 
 
-var base = require('base/1.1.x/');
+var base = require('base/1.1.x/'), console = window.console;
 
 
 // 输出错误日志（兼容旧浏览器）
-var logError = typeof console !== 'undefined' && console.error ?
+var logError = console && typeof console.error === 'function' ?
 	function(e) { console.error('Uncaught (in promise) ' + e); } :
-	function() { }
+	function() { };
 
 
 // 判断某个对象是否支持then方法
 function isThenable(obj) { return obj && typeof obj.then === 'function'; }
 
+// 如果value是thenable的，就执行then，否则resolve
+function thenOrResolve(value, resolve, reject) {
+	if ( isThenable(value) ) {
+		value.then(resolve, reject);
+	} else {
+		resolve(value);
+	}
+}
 
-// Promise的三种状态
+
+// Promise的四种状态（其中canceled是扩展的）
 var STATUS_PENDING = 0,
 	STATUS_FULFILLED = 1,
 	STATUS_REJECTED = 2,
@@ -33,7 +42,7 @@ var STATUS_PENDING = 0,
 
 
 /**
- * ES6 Promise的兼容实现，同时提供一些扩展功能
+ * ES6 Promise的兼容实现，并进行了必要的扩展
  * @class Promise
  * @constructor
  * @exports
@@ -53,19 +62,22 @@ var Promise = base.createClass(function(executor) {
 	// 存放各种状态下的回调函数
 	t._pendings = { };
 
+	// 封装拒绝状态的确定（下面好几个地方用到）
+	function reject(reason) { t._settle(STATUS_REJECTED, reason); }
+
 	try {
 		executor(function(value) {
-			t._settle(STATUS_FULFILLED, value);
-		}, function(reason) {
-			t._settle(STATUS_REJECTED, reason);
-		}, function(canceler) {
+			thenOrResolve(value, function(value) {
+				t._settle(STATUS_FULFILLED, value);
+			}, reject);
+		}, reject, function(canceler) {
 			if (typeof canceler !== 'function') {
 				throw new Error('Promise canceler must be a function');
 			}
 			t._canceler = canceler;
 		});
 	} catch (e) {
-		t._settle(STATUS_REJECTED, e);
+		reject(e);
 	}
 }, {
 	// 确定状态并执行对应的回调
@@ -77,15 +89,17 @@ var Promise = base.createClass(function(executor) {
 		t._status = status;
 		t._value = value;
 
-		var callbacks = t._pendings[status];
+		
 
-		// 拒绝状态下，如果没有对此状态的回调函数，则输出拒绝信息
+		// 拒绝状态下，如果没有对此状态的回调，则认为没有进行异常处理，输出拒绝信息
 		if (t._status === STATUS_REJECTED) {
 			setTimeout(function() {
-				if (!callbacks || !callbacks.length) { logError(value); }
+				if (!t._hasRejectedHandler) { logError(value); }
 			}, 0);
 		}
 
+		// 执行回调
+		var callbacks = t._pendings[status];
 		if (callbacks) {
 			callbacks.forEach(function(cb) { cb(value); });
 		}
@@ -96,11 +110,19 @@ var Promise = base.createClass(function(executor) {
 	// 添加回调函数
 	_listen: function(status, cb) {
 		var t = this;
-		if (t._status === STATUS_PENDING) {
-			t._pendings[status] = t._pendings[status] || [ ];
-			t._pendings[status].push(cb);
-		} else if (t._status === status) {
-			cb(t._value);
+
+		// 记录当前promise有对拒绝状态进行处理
+		if (status === STATUS_REJECTED) { t._hasRejectedHandler = true; }
+
+		switch (t._status) {
+			case STATUS_PENDING:
+				t._pendings[status] = t._pendings[status] || [ ];
+				t._pendings[status].push(cb);
+				break;
+
+			case status:
+				cb(t._value);
+				break;
 		}
 	},
 
@@ -111,23 +133,18 @@ var Promise = base.createClass(function(executor) {
 	 */
 	cancel: function() {
 		var t = this;
-		if (t._canceler) {
-			t._canceler.call(window);
-			t._settle(STATUS_CANCELED);
-		} else {
-			throw new Error('Promise canceler is undefined');
+		if (t._status === STATUS_PENDING) {
+			if (t._canceler) {
+				t._canceler.call(window);
+				t._settle(STATUS_CANCELED);
+			} else {
+				throw new Error('Promise canceler is undefined');
+			}
 		}
 	},
 
-	/**
-	 * 指定当前promise状态确定后的操作
-	 * @method then
-	 * @for Promise
-	 * @param {Function} onFulfilled 当前promise被满足后调用的函数
-	 * @param {Function} onRejected 当前promise被拒绝后调用的函数
-	 * @return {Promise} 以回调函数解决的promise
-	 */
-	then: function(onFulfilled, onRejected) {
+	// 对then和spread的统一处理	
+	_then: function(onFulfilled, onRejected, toSpread) {
 		var t = this;
 
 		return new Promise(function(resolve, reject, setCanceler) {
@@ -135,33 +152,29 @@ var Promise = base.createClass(function(executor) {
 				var value = t._value;
 				if (onFulfilled) {
 					try {
-						value = onFulfilled(value);
+						if (toSpread) {
+							value = onFulfilled.apply(window, value);
+						} else {
+							value = onFulfilled.call(window, value);
+						}
 					} catch (e) {
 						reject(e);
 						return;
 					}
 				}
-				if ( isThenable(value) ) {
-					value.then(resolve, reject);
-				} else {
-					resolve(value);
-				}
+				thenOrResolve(value, resolve, reject);
 			});
 
 			t._listen(STATUS_REJECTED, function() {
 				var value = t._value;
 				if (onRejected) {
 					try {
-						value = onRejected(value);
+						value = onRejected.call(window, value);
 					} catch (e) {
 						reject(e);
 						return;
 					}
-					if ( isThenable(value) ) {
-						value.then(resolve, reject);
-					} else {
-						resolve(value);
-					}
+					thenOrResolve(value, resolve, reject);
 				} else {
 					reject(value);
 				}
@@ -174,19 +187,44 @@ var Promise = base.createClass(function(executor) {
 	},
 
 	/**
+	 * 指定当前promise被解决后的操作
+	 * @method then
+	 * @for Promise
+	 * @param {Function} onFulfilled 当前promise被满足后调用的函数
+	 * @param {Function} onRejected 当前promise被拒绝后调用的函数
+	 * @return {Promise} 以回调函数解决的promise
+	 */
+	then: function(onFulfilled, onRejected) {
+		return this._then(onFulfilled, onRejected);
+	},
+
+	/**
+	 * 指定当前promise被满足后的操作。仅当满足promise的值是数组时可用，数组会展开为回调函数的参数
+	 * @method spread
+	 * @for Promise
+	 * @param {Function} onFulfilled 当前promise被满足后调用的函数
+	 * @return {Promise} 以回调函数解决的promise
+	 */
+	spread: function(onFulfilled) {
+		return this._then(onFulfilled, null, true);
+	},
+
+	/**
 	 * 指定当前promise被拒绝后执行的操作
 	 * @method catch
 	 * @for Promise
 	 * @param {Function} onRejected 当前promise被拒绝后调用的函数
 	 * @return {Promise} 以回调函数解决的promise
 	 */
-	'catch': function(onRejected) { return this.then(null, onRejected); },
+	'catch': function(onRejected) {
+		return this.then(null, onRejected);
+	},
 
 	/**
-	 * 指定当前promise状态确定后（无论何种状态，包括被取消状态）执行的操作
+	 * 指定当前promise被解决或被取消后执行的操作
 	 * @method finally
 	 * @for Promise
-	 * @param {Function} handler 状态确定后执行的操作
+	 * @param {Function} handler 状态确定后执行的函数，唯一的参数表示当前promise是否被取消
 	 * @return {Promise} 与当前promise状态相同的新promise
 	 */
 	'finally': function(handler) {
@@ -196,7 +234,7 @@ var Promise = base.createClass(function(executor) {
 			function callback() {
 				if (handler) {
 					try {
-						handler();
+						handler.call(window, t._status === STATUS_CANCELED);
 					} catch (e) {
 						reject(e);
 						return;
@@ -276,11 +314,7 @@ base.extend(Promise, {
 	resolve: function(value) {
 		return new Promise(function(resolve, reject) {
 			setTimeout(function() {
-				if ( isThenable(value) ) {
-					value.then(resolve, reject);
-				} else {
-					resolve(value);
-				}
+				thenOrResolve(value, resolve, reject);
 			}, 0);
 		});
 	},
