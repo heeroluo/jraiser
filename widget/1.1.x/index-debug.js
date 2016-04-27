@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * widget - v1.1.0 (2015-08-05T10:11:55+0800)
+ * widget - v1.1.1 (2016-04-27T11:16:06+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -38,7 +38,7 @@ var WidgetBase = exports.WidgetBase = base.createClass(function() {
 			// 主要用于保存绑定事件的历史记录，以便在销毁组件时解绑
 			t.__domEventProxy = new DOMEventProxy();
 
-			t._init(options);
+			var eventProps = t._init(options);
 			t.__inited = true;
 
 			/**
@@ -46,7 +46,7 @@ var WidgetBase = exports.WidgetBase = base.createClass(function() {
 			 * @event init
 			 * @for WidgetBase
 			 */
-			t._trigger('init');
+			t._trigger('init', eventProps);
 		}
 	},
 
