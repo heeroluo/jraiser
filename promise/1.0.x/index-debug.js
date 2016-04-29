@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * promise - v1.0.0 (2016-04-26T10:56:30+0800)
+ * promise - v1.0.0 (2016-04-29T10:00:16+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -232,20 +232,36 @@ var Promise = base.createClass(function(executor) {
 
 		return new Promise(function(resolve, reject, setCanceler) {
 			function callback() {
+				var result = {
+					code: t._status,
+					FULFILLED: STATUS_FULFILLED,
+					REJECTED: STATUS_REJECTED,
+					CANCELED: STATUS_CANCELED
+				};
+
+				var settle, value = t._value;
+				switch (t._status) {
+					case STATUS_FULFILLED:
+						result.value = value;
+						settle = function() { resolve(value); };
+						break;
+
+					case STATUS_REJECTED:
+						result.reason = value;
+						settle = function() { reject(value); };
+						break;
+				}
+
 				if (handler) {
 					try {
-						handler.call(window, t._status === STATUS_CANCELED);
+						handler.call(window, result);
 					} catch (e) {
 						reject(e);
 						return;
 					}
 				}
 
-				if (t._status === STATUS_FULFILLED) {
-					resolve(t._value);
-				} else if (t._status === STATUS_REJECTED) {
-					reject(t._value);
-				}
+				if (settle) { settle(); }
 			}
 
 			if (t._canceler) {
