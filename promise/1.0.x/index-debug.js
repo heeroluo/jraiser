@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * promise - v1.0.0 (2016-04-29T10:00:16+0800)
+ * promise - v1.0.0 (2016-04-30T19:52:45+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -17,7 +17,7 @@ var base = require('base/1.1.x/'), console = window.console;
 
 // 输出错误日志（兼容旧浏览器）
 var logError = console && typeof console.error === 'function' ?
-	function(e) { console.error('Uncaught (in promise) ' + e); } :
+	function(e) { console.error('Uncaught (in promise) %o', e); } :
 	function() { };
 
 
@@ -88,9 +88,7 @@ var Promise = base.createClass(function(executor) {
 
 		t._status = status;
 		t._value = value;
-
-		
-
+ 
 		// 拒绝状态下，如果没有对此状态的回调，则认为没有进行异常处理，输出拒绝信息
 		if (t._status === STATUS_REJECTED) {
 			setTimeout(function() {
