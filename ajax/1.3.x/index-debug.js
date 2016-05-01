@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.3.0 (2016-04-30T20:01:47+0800)
+ * ajax - v1.3.0 (2016-05-01T18:43:26+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -537,13 +537,66 @@ function send(url, options) {
 }
 
 
+/**
+ * 获取表单数据
+ * @method serializeForm
+ * @param {NodeList|Element} form 表单
+ * @param {String} [dataType] 返回的数据类型：
+ *   string表示字符串；
+ *   map表示键值对（一键多值时只记录其最后一个值）。
+ *   默认为数组。
+ * @return {Array|Object|String} 表单数据
+ */
+function serializeForm(form, dataType) {
+	// 为NodeList类型时，取第一个节点
+	if (!('nodeType' in form) && typeof form.get === 'function') { form = form.get(0); }
+
+	if (form.tagName !== 'FORM') { throw new Error('Form must be an HTML form element'); }
+
+	var data = [ ], elements = form.elements;
+	for (var i = 0, elt; elt = elements[i]; i++) {
+		// name属性为空或disabled的元素不被提交
+		if (elt.disabled || !elt.name) { continue; }
+		// 单选框和多选框的值在选中状态下才有效
+		if (elt.tagName === 'INPUT' &&
+			(elt.type === 'radio' || elt.type === 'checkbox') && !elt.checked)
+		{
+			continue;
+		}
+
+		data.push({
+			name: elt.name,
+			// 密码保持原来的值，其他去除两端的空白
+			value: elt.type === 'password' ? elt.value : elt.value.trim()
+		});
+	}
+
+	switch (dataType) {
+		case 'string':
+			data = qs.stringify(data);
+			break;
+
+		case 'map':
+			var map = { };
+			for (var i = 0; i < data.length; i++) {
+				map[data[i].name] = data[i].value;
+			}
+			data = map;
+			break;
+	}
+
+	return data;
+}
+
+
 return {
 	getScript: getScript,
 	getImage: getImage,
 	getCSS: getCSS,
 	jsonp: jsonp,
 	createXHR: createXHR,
-	send: send
+	send: send,
+	serializeForm: serializeForm
 };
 
 });
