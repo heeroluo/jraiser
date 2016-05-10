@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.3.0 (2016-05-01T18:43:26+0800)
+ * ajax - v1.3.0 (2016-05-10T18:14:50+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -74,7 +74,12 @@ var getScript = exports.getScript = wrap(function(src, options, callbackName) {
 		//   script节点没有abort方法，无法做到真正的放弃，
 		//   只能通过这个变量控制不执行回调函数
 		var isAborted;
-		setCanceler(function() { isAborted = true; });
+		function abort() {
+			isAborted = true;
+			if (script) { script[scriptOnloadEvent](); }
+		}
+
+		setCanceler(abort);
 
 		// JSONP回调函数
 		if (callbackName) {
@@ -89,11 +94,14 @@ var getScript = exports.getScript = wrap(function(src, options, callbackName) {
 		if (options.charset) { script.charset = options.charset; }
 		script.async = true;
 		script[scriptOnloadEvent] = function() {
-			if ( !script.readyState || /loaded|complete/.test(script.readyState) ) {
+			if ( isAborted || !script.readyState || /loaded|complete/.test(script.readyState) ) {
 				// 移除script节点
 				script[scriptOnloadEvent] = null;
 				head.removeChild(script);
 				script = null;
+
+				// 清除超时计时器
+				if (timeoutTimer) { clearTimeout(timeoutTimer); }
 
 				// 释放JSONP回调函数
 				if (callbackName) { base.deleteGlobalVar(callbackName); }
@@ -109,13 +117,11 @@ var getScript = exports.getScript = wrap(function(src, options, callbackName) {
 		}
 
 		// 超时处理
-		var timeout = Number(options.timeout);
+		var timeout = Number(options.timeout), timeoutTimer;
 		if (timeout > 0) {
-			setTimeout(function() {
-				if (!isAborted) {
-					isAborted = true;
-					reject( new Error('Timeout') );
-				}
+			timeoutTimer = setTimeout(function() {
+				abort();
+				reject( new Error('Timeout') );
 			}, timeout);
 		}
 	});
@@ -125,12 +131,17 @@ var getScript = exports.getScript = wrap(function(src, options, callbackName) {
 // JSONP POST
 // 实现原理为表单提交到iframe，iframe内页面调用parent[callback]
 function postScript(action, options, callbackName) {
-	return new Promise(function(resolve, reject) {
+	return new Promise(function(resolve, reject, setCanceler) {
 		// 用于记录是否放弃请求：
 		//   iframe节点没有abort方法，无法做到真正的放弃，
 		//   只能通过这个变量控制不执行回调函数
 		var isAborted;
-		setCanceler(function() { isAborted = true; });
+		function abort() {
+			isAborted = true;
+			iframeOnload();
+		}
+
+		setCanceler(abort);
 
 		// JSONP回调函数
 		if (callbackName) {
@@ -173,15 +184,25 @@ function postScript(action, options, callbackName) {
 		body.insertBefore(div, body.firstChild);
 		form.submit();
 
+		var iframe = form.nextSibling;
 		function iframeOnload() {
+			// 释放事件回调
+			if (iframe) {
+				if (iframe.removeEventListener) {
+					iframe.removeEventListener('load', iframeOnload, false);
+				} else if (iframe.detachEvent) {
+					iframe.detachEvent('onload', iframeOnload);
+				}
+			}
 			// 移除提交数据用的元素
-			if (div.parentNode) { div.parentNode.removeChild(div); }
+			if (div && div.parentNode) { div.parentNode.removeChild(div); }
+			div = iframe = null;
+
 			// 释放全局回调函数
 			if (callbackName) { base.deleteGlobalVar(callbackName); }
 
 			if (!isAborted) { resolve(); }
 		}
-		var iframe = form.nextSibling;
 		if (iframe.addEventListener) {
 			iframe.addEventListener('load', iframeOnload, false);
 		} else if (iframe.attachEvent) {
@@ -193,7 +214,7 @@ function postScript(action, options, callbackName) {
 		if (timeout > 0) {
 			setTimeout(function() {
 				if (!isAborted) {
-					isAborted = true;
+					abort();
 					reject( new Error('Timeout') );
 				}
 			}, timeout);
