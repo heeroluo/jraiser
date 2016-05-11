@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.3.0 (2016-05-10T18:14:50+0800)
+ * ajax - v1.3.0 (2016-05-11T11:03:06+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -297,8 +297,10 @@ var allImages = { };
  * @return {Promise} 加载图片的Promise
  */
 var getImage = wrap(function(src, options) {
+	var id = Math.random();
+
 	return new Promise(function(resolve, reject) {
-		var img = new Image(), id = Math.random();
+		var img = new Image();
 		// 把img存起来，以防被回收
 		allImages[id] = img;
 
