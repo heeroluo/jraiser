@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.3.0 (2016-05-11T11:03:06+0800)
+ * ajax - v1.3.0 (2016-05-11T11:18:26+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -380,10 +380,10 @@ function parseMIMEType(contentType) {
  *   @param {Boolean} [options.async=true] 是否使用异步方式请求，dataType为jsonp时只能为true
  *	 @param {Number} [options.timeout] 超时时间，仅在异步请求方式时有效
  *   @param {XMLHttpRequest} [options.xhr] 进行请求的XMLHttpRequest对象，如不指定则自动创建，dataType为jsonp时无效
- *   @param {Boolean} [options.withCredentials=false] 是否在跨域请求中发送凭据(cookie等）
+ *   @param {Boolean} [options.withCredentials=true] 是否在跨域请求中发送凭据(cookie等）
  *   @param {String} [options.callbackName] jsonp回调函数名，如不指定则按照特定规则生成。
  *     仅当dataType为jsonp时有效
- *   @param {Function(xhr)} [options.onbeforesend] 发送请求前执行的操作，dataType为jsonp时无效
+ *   @param {Function(xhr)} [options.beforeSend] 发送请求前执行的操作，dataType为jsonp时无效
  * @return {Promise} 发送请求的promise
  */
 /**
@@ -399,10 +399,10 @@ function parseMIMEType(contentType) {
  *   @param {Boolean} [options.async=true] 是否使用异步方式请求，dataType为jsonp时只能为true
  *	 @param {Number} [options.timeout] 超时时间，仅在异步请求方式时有效
  *   @param {XMLHttpRequest} [options.xhr] 进行请求的XMLHttpRequest对象，如不指定则自动创建，dataType为jsonp时无效
- *   @param {Boolean} [options.withCredentials=false] 是否在跨域请求中发送凭据(cookie等）
+ *   @param {Boolean} [options.withCredentials=true] 是否在跨域请求中发送凭据(cookie等）
  *   @param {String} [options.callbackName] jsonp回调函数名，如不指定则按照特定规则生成。
  *     仅当dataType为jsonp时有效
- *   @param {Function(xhr)} [options.onbeforesend] 发送请求前执行的操作，dataType为jsonp时无效
+ *   @param {Function(xhr)} [options.beforeSend] 发送请求前执行的操作，dataType为jsonp时无效
  * @return {Promise} 发送请求的promise
  */
 function send(url, options) {
@@ -548,9 +548,9 @@ function send(url, options) {
 			xhr.withCredentials = true;
 		}
 
-		// 触发beforesend事件，可以在此事件中配置XMLHttpRequest对象
-		if (options.onbeforesend) {
-			options.onbeforesend.call(window, xhr);
+		// 触发beforeSend，可以在此函数中再次调用XMLHttpRequest对象
+		if (options.beforeSend) {
+			options.beforeSend.call(window, xhr);
 		}
 
 		xhr.send(data || '');
