@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * ajax - v1.3.0 (2016-05-11T11:18:26+0800)
+ * ajax - v1.3.0 (2016-05-13T15:53:47+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -305,7 +305,9 @@ var getImage = wrap(function(src, options) {
 		allImages[id] = img;
 
 		img.onload = function() { resolve(src); };
-		img.onabort = img.onerror = function() { reject('Failed to load image'); }
+		img.onabort = img.onerror = function() {
+			reject( new Error('Failed to load image') );
+		};
 		img.src = src;
 	})['finally'](function() {
 		delete allImages[id];
@@ -440,12 +442,11 @@ function send(url, options) {
 		// XMLHttpRequest状态改变时的回调函数
 		// 也用于直接触发错误回调
 		function onreadystatechange(e, errorMsg) {
-			var readyState = xhr.readyState;
-			if (readyState !== 4 && !errorMsg) { return; }
+			var readyState = xhr.readyState, status = readyState === 4 ? xhr.status : 0;
+			if ( (readyState !== 4 || !status) && !errorMsg ) { return; }
 
-			var status = readyState === 4 ? xhr.status : 0;
-			if ( !( (status >= 200 && status < 300) || status === 1223 || status === 304 ) ) {
-				errorMsg = errorMsg || 'Error';
+			if ( !errorMsg && !( (status >= 200 && status < 300) || status === 1223 || status === 304 ) ) {
+				errorMsg = 'Error (HTTP status code: ' + status + ')';
 			}
 
 			var response;
@@ -478,7 +479,7 @@ function send(url, options) {
 			}
 
 			if (errorMsg) {
-				reject(errorMsg);
+				reject( new Error(errorMsg) );
 			} else {
 				resolve([response, xhr]);
 			}
