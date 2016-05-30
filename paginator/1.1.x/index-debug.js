@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * paginator - v1.1.0 (2016-02-11T10:25:36+0800)
+ * paginator - v1.1.1 (2016-05-30T17:42:24+0800)
  * http://jraiser.org/ | Released under MIT license
  */
 define(function(require, exports, module) { 'use strict';
@@ -157,7 +157,7 @@ return widget.create({
 	'<li class="paginator__item paginator__item-number"><a href="#" data-page="<%=obj.page%>" class="paginator__item__inner"><%=obj.page%></a></li>' +
 	'<% } %>' +
 '<% }); %>' +
-'<% if (currentPage < totalPages) { %>' +
+'<% if (totalPages > 1 && currentPage < totalPages) { %>' +
 	'<li class="paginator__item paginator__item-next"><a href="#" data-page="<%=(currentPage + 1)%>" class="paginator__item__inner"><%=nextText%></a></li>' +
 '<% } else { %>' +
 	'<li class="paginator__item paginator__item-next paginator__item--disabled"><span class="paginator__item__inner"><%=nextText%></span></li>' +
