@@ -1,6 +1,6 @@
 /*!
  * JRaiser 2 Javascript Library
- * localStorage implemented by userData
+ * localStorage implemented by UserData
  * http://jraiser.org/ | Released under MIT license
  */
-!function(e){function t(e){e||(e=new Date,e.setFullYear(e.getFullYear()+1)),a.expires=e.toUTCString(),a.save(r)}if(!e.localStorage){var n=e.document,o=e.location,a=n.createElement("input");a.type="hidden",a.addBehavior("#default#userData"),n.body.insertBefore(a,n.body.firstChild);var r=o.hostname;a.load(r),e.localStorage={getItem:function(e){return a.getAttribute(e)},setItem:function(e,n){a.setAttribute(e,n),t()},removeItem:function(e){a.removeAttribute(e),t()},clear:function(){t(new Date(315532799e3)),a.load(r)}}}}(window);
+!function(t){function e(t,e){function i(n){n?r.expires=n.toUTCString():e&&(r.expires=e),r.save(t)}var r=n.createElement("input");r.type="hidden",r.addBehavior("#default#userData"),n.body.insertBefore(r,n.body.firstChild),t=t.replace(":","$"),r.load(t),this.getItem=function(e){return r.load(t),r.getAttribute(e)},this.setItem=function(t,e){r.setAttribute(t,e),i()},this.removeItem=function(t){r.removeAttribute(t),i()},this.clear=function(){i(new Date(315532799e3))}}if(!t.localStorage){var n=t.document,i=t.location;t.localStorage=function(){var t=new Date;return t.setFullYear(t.getFullYear()+1),new e(i.host,t.toUTCString())}()}}(window);
