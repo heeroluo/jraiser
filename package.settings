@@ -1,6 +1,6 @@
 {
 	"app_path": "./_examples_/",
-	"lib_path": "./",
+	"lib_path": "./lib",
 	"include_subs": true,
 	"list": [
 		{ "target": "^dom/.*/$" },
