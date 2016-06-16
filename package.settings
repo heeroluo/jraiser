@@ -3,7 +3,9 @@
 	"lib_path": "./lib",
 	"include_subs": true,
 	"list": [
-		{ "target": "^dom/.*/$" },
+		{
+			"target": "^dom/.*/"
+		},
 		{
 			"target": "^dom/.*/dom-",
 			"excepts": ["."]
