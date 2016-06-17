@@ -11,11 +11,11 @@
 			"excepts": ["."]
 		},
 		{
-			"target": "^ajax/.*/$",
+			"target": "^ajax/.*/",
 			"excepts": ["^base/.*"]
 		},
 		{
-			"target": "^widget/.*/$",
+			"target": "^widget/.*/(widget)?$",
 			"includes": ["^event-driven/"],
 			"excepts": ["^base/.*", "^dom/.*"]
 		}
