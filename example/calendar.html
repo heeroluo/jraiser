@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Examples of Calendar 1.2.x</title>
+<link href="basic.css" media="all" rel="stylesheet" type="text/css" />
+<style>
+#wrapper {
+	position: relative;
+	width: 300px;
+	margin: 0 auto;
+}
+.header {
+	position: relative;
+	margin-bottom: 8px;
+	height: 26px;
+	line-height: 26px;
+	text-align: center;
+}
+#prev-month, #next-month {
+	position: absolute;
+	top: 0;
+	text-decoration: none;
+	color: #333;
+}
+#prev-month { left: 20px; }
+#next-month { right: 20px; }
+#result { margin-top: 30px; text-align: center; }
+
+.ui-calendar { width: 100%; }
+.ui-calendar__head__grid { padding-bottom: 10px; color: #999; }
+.ui-calendar__body__date {
+	background: #fff;
+	color: #0080e1;
+	height: 32px;
+	line-height: 32px;
+	text-decoration: none;
+	text-align: center;
+	cursor: pointer;
+}
+.ui-calendar__body__date:hover { color: #ff3535; }
+.ui-calendar__body__date--today { font-weight: bold; text-decoration: underline; }
+.ui-calendar__body__date--weekend { color: #ff3535; }
+</style>
+</head>
+
+<body>
+<div class="example">
+	<div id="wrapper">
+		<div class="header">
+			<div id="year-and-month"></div>
+			<a href="#" id="prev-month">&lt;</a>
+			<a href="#" id="next-month">&gt;</a>
+		</div>
+	</div>
+	<div id="result"></div>
+</div>
+<script src="../bowl-debug.js"></script>
+<script src="config.js"></script>
+<script>
+require(['dom@1.1.x', 'calendar@1.2.x'], function($, Calendar) {
+	var calendar = new Calendar({
+		$appendTo: $('#wrapper'),
+		year: $('#year').val(),
+		month: $('#month').val(),
+		tableAttrs: {
+			cellspacing: 4
+		},
+		events: {
+			render: function(e) {
+				$('#year-and-month').text(this.year() + '年' + this.month() + '月');
+			},
+			dateselect: function(e) {
+				var date = e.selectedDate;
+				$('#result').text('已选日期：' + date.year + '年' + date.month + '月' + date.date + '日');
+			}
+		}
+	});
+
+	$('#prev-month').click(function(e) {
+		e.preventDefault();
+		calendar.month('-1');
+		calendar.render();
+	});
+	$('#next-month').click(function(e) {
+		e.preventDefault();
+		calendar.month('+1');
+		calendar.render();
+	});
+});
+</script>
+</body>
+</html>
