@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Examples of Tabs 1.2.x</title>
+<style>
+body { font-size: 14px; }
+h2, ul, li { padding: 0; margin: 0; }
+ul, li { list-style-type: none; }
+h2 { font-size: 20px; margin: 20px 10px; }
+.ui-tabs { padding: 0 50px; }
+.ui-tabs__tabs { overflow: hidden; }
+.ui-tabs__tabs__item {
+	width: 100px;
+	height: 40px;
+	line-height: 40px;
+	float: left;
+	padding: 0 20px;
+	background: #2d579d;
+	color: #fff;
+}
+.ui-tabs__tabs__item--active { background: #0080e1; }
+.ui-tabs__panels {
+	height: 30px;
+	line-height: 30px;
+	padding: 12px 20px;
+	background: #eee;
+}
+.ui-tabs__panels__item { display: none; }
+</style>
+</head>
+
+<body>
+<h2>自动播放（间隔3s）</h2>
+<div id="tabs1" class="ui-tabs">
+	<ul class="ui-tabs__tabs">
+		<li class="ui-tabs__tabs__item">One</li>
+		<li class="ui-tabs__tabs__item">Two</li>
+		<li class="ui-tabs__tabs__item">Three</li>
+	</ul>
+	<div class="ui-tabs__panels">
+		<div class="ui-tabs__panels__item">
+			内容1
+		</div>
+		<div class="ui-tabs__panels__item">
+			内容2
+		</div>
+		<div class="ui-tabs__panels__item">
+			内容3
+		</div>
+	</div>
+</div>
+
+<h2 style="margin-top: 60px;">通过锚点存储当前选项卡</h2>
+<div id="tabs2" class="ui-tabs">
+	<ul class="ui-tabs__tabs">
+		<li class="ui-tabs__tabs__item">One</li>
+		<li class="ui-tabs__tabs__item">Two</li>
+		<li class="ui-tabs__tabs__item">Three</li>
+	</ul>
+	<div class="ui-tabs__panels">
+		<div class="ui-tabs__panels__item" data-id="one">
+			内容1
+		</div>
+		<div class="ui-tabs__panels__item" data-id="two">
+			内容2
+		</div>
+		<div class="ui-tabs__panels__item" data-id="three">
+			内容3
+		</div>
+	</div>
+</div>
+<script src="../bowl-debug.js"></script>
+<script src="config.js"></script>
+<script>
+require(['dom@1.1.x', 'tabs@1.2.x'], function($, Tabs) {
+	var tabs1 = new Tabs({
+		$wrapper: $('#tabs1'),
+		playInterval: 3000
+	});
+	tabs1.play();
+
+	new Tabs({
+		$wrapper: $('#tabs2'),
+		event: 'click',
+		useHashStorage: true
+	});
+});
+</script>
+</body>
+</html>
