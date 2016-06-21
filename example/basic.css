@@ -1,0 +1,13 @@
+body {
+	margin: 0;
+	font-family: 'Helvetica Neue', 'Microsoft YaHei', SimSun, Verdana, Arial;
+	font-size: 14px;
+	word-wrap: break-word;
+}
+h1, h2, ul, ol, li, p { padding: 0; margin: 0; }
+h1, h2, h3, h4, h5, h6 { font-weight: normal; }
+li { list-style-type: none; }
+
+.example { margin: 50px 20px 20px 20px; }
+.example__title { margin-bottom: 15px; font-size: 20px; }
+.example:first-child { margin-top: 20px; }

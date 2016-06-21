@@ -3,12 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <title>Examples of Tabs 1.2.x</title>
+<link href="basic.css" media="all" rel="stylesheet" type="text/css" />
 <style>
-body { font-size: 14px; }
-h2, ul, li { padding: 0; margin: 0; }
-ul, li { list-style-type: none; }
-h2 { font-size: 20px; margin: 20px 10px; }
-.ui-tabs { padding: 0 50px; }
 .ui-tabs__tabs { overflow: hidden; }
 .ui-tabs__tabs__item {
 	width: 100px;
@@ -31,42 +27,46 @@ h2 { font-size: 20px; margin: 20px 10px; }
 </head>
 
 <body>
-<h2>自动播放（间隔3s）</h2>
-<div id="tabs1" class="ui-tabs">
-	<ul class="ui-tabs__tabs">
-		<li class="ui-tabs__tabs__item">One</li>
-		<li class="ui-tabs__tabs__item">Two</li>
-		<li class="ui-tabs__tabs__item">Three</li>
-	</ul>
-	<div class="ui-tabs__panels">
-		<div class="ui-tabs__panels__item">
-			内容1
-		</div>
-		<div class="ui-tabs__panels__item">
-			内容2
-		</div>
-		<div class="ui-tabs__panels__item">
-			内容3
+<div class="example">
+	<h2 class="example__title">自动播放（间隔3s）</h2>
+	<div id="tabs1" class="ui-tabs">
+		<ul class="ui-tabs__tabs">
+			<li class="ui-tabs__tabs__item">One</li>
+			<li class="ui-tabs__tabs__item">Two</li>
+			<li class="ui-tabs__tabs__item">Three</li>
+		</ul>
+		<div class="ui-tabs__panels">
+			<div class="ui-tabs__panels__item">
+				内容1
+			</div>
+			<div class="ui-tabs__panels__item">
+				内容2
+			</div>
+			<div class="ui-tabs__panels__item">
+				内容3
+			</div>
 		</div>
 	</div>
 </div>
 
-<h2 style="margin-top: 60px;">通过锚点存储当前选项卡</h2>
-<div id="tabs2" class="ui-tabs">
-	<ul class="ui-tabs__tabs">
-		<li class="ui-tabs__tabs__item">One</li>
-		<li class="ui-tabs__tabs__item">Two</li>
-		<li class="ui-tabs__tabs__item">Three</li>
-	</ul>
-	<div class="ui-tabs__panels">
-		<div class="ui-tabs__panels__item" data-id="one">
-			内容1
-		</div>
-		<div class="ui-tabs__panels__item" data-id="two">
-			内容2
-		</div>
-		<div class="ui-tabs__panels__item" data-id="three">
-			内容3
+<div class="example">
+	<h2 class="example__title">通过锚点存储当前选项卡</h2>
+	<div id="tabs2" class="ui-tabs">
+		<ul class="ui-tabs__tabs">
+			<li class="ui-tabs__tabs__item">One</li>
+			<li class="ui-tabs__tabs__item">Two</li>
+			<li class="ui-tabs__tabs__item">Three</li>
+		</ul>
+		<div class="ui-tabs__panels">
+			<div class="ui-tabs__panels__item" data-id="one">
+				内容1
+			</div>
+			<div class="ui-tabs__panels__item" data-id="two">
+				内容2
+			</div>
+			<div class="ui-tabs__panels__item" data-id="three">
+				内容3
+			</div>
 		</div>
 	</div>
 </div>
