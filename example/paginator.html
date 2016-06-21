@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Examples of Paginator 1.2.x</title>
+<link href="basic.css" media="all" rel="stylesheet" type="text/css" />
+<style>
+.paginator {
+	padding: 0;
+	margin: 0;
+	font-size: 0;
+	text-align: center;
+}
+.paginator__item {
+	margin: 0 0.5em;
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	display: inline-block;
+	line-height: 1.5;
+	font-size: 14px;
+	*zoom: 1;
+	*display: inline;
+}
+.paginator__item a, .paginator__item span {
+	display: block;
+	padding: 3px 9px;
+}
+.paginator__item a {
+	color: #0080e1;
+	text-decoration: none;
+}
+.paginator__item--current {
+	border: none;
+	color: #ff3535;
+	font-weight: bold;
+}
+.paginator__item--disabled, .paginator__item--disabled {
+	color: #ccc;
+	border-color: #dedede;
+}
+.paginator__item-ellipsis {
+	border: none;
+	color: #666;
+	padding-left: 0;
+	padding-right: 0;
+}
+#content {
+	margin: 20px 0;
+	height: 30px;
+	line-height: 30px;
+	font-size: 16px;
+	text-align: center;
+}
+</style>
+</head>
+
+<body>
+<div class="example">
+	<h2 class="example__title">共10页</h2>
+	<div id="content" style="height: 30px; line-height: 30px; text-align: center;"></div>
+	<div id="paginator"></div>
+</div>
+<script src="../bowl-debug.js"></script>
+<script src="config.js"></script>
+<script>
+require(['dom/1.1.x/', 'paginator/1.2.x/'], function($, Paginator) {
+	new Paginator({
+		$appendTo: $('#paginator'),
+		totalPages: 10,
+		currentPage: 1,
+		howManyPageItems: 7,
+		events: {
+			click: function(e) {
+				this.options({
+					currentPage: e.page
+				});
+				$("#content").text('第' + e.page + '页');
+			}
+		}
+	});
+});
+</script>
+</body>
+</html>
