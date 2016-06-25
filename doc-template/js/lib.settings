@@ -19,7 +19,7 @@
 			"excepts": ["^base/.*", "^dom/.*"]
 		}
 	],
-	"ignored_paths": ["bowl", "compatibility", "example", "doc-template"],
+	"ignored_paths": ["bowl", "compatibility", "example"],
 	"uglify_options": {
 		"comments": "^\\!"
 	}
