@@ -1,6 +1,0 @@
-/*!
- * JRaiser 2 Javascript Library
- * cookie - v1.0.1 (2015-04-27T11:10:54+0800)
- * http://jraiser.org/ | Released under MIT license
- */
-define("cookie/1.0.x/",["base/1.1.x/"],function(e,n,t){"use strict";function o(e){if(d.test(e)){var n=RegExp.$2.toUpperCase();if(!i.hasOwnProperty(n))throw new Error("not such time unit("+RegExp.$2+")");return parseFloat(RegExp.$1)*i[n]}return parseFloat(e)||0}var r=e("base/1.1.x/"),i={SEC:1e3,MIN:6e4,HOUR:36e5,DAY:864e5,MONTH:2592e6,YEAR:31536e6},d=/^(\d+(?:\.\d+)?)\s*([a-z]+?)s?$/i;return{set:function(e,n,t){t=r.extend({encode:encodeURIComponent},t);var i=t.expires,d=t.encode(e)+"="+t.encode(n);if("string"==typeof i&&(i=o(i)),"number"==typeof i){var s=new Date;s.setTime(s.getTime()+i),i=s}r.isDate(i)&&(d+="; expires="+i.toUTCString()),t.path&&(d+="; path="+t.path),t.domain&&(d+="; domain="+t.domain),t.secure===!0&&(d+="; secure"),document.cookie=d},get:function(e,n){n=r.extend({encode:encodeURIComponent,decode:decodeURIComponent},n),e="; "+n.encode(e)+"=";var t,o="; "+document.cookie,i=o.indexOf(e);return-1===i?null:(i+=e.length,t=o.indexOf(";",i),-1===t&&(t=o.length),n.decode(o.substring(i,t)))},remove:function(e,n){n=n||{},n.expires=new Date(0),this.set(e,"",n)}}});

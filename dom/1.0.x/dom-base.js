@@ -1,6 +1,0 @@
-/*!
- * JRaiser 2 Javascript Library
- * dom-base - v1.0.1 (2014-08-10T17:28:48+0800)
- * http://jraiser.org/ | Released under MIT license
- */
-define("dom/1.0.x/dom-base",null,function(n,e,t){"use strict";function r(n,e,t,i,o){var l,c=n.length;if(null!=e&&"object"==typeof e){for(var f in e)r(n,f,e[f],i,o);return n}if(t!==u){for(i=i&&"function"==typeof t,l=-1;++l<c;)o.set.call(n,n[l],e,i?t.call(n[l],o.get.call(n,n[l],e),l):t);return n}return c?o.get.call(n,n[0],e):null}var u,i="_jRaiserNodeId_",o=0,l=/\s+/;return{isNode:function(n){return n.nodeType!==u},isXMLNode:function(n){var e=(n.ownerDocument||n).documentElement;return e?"HTML"!==e.nodeName:!1},isWindow:function(n){return null!=n&&n==n.window},getWindow:function(n){return this.isWindow(n)?n:9===n.nodeType?n.defaultView||n.parentWindow:!1},uniqueId:function(n,e){var t=n[i];return t===u&&e!==!1&&(t=n[i]=new Number(++o)),t?t.valueOf():t},removeUniqueId:function(n){try{delete n[i]}catch(e){n[i]=null}},splitBySpace:function(n){return"string"==typeof n&&(n=n.split(l)),null==n||0===n.length?null:n},access:r}});

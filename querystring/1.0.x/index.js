@@ -1,6 +1,0 @@
-/*!
- * JRaiser 2 Javascript Library
- * querystring - v1.0.4 (2015-08-04T17:09:54+0800)
- * http://jraiser.org/ | Released under MIT license
- */
-define("querystring/1.0.x/",["base/1.1.x/"],function(e,n,r){"use strict";function t(e,n,r){return r(e)+(null==n?"":"="+r(n))}var i=e("base/1.1.x/");return{stringify:function(e,n){if("string"==typeof e)return e;n=i.extend({encode:encodeURIComponent},n);var r=[];if(i.isArray(e))e.forEach(function(e){r.push(t(e.name,e.value,n.encode))});else for(var o in e)r.push(t(o,e[o],n.encode));return r.join("&")},parse:function(e,n){n=i.extend({decode:decodeURIComponent},n);var r="array"===n.dataType,t=r?[]:{};return e=(e||window.location.search).replace(/^\?+/,"").split("&").forEach(function(e){e&&(e=e.split("="),e.length<2&&e.push(null),r?t.push({name:n.decode(e[0]),value:n.decode(e[1])}):t[n.decode(e[0])]=n.decode(e[1]))}),t},append:function(e,n,r){if(!n||i.isArray(n)&&!n.length||i.isEmptyObject(n))return e;n="string"!=typeof n?this.stringify(n,r):n.replace(/^[?&]+/,"");var t=e.indexOf("#"),o="";return-1!==t&&(o=e.substring(t,e.length),e=e.substring(0,t)),e=e.replace(/[?&]+$/,""),e+(-1===e.indexOf("?")?"?":"&")+n+o}}});

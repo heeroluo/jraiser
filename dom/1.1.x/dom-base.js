@@ -1,6 +1,0 @@
-/*!
- * JRaiser 2 Javascript Library
- * dom-base - v1.1.0 (2014-12-12T13:47:40+0800)
- * http://jraiser.org/ | Released under MIT license
- */
-define("dom/1.1.x/dom-base",null,function(n,e,t){"use strict";function r(n){return null!=n&&n.nodeType!==i}function o(n){var e=(n.ownerDocument||n).documentElement;return e?"HTML"!==e.nodeName:!1}function u(n){return null!=n&&n==n.window}function l(n,e,t,r,o){if(null!=e&&"object"==typeof e){for(var u in e)e.hasOwnProperty(u)&&l(n,u,e[u],r,o);return n}var c=n.length;if(t!==i){r=r&&"function"==typeof t;for(var f=-1;++f<c;)o.set.call(n,n[f],e,r?t.call(n[f],o.get.call(n,n[f],e),f):t);return n}return c?o.get.call(n,n[0],e):null}var i,c=/\s+/;return{isNode:r,isXMLNode:o,isWindow:u,isHTMLElement:function(n,e){return!u(n)&&r(n)&&!o(n)&&(1===n.nodeType||e&&9===n.nodeType)},getWindow:function(n){return u(n)?n:9===n.nodeType?n.defaultView||n.parentWindow:null},splitBySpace:function(n){return"string"==typeof n&&(n=n.split(c)),null==n||0===n.length?null:n},access:l}});

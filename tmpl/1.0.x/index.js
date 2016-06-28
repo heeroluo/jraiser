@@ -1,6 +1,0 @@
-/*!
- * JRaiser 2 Javascript Library
- * micro-templating - v1.0.0 (2014-04-21T14:44:29+0800)
- * http://jraiser.org/ | Released under MIT license
- */
-define("tmpl/1.0.x/",null,function(e,n,t){"use strict";function r(){for(var e=document.getElementsByTagName("script"),n={},t=0;t<e.length;t++)n[e[t].getAttribute("data-key")||e[t].id]=e[t].innerHTML.trim();return n}function i(e){return e.replace(o,function(e){return u[e]})}function p(e){var n=(e||{}).delimiters;n=n?n.slice():["<%","%>"];var t=new RegExp("((^|"+n[1]+")[^\\t]*)'","g"),u=new RegExp("\\t=(.*?)"+n[1],"g"),a=new RegExp("\\t-(.*?)"+n[1],"g"),_={};return{render:function(e,r,p){if(null==e||null==r)return e;var o=_[e];return o||(o=new Function("obj","escape","var __p__=[],print=function(){__p__.push.apply(__p__,arguments);};with(obj){__p__.push('"+e.replace(/[\r\t\n]/g," ").split(n[0]).join("	").replace(t,"$1\r").replace(u,"',$1,'").replace(a,"',escape($1),'").split("	").join("');").split(n[1]).join("__p__.push('").split("\r").join("\\'")+"');}return __p__.join('');"),p!==!1&&(_[e]=o)),o(r,i)},loadTemplateFromHTML:r,setup:p}}var u={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;","/":"&#x2F;"},a=[];for(var _ in u)a.push(_);var o=new RegExp("["+a.join("")+"]","g");return p()});

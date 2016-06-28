@@ -1,0 +1,26 @@
+{
+	"lib_path": "./lib",
+	"include_subs": true,
+	"list": [
+		{
+			"target": "^dom/.*/(dom)?$"
+		},
+		{
+			"target": "^dom/.*/dom-",
+			"excepts": ["."]
+		},
+		{
+			"target": "^ajax/.*/",
+			"excepts": ["^base/.*"]
+		},
+		{
+			"target": "^widget/.*/(widget)?$",
+			"includes": ["^event-driven/"],
+			"excepts": ["^base/.*", "^dom/.*"]
+		}
+	],
+	"ignored_paths": ["bowl", "compatibility", "example", "doc-template"],
+	"uglify_options": {
+		"comments": "^\\!"
+	}
+}

@@ -1,25 +1,4 @@
 {
-	"app_path": "./_examples_/",
-	"lib_path": "./",
-	"include_subs": true,
-	"list": [
-		{ "target": "^dom/.*/$" },
-		{
-			"target": "^dom/.*/dom-",
-			"excepts": ["."]
-		},
-		{
-			"target": "^ajax/.*/$",
-			"excepts": ["^base/.*"]
-		},
-		{
-			"target": "^widget/.*/$",
-			"includes": ["^event-driven/"],
-			"excepts": ["^base/.*", "^dom/.*"]
-		}
-	],
-	"ignored_paths": ["_examples_", "bowl"],
-	"uglify_options": {
-		"comments": "^\\!"
-	}
+	"import": "./lib.settings",
+	"app_path": "./app"
 }
