@@ -8,6 +8,7 @@
 
 ## 兼容性
 大部分模块兼容PC浏览器（IE 6+）和移动浏览器（iOS 6.0+、Android 4.0+）；小部分模块在IE 6/7下不可用。
-  
-  
-详细说明见 [官方网站](http://jraiser.org/)  。
+
+## 相关链接
+* [官方网站](http://jraiser.org/)：包含教程等详细资料
+* [API文档](http://api.jraiser.org/)：所有模块的API文档
