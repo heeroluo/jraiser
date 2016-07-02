@@ -41,6 +41,7 @@
 .ui-calendar__body__date:hover { color: #ff3535; }
 .ui-calendar__body__date--today { font-weight: bold; text-decoration: underline; }
 .ui-calendar__body__date--weekend { color: #ff3535; }
+.ui-calendar__body__date--overflow { opacity: 0.5; }
 </style>
 </head>
 
@@ -63,6 +64,7 @@ require(['dom@1.1.x', 'calendar@1.2.x'], function($, Calendar) {
 		$appendTo: $('#wrapper'),
 		year: $('#year').val(),
 		month: $('#month').val(),
+		fullFill: true,
 		tableAttrs: {
 			cellspacing: 4
 		},
