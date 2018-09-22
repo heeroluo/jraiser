@@ -279,7 +279,7 @@ bowljs.config({
 				<a href="/"><img src="../../image/logo.png" alt="JRaiser" /></a>
 			</div>
 			<div class="footer__content">
-				Copyright &copy; 2012-2016 <a href="http://heeroluo.net/" target="_blank">Heero.Luo</a><br />Released under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT license</a>
+				Copyright &copy; 2012-2018 <a href="https://mrluo.life/" target="_blank">Mr.Luo</a><br />Released under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT license</a>
 			</div>
 		</footer>
 	</div>
