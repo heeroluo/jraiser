@@ -1,6 +1,6 @@
 {
 	"template_path": "./doc-template",
-	"output_path": "/Users/heerolaw/Sites/HTML/api.jraiser.org/",
+	"output_path": "/Users/HeeroLaw/Projects/jraiser/docs/api/",
 	"category_order": [
 		"Infrastructure",
 		"Utility",

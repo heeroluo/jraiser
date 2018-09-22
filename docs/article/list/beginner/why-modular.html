@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,shrink-to-fit=no" />
+<meta name="format-detection" content="telephone=no,email=no" />
+<meta name="keywords" content="javascript,jraiser,bowljs,modular,library,cmd,amd,loader,define,require,模块化,加载器" />
+<meta name="description" content="基于CMD规范的模块化类库，包含加载器和一些通用性强的基础模块和UI组件。此外还有配套的CLI工具，可用于构建代码和生成API文档。" />
+<title>为什么模块化 | JRaiser</title>
+<link href="/jraiser/style/basic.css?1" media="all" rel="stylesheet" type="text/css" />
+<link href="/jraiser/style/common.css?1" media="all" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<!--[if lt IE 9]>
+<script>
+!function(body) {
+	var html = body.parentNode;
+	body.style.width = '100%';
+	body.style.height = '100%';
+	html.style.overflow = body.style.overflow= 'hidden';
+}(document.body);
+</script>
+<iframe src="/4oie.html" frameborder="0" scrolling="no" style="position: absolute; width: 100%; height: 100%; left: 0; top: 0; z-index: 99999;"></iframe>
+<![endif]-->
+<header class="header">
+	<div class="g-boundary g-clearfix">
+		<div class="header__logo">
+			<a href="/">
+				<img src="/jraiser/image/logo.png" alt="JRaiser" />
+			</a>
+		</div>
+		<nav class="header__nav">
+			<a href="/jraiser/article/list/beginner/quick-start.html" class="header__nav__item header__nav__item__current">教程</a>
+			<a href="/jraiser/api/index.html" target="_blank" class="header__nav__item">API文档</a>
+			<a href="https://github.com/heeroluo/jraiser/issues" target="_blank" class="header__nav__item">提交Issue</a>
+		</nav>
+	</div>
+</header>
+<div class="p-wrapper g-boundary g-clearfix">
+	<div id="main" class="p-main">
+		<article class="p-article">
+	<h1 class="p-article__title">为什么模块化</h1>
+	<div class="p-article__content"><p>小A是某个开发团队的前端工程师，负责编写项目的Javascript代码。</p>
+<h2 id="全局变量冲突"><a href="#全局变量冲突" class="headerlink" title="全局变量冲突"></a>全局变量冲突</h2><p>根据自己的经验，小A先把一些常用的功能写成函数放到一个公用文件「base.js」中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> _ = &#123;</span><br><span class="line">    $: <span class="function"><span class="keyword">function</span>(<span class="params">id</span>) </span>&#123; <span class="keyword">return</span> <span class="built_in">document</span>.getElementById(id); &#125;,</span><br><span class="line">    getCookie: <span class="function"><span class="keyword">function</span>(<span class="params">key</span>) </span>&#123; ... &#125;,</span><br><span class="line">    setCookie: <span class="function"><span class="keyword">function</span>(<span class="params">key, value</span>) </span>&#123; ... &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>小A把这些函数都放在「_」对象内，以防过多的全局变量造成冲突。他告诉团队的其他成员，如果谁想使用这些函数，只要引入「base.js」就可以了。</p>
+<p>小C是小A的同事，他向小A反映：自己的页面引入了一个叫做「underscore.js」的类库，而且，这个类库也会占用「_」这个全局变量，这样一来就会跟「base.js」中的「_」冲突了。小A心想，「underscore.js」是第三方类库，估计不好改，但是「base.js」已经在很多页面铺开，不可能改。最后小A只好无奈地把「underscore.js」占用的全局变量改了。</p>
+<p>此时，小A发现，把函数都放在一个对象内，可以<strong>减少全局变量冲突的概率，却没有解决全局变量冲突这个问题</strong>。</p>
+<h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><p>随着业务的发展，小A又编写了一系列的函数库和UI组件，比如选项卡切换组件「tabs.js」，此组件调用了「base.js」以及「util.js」中的函数。</p>
+<p>有一天，新同事小D跟小A反映，自己已经在页面中引用了「tabs.js」，功能却不正常。小A一看就发现问题了，原来小D不知道「tabs.js」依赖于另外两个文件，没有添加这两个文件的引用。于是，小D马上进行修改：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"tabs.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"base.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"util.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然而，功能还是不正常。此时小A教训小D说：“都说是依赖，那被依赖方肯定要放在依赖方之前啊”。原来小D把「base.js」和「util.js」放到「tabs.js」之后了。</p>
+<p>小D心想：小A是作者，自然知道组件的依赖情况，但是别人就难说了，特别是新人。</p>
+<p>过了一段时间，小A给选项卡切换组件增加了功能，为了实现这个功能，「tabs.js」还需要调用「ui.js」中的函数。这时，小A发现了一个严重的问题，他需要在<em>所有</em>调用了「tabs.js」的页面上增加「ui.js」的引用！！！</p>
+<p>又过了一段时间，小A优化了「tabs.js」，不再需要依赖于「util.js」了，所以他在所有用到「tabs.js」的页面中移除了「util.js」的引用，以提高性能。他这一修改，出大事了，有些页面不正常了。小A一看，恍然大悟，原来某些页面的其他功能用到了「util.js」中的函数，他把这个文件的引用去掉导致出错了。为了保证功能正常，他又把代码恢复了。</p>
+<p>小A又想，有没有办法在<strong>修改依赖的同时不用逐一修改页面，也不影响其他功能</strong>呢？</p>
+<h2 id="模块化"><a href="#模块化" class="headerlink" title="模块化"></a>模块化</h2><p>后来，小A发现了一种新奇的模块化编码方式，可以把它之前遇到的问题全部解决。</p>
+<p>在模块化编程方式下，<strong>每个文件都是一个模块</strong>。每个模块都由一个名为「<strong>define</strong>」的函数创建。例如，把「base.js」改造成一个模块后，代码会变成这样：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">define(<span class="function"><span class="keyword">function</span>(<span class="params">require, exports, module</span>) </span>&#123;</span><br><span class="line">    exports.$ = <span class="function"><span class="keyword">function</span>(<span class="params">id</span>) </span>&#123; <span class="keyword">return</span> <span class="built_in">document</span>.getElementById(id); &#125;;</span><br><span class="line">    exports.getCookie = <span class="function"><span class="keyword">function</span>(<span class="params">key</span>) </span>&#123; ... &#125;;</span><br><span class="line">    exports.setCookie = <span class="function"><span class="keyword">function</span>(<span class="params">key, value</span>) </span>&#123; ... &#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>「base.js」向外提供的接口都被添加到「<strong>exports</strong>」这个对象。而「exports」是一个局部变量，整个模块的代码都没有占用全局变量。</p>
+<p>那如何调用某个模块提供的接口呢？以「tabs.js」为例，它要依赖于「base.js」和「util.js」：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">define(<span class="function"><span class="keyword">function</span>(<span class="params">require, exports, module</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> _ = <span class="built_in">require</span>(<span class="string">'base.js'</span>), util = <span class="built_in">require</span>(<span class="string">'util.js'</span>);</span><br><span class="line">    <span class="keyword">var</span> div_tabs = _.$(<span class="string">'tabs'</span>);</span><br><span class="line">    <span class="comment">// .... 其他代码</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>一旦要移除「util.js」、添加「ui.js」，那只要修改「tabs.js」就可以了：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">define(<span class="function"><span class="keyword">function</span>(<span class="params">require, exports, module</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> base = <span class="built_in">require</span>(<span class="string">'base.js'</span>), ui = <span class="built_in">require</span>(<span class="string">'ui.js'</span>);</span><br><span class="line">    <span class="keyword">var</span> div_tabs = base.$(<span class="string">'tabs'</span>);</span><br><span class="line">    <span class="comment">// .... 其他代码</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>由于<strong>每个模块的依赖都写在自身的代码中</strong>，所以修改依赖不会影响其他模块。</p>
+<h2 id="加载器"><a href="#加载器" class="headerlink" title="加载器"></a>加载器</h2><p>由于缺乏浏览器的原生支持，如果要用模块化的方式编码，就必须借助于一个叫做<strong>加载器</strong>（loader）的东西。</p>
+<p>本类库使用的加载器为 <a href="https://github.com/heeroluo/bowljs" target="_blank" rel="external">Bowl.js</a> 。</p>
+</div>
+</article>
+<nav class="p-article-adjacent g-clearfix">
+	
+	<a href="/jraiser/article/list/beginner/quick-start.html" class="p-article-adjacent__next">快速上手</a>
+</nav>
+		<script>
+		!function() {
+			var links = document.querySelectorAll('#main a'), host = window.location.host;
+			for (var i = links.length - 1; i >= 0; i--) {
+				if (links[i].host !== host) { links[i].target = '_blank'; }
+			}
+		}();
+		</script>
+	</div>
+	<aside id="sidebar" class="c-sidebar">
+	<nav class="c-sidebar__nav">
+		<div class="c-sidebar__nav__title">入门</div>
+		<ul class="c-sidebar__nav__list">
+			<li><a href="/jraiser/article/list/beginner/why-modular.html">为什么模块化</a></li>
+			<li><a href="/jraiser/article/list/beginner/quick-start.html">快速上手</a></li>
+			<li><a href="/jraiser/article/list/beginner/build.html">构建</a></li>
+		</ul>
+	</nav>
+	<nav class="c-sidebar__nav">
+		<div class="c-sidebar__nav__title">进阶</div>
+		<ul class="c-sidebar__nav__list">
+			<li><a href="/jraiser/article/list/advanced/build-by-gulp.html">与Gulp搭配使用</a></li>
+		</ul>
+	</nav>
+	<nav class="c-sidebar__nav">
+		<div class="c-sidebar__nav__title">常见问题</div>
+		<ul class="c-sidebar__nav__list">
+			<li><a href="/jraiser/article/list/faq/third-party-module.html">调用第三方模块</a></li>
+			<li><a href="/jraiser/article/list/faq/about-module-id.html">关于模块ID</a></li>
+		</ul>
+	</nav>
+</aside>
+<script>
+!function(global) {
+	var sideNavLinks = global.document.querySelectorAll('#sidebar a');
+	var pathname = global.location.pathname;
+	for (var i = sideNavLinks.length - 1; i >= 0; i--) {
+		if (sideNavLinks[i].getAttribute('href') === pathname) {
+			sideNavLinks[i].parentNode.className = 'sidebar__nav__list__item--current';
+			return;
+		}
+	}
+}(window);
+</script>
+</div>
+<footer class="c-footer g-keep-bottom js-keep-bottom">
+	<div class="g-boundary g-clearfix">
+		<div class="c-footer__copyright">
+			<p>Copyright &copy; 2012-2018 <a href="//mrluo.life/" target="_blank">Mr.Luo</a></p>
+			<p>Released under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT license</a></p>
+		</div>
+		<div class="c-footer__related">
+			<p>相关链接：</p>
+			<ul class="c-footer__related__list g-clearfix">
+				<li><a href="https://github.com/heeroluo/bowljs" target="_blank">Bowl.js项目</a></li>
+				<li><a href="https://github.com/heeroluo/bowljs-cli" target="_blank">Bowljs CLI项目</a></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<script>
+!function(global) {
+	var body = global.document.body;
+	function updateBottomHeight() {
+		var elts = body.querySelectorAll('.js-keep-bottom');
+		var totalHeight = 0, lastHeight;
+		for (var i = elts.length - 1; i >= 0; i--) {
+			if (lastHeight) { elts[i].style.bottom = lastHeight + 'px'; }
+			lastHeight = elts[i].offsetHeight;
+			totalHeight += lastHeight;
+		}
+		body.style.paddingBottom = totalHeight + 'px';
+	}
+	global.addEventListener('resize', updateBottomHeight, false);
+	updateBottomHeight();
+	if (/\bEdge\b/.test(global.navigator.userAgent)) {
+		setTimeout(updateBottomHeight, 0);
+	}
+}(window);
+</script>
+<div style="display: none;"><script src="//s4.cnzz.com/stat.php?id=4803075&amp;web_id=4803075"></script></div>
+</body>
+</html>

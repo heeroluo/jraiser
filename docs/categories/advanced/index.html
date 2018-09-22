@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,shrink-to-fit=no" />
+<meta name="format-detection" content="telephone=no,email=no" />
+<meta name="keywords" content="javascript,jraiser,bowljs,modular,library,cmd,amd,loader,define,require,模块化,加载器" />
+<meta name="description" content="基于CMD规范的模块化类库，包含加载器和一些通用性强的基础模块和UI组件。此外还有配套的CLI工具，可用于构建代码和生成API文档。" />
+<title>JRaiser</title>
+<link href="/jraiser/style/basic.css?1" media="all" rel="stylesheet" type="text/css" />
+<link href="/jraiser/style/common.css?1" media="all" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<!--[if lt IE 9]>
+<script>
+!function(body) {
+	var html = body.parentNode;
+	body.style.width = '100%';
+	body.style.height = '100%';
+	html.style.overflow = body.style.overflow= 'hidden';
+}(document.body);
+</script>
+<iframe src="/4oie.html" frameborder="0" scrolling="no" style="position: absolute; width: 100%; height: 100%; left: 0; top: 0; z-index: 99999;"></iframe>
+<![endif]-->
+<header class="header">
+	<div class="g-boundary g-clearfix">
+		<div class="header__logo">
+			<a href="/">
+				<img src="/jraiser/image/logo.png" alt="JRaiser" />
+			</a>
+		</div>
+		<nav class="header__nav">
+			<a href="/jraiser/article/list/beginner/quick-start.html" class="header__nav__item header__nav__item__current">教程</a>
+			<a href="/jraiser/api/index.html" target="_blank" class="header__nav__item">API文档</a>
+			<a href="https://github.com/heeroluo/jraiser/issues" target="_blank" class="header__nav__item">提交Issue</a>
+		</nav>
+	</div>
+</header>
+<div class="p-wrapper g-boundary g-clearfix">
+	<div id="main" class="p-main">
+		
+{"domain":null,"_events":{},"_eventsCount":0,"name":"Category","data":{"ciqg12g2u0002uh1e3xbm6xnm":{"name":"faq","_id":"ciqg12g2u0002uh1e3xbm6xnm"},"ciqg12g340006uh1eodvf12ih":{"name":"beginner","_id":"ciqg12g340006uh1eodvf12ih"},"ciqg12g380009uh1eeo6i19xi":{"name":"advanced","_id":"ciqg12g380009uh1eeo6i19xi"}},"_mutex":{"_locked":false,"_queue":[]},"schema":{"paths":{"name":{"name":"name","options":{"required":true}},"parent":{"name":"parent","options":{"required":false,"ref":"Category"}},"slug":{"name":"slug","options":{"required":false}},"path":{"name":"path","options":{"required":false}},"permalink":{"name":"permalink","options":{"required":false}},"posts":{"name":"posts","options":{"required":false}},"length":{"name":"length","options":{"required":false}},"_id":{"name":"_id","options":{"required":true}}},"statics":{},"methods":{},"hooks":{"pre":{"save":[null],"remove":[null]},"post":{"save":[],"remove":[]}},"stacks":{"getter":[null,null,null,null,null,null,null,null],"setter":[null,null,null,null,null,null,null,null],"import":[null,null,null,null,null,null,null,null],"export":[null,null,null,null,null,null,null,null]}},"length":3}
+		<script>
+		!function() {
+			var links = document.querySelectorAll('#main a'), host = window.location.host;
+			for (var i = links.length - 1; i >= 0; i--) {
+				if (links[i].host !== host) { links[i].target = '_blank'; }
+			}
+		}();
+		</script>
+	</div>
+	<aside id="sidebar" class="c-sidebar">
+	<nav class="c-sidebar__nav">
+		<div class="c-sidebar__nav__title">入门</div>
+		<ul class="c-sidebar__nav__list">
+			<li><a href="/jraiser/article/list/beginner/why-modular.html">为什么模块化</a></li>
+			<li><a href="/jraiser/article/list/beginner/quick-start.html">快速上手</a></li>
+			<li><a href="/jraiser/article/list/beginner/build.html">构建</a></li>
+		</ul>
+	</nav>
+	<nav class="c-sidebar__nav">
+		<div class="c-sidebar__nav__title">进阶</div>
+		<ul class="c-sidebar__nav__list">
+			<li><a href="/jraiser/article/list/advanced/build-by-gulp.html">与Gulp搭配使用</a></li>
+		</ul>
+	</nav>
+	<nav class="c-sidebar__nav">
+		<div class="c-sidebar__nav__title">常见问题</div>
+		<ul class="c-sidebar__nav__list">
+			<li><a href="/jraiser/article/list/faq/third-party-module.html">调用第三方模块</a></li>
+			<li><a href="/jraiser/article/list/faq/about-module-id.html">关于模块ID</a></li>
+		</ul>
+	</nav>
+</aside>
+<script>
+!function(global) {
+	var sideNavLinks = global.document.querySelectorAll('#sidebar a');
+	var pathname = global.location.pathname;
+	for (var i = sideNavLinks.length - 1; i >= 0; i--) {
+		if (sideNavLinks[i].getAttribute('href') === pathname) {
+			sideNavLinks[i].parentNode.className = 'sidebar__nav__list__item--current';
+			return;
+		}
+	}
+}(window);
+</script>
+</div>
+<footer class="c-footer g-keep-bottom js-keep-bottom">
+	<div class="g-boundary g-clearfix">
+		<div class="c-footer__copyright">
+			<p>Copyright &copy; 2012-2018 <a href="//mrluo.life/" target="_blank">Mr.Luo</a></p>
+			<p>Released under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT license</a></p>
+		</div>
+		<div class="c-footer__related">
+			<p>相关链接：</p>
+			<ul class="c-footer__related__list g-clearfix">
+				<li><a href="https://github.com/heeroluo/bowljs" target="_blank">Bowl.js项目</a></li>
+				<li><a href="https://github.com/heeroluo/bowljs-cli" target="_blank">Bowljs CLI项目</a></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<script>
+!function(global) {
+	var body = global.document.body;
+	function updateBottomHeight() {
+		var elts = body.querySelectorAll('.js-keep-bottom');
+		var totalHeight = 0, lastHeight;
+		for (var i = elts.length - 1; i >= 0; i--) {
+			if (lastHeight) { elts[i].style.bottom = lastHeight + 'px'; }
+			lastHeight = elts[i].offsetHeight;
+			totalHeight += lastHeight;
+		}
+		body.style.paddingBottom = totalHeight + 'px';
+	}
+	global.addEventListener('resize', updateBottomHeight, false);
+	updateBottomHeight();
+	if (/\bEdge\b/.test(global.navigator.userAgent)) {
+		setTimeout(updateBottomHeight, 0);
+	}
+}(window);
+</script>
+<div style="display: none;"><script src="//s4.cnzz.com/stat.php?id=4803075&amp;web_id=4803075"></script></div>
+</body>
+</html>

@@ -1,0 +1,123 @@
+.p-header { padding: 100px 0; text-align: center; }
+
+/* LOGO */
+.p-header__logo { position: relative; display: inline-block; }
+.p-header__logo img {
+	width: 380px;
+	height: 72px;
+}
+.p-header__logo__ver {
+	position: absolute;
+	left: 100%;
+	top: 0;
+	width: 56px;
+	height: 26px;
+	line-height: 26px;
+	margin-left: 20px;
+	border-radius: 4px;
+	background: #ff3535;
+	display: inline-block;
+	font-size: 12px;
+	font-style: normal;
+	color: #fff;
+}
+.p-header__des { margin-top: 20px; }
+.p-header__des img { width: 340px; height: 21px; }
+
+/* LOGO下方按钮 */
+.p-header__nav { margin-top: 80px; font-size: 0; }
+.p-header__nav__item {
+	width: 136px;
+	height: 52px;
+	line-height: 52px;
+	margin: 0 15px;
+	display: inline-block;
+	background: #0080e1;
+	border-radius: 8px;
+	font-size: 16px;
+	color: #fff;
+}
+.p-header__nav__item:first-child { background: #ff3535; }
+
+@media (max-width: 579px) {
+	.p-header { padding-top: 80px; padding-bottom: 80px; }
+	.p-header__logo img {
+		width: 90%;
+		max-width: 380px;
+		height: auto;
+	}
+	.p-header__logo__ver { display: none; }
+	.p-header__des img {
+		width: 85%;
+		max-width: 320px;
+		height: auto;
+	}
+	.p-header__nav { margin-top: 60px; }
+	.p-header__nav__item {
+		width: 60%;
+		margin: 25px auto 0 auto;
+		display: block;
+	}
+}
+@media (max-width: 329px) {
+	.p-header__nav__item { font-size: 14px; }
+}
+
+
+/* 特性内容节 */
+.p-section-feature {
+	bottom: 124px;
+	padding: 70px 0;
+	background: #0080e1;
+	color: #fff;
+}
+.p-feature {
+	width: 250px;
+	box-sizing: border-box;
+	display: inline-block;
+	vertical-align: top;
+}
+.p-feature__title {
+	position: relative;
+	line-height: 40px;
+	font-size: 20px;
+	text-align: left;
+}
+.p-feature__title__ico {
+	position: absolute;
+	left: 0;
+	top: 0;
+	line-height: 1;
+	font-size: 36px;
+}
+.p-feature__title__ico-lib { top: 2px; }
+.p-feature__title__ico-lib:after { content: '\e602'; }
+.p-feature__title__ico-mod:after { content: '\e600'; }
+.p-feature__title__ico-comp:after { content: '\e601'; }
+.p-feature__des {
+	margin-top: 20px;
+	line-height: 22px;
+	font-size: 14px;
+	text-align: left;
+	color: #fff;
+}
+.p-feature__des a {
+	font-style: normal;
+	text-decoration: underline;
+	color: #fff;
+}
+
+@media (max-width: 899px) {
+	.p-section-feature { padding-top: 50px; padding-bottom: 50px; }
+	.p-feature { width: 45%; }
+	.p-feature:last-child { margin-top: 40px; }
+}
+@media (max-width: 539px) {
+	.p-feature {
+		width: 100%;
+		margin-top: 40px;
+		display: block;
+	}
+	.p-feature:first-child { margin-top: 0; }
+	.p-section-feature { padding-top: 40px; padding-bottom: 40px; }
+}
