@@ -7,5 +7,5 @@
 		"UI",
 		""
 	],
-	"ignored_paths": ["bowl", "compatibility", "example", "doc-template"]
+	"ignored_paths": ["bowl", "compatibility", "example", "doc-template", "docs"]
 }
