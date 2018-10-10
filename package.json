@@ -1,0 +1,41 @@
+{
+  "name": "jraiser",
+  "version": "3.0.0",
+  "description": "Modular JavaScript Foundation Library",
+  "main": "bowl-debug.js",
+  "directories": {
+    "doc": "docs",
+    "example": "example",
+    "lib": "lib"
+  },
+  "scripts": {
+    "start": "node dev-server/start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/heeroluo/jraiser.git"
+  },
+  "keywords": [
+    "modular",
+    "loader",
+    "library"
+  ],
+  "author": {
+    "name": "Heero.Luo",
+    "email": "heeroluo@126.com",
+    "url": "http://heeroluo.net/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/heeroluo/jraiser/issues"
+  },
+  "homepage": "https://heeroluo.github.io/jraiser/",
+  "engines": {
+    "node": ">=6.5.0"
+  },
+  "devDependencies": {
+    "express": "^4.16.3",
+    "fs-extra": "^7.0.0"
+  }
+}
