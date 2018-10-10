@@ -144,7 +144,7 @@ var easings = {
 };
 
 
-// 计算补间动画过程中的值
+// 计算补间过程中的值
 function computeStepValue(startValue, endValue, totalTime, easing, progress) {
 	var stepValue;
 
@@ -183,7 +183,7 @@ function runStep(task, percentage, key) {
 			}
 		}
 	} else {
-		// 动画最后一帧时直接使用最终值（小数计算可能有误差，这样最保险），否则使用计算出来的值
+		// 补间最后一帧时直接使用最终值（小数计算可能有误差，这样最保险），否则使用计算出来的值
 		nextValue = percentage >= 1 ? endValue : computeStepValue(
 			startValue,
 			endValue,
@@ -260,7 +260,7 @@ var queueManager = (function() {
 					Math.max(0, task.startTime + task.duration - new Date)
 				);
 				if (percentage >= 1) {
-					// 移除已完成动画
+					// 移除已完成任务
 					queue.splice(i, 1);
 				} else {
 					i++;
@@ -271,7 +271,7 @@ var queueManager = (function() {
 })();
 
 
-// 动画任务管理
+// 补间任务管理
 var schedule = (function() {
 	var doc = window.document;
 	var requestAnimationFrame = window.requestAnimationFrame;
@@ -306,17 +306,17 @@ var schedule = (function() {
 
 
 /**
- * 创建补间动画。
+ * 创建补间。
  * @method create
- * @param {Object} options 动画参数。
+ * @param {Object} options 补间参数。
  *   @param {Number|Array|Object} options.startValue 初始值。
  *   @param {Number|Array|Object} options.endValue 结束值。
  *   @param {Function(value,key)} options.frame 在此函数中执行每一帧的操作。
  *   @param {Number} [options.duration=400] 持续时间。
  *   @param {Function|String} [options.easing='linear'] 缓动函数。
  *   @param {Function(value,progress,remaining)} [options.onprogress] 每一帧执行后的回调函数。
- *   @param {Function(taskId)} [options.oncomplete] 动画结束后的回调函数。
- * @return {Number} 动画任务id。
+ *   @param {Function(taskId)} [options.oncomplete] 补间结束后的回调函数。
+ * @return {Number} 补间任务id。
  */
 exports.create = function(options) {
 	var easing = options.easing || 'linear';
@@ -342,10 +342,10 @@ exports.create = function(options) {
 
 
 /**
- * 移除动画任务。
+ * 移除补间任务。
  * @method remove
  * @param {Number} taskId 任务id。
- * @param {Boolean} [jumpToEnd=false] 是否执行动画最后一帧（跳到完成状态）。
+ * @param {Boolean} [jumpToEnd=false] 是否执行补间最后一帧（跳到完成状态）。
  */
 exports.remove = function(taskId, jumpToEnd) {
 	var i = queueManager.findIndex(taskId);
