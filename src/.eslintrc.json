@@ -10,7 +10,9 @@
 		"amd": true
 	},
 	"rules": {
-		"no-console": "warn",
+		"no-console": ["warn", {
+			"allow": ["warn", "error", "info"]
+		}],
 		"no-constant-condition": "warn",
 		"block-scoped-var": "error",
 		"curly": ["error", "multi-line"],
