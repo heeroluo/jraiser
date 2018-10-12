@@ -12,7 +12,6 @@
  *   ./dom-animation.js
  */
 
-
 var base = require('../../base/1.2/base');
 var Sizzle = require('./sizzle');
 var domBase = require('./dom-base');
