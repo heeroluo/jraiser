@@ -136,8 +136,8 @@ exports.toArray = function(obj) {
 /**
  * 把源数组的元素合并到目标数组。
  * @method mergeArray
- * @param {Array} target 目标数组。
- * @param {Array} source 源数组。
+ * @param {Array|ArrayLike} target 目标数组。
+ * @param {Array|ArrayLike} source 源数组。
  * @return {Array} 目标数组。
  */
 exports.mergeArray = function(target, source) {
