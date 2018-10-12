@@ -33,14 +33,18 @@ var parse = exports.parse = function(timespan) {
 	if (typeof timespan === 'number') { return timespan; }
 	if (!isNaN(timespan)) { return Number(timespan); }
 
-	var unit;
-	timespan = timespan.replace(/\s*([a-z]+?)s?\s*$/i, function(match, $1) {
-		unit = $1.toUpperCase();
-		return '';
-	});
+	var num = parseFloat(timespan);
+	if (isNaN(num)) {
+		throw new Error('Invalid timespan string');
+	}
+
+	var unit = timespan.split(num)[1]
+		.trim()
+		.toUpperCase()
+		.replace(/S$/, ''); // 移除复数时的s
 
 	if (timeUnits.hasOwnProperty(unit)) {
-		return (Number(timespan) || 0) * timeUnits[unit];
+		return num * timeUnits[unit];
 	} else {
 		throw new Error('Invalid time unit "' + unit + '"');
 	}
