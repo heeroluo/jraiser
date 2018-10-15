@@ -64,7 +64,9 @@
 		"quote-props": ["error", "as-needed", {
 			"keywords": true
 		}],
-		"quotes": ["error", "single"],
+		"quotes": ["error", "single", {
+			"avoidEscape": true
+		}],
 		"semi": "error",
 		"semi-spacing": "error",
 		"space-before-blocks": "error",
