@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>Test</title>
+	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
+	</link>
+</head>
+
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<script src="/non-modular/bowljs/bowl.js"></script>
+	<script src="/non-modular/qunit/qunit.js"></script>
+	<script>
+		bowljs.config({
+			libPath: '/jraiser',
+			appPath: '/app',
+			debug: false,
+			preload: [
+				// Function.prototype.bind ? '' : 'compatibility/es5-shim',
+				// window.JSON ? '' : 'compatibility/json2',
+				// window.localStorage ? '' : 'compatibility/localstorage'
+			]
+		});
+
+		require(['cookie/1.1/cookie', 'base/1.2/base'], function(cookie, base) {
+			// 验证思路：先用setCookie方法验证cookie.get，再用cookie.get验证cookie.set，最后验证cookie.remove
+			var setCookie = function(key, value, options) {
+				options = base.extend({
+					encode: encodeURIComponent
+				}, options);
+
+				var content = options.encode(key) + '=' + options.encode(value);
+				if (options.expires != null) {
+					content += '; expires=' + (
+						base.isDate(options.expires) ?
+							options.expires :
+							timespan.addToDate(new Date(), options.expires)
+					);
+				}
+				if (options.path) { content += '; path=' + options.path; }
+				if (options.domain) { content += '; domain=' + options.domain; }
+				if (options.secure === true) { content += '; secure'; }
+
+				document.cookie = content;
+			};
+
+			QUnit.test('cookie.get test', function(assert) {
+				setCookie('case1-key', 'case1-value');
+				assert.equal(cookie.get('case1-key'), 'case1-value');
+			});
+
+			QUnit.test('cookie.set test', function(assert) {
+				cookie.set('case2-key', 'case2-value');
+				assert.equal(cookie.get('case2-key'), 'case2-value');
+			});
+
+			QUnit.test('cookie.remove', function(assert) {
+				cookie.set('case3-key', 'case3-value');
+				assert.equal(cookie.get('case3-key'), 'case3-value');
+				cookie.remove('case3-key');
+				assert.equal(cookie.get('case3-key'), null);
+			});
+		});
+	</script>
+</body>
+
+</html>

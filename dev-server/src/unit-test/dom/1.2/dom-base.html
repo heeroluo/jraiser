@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>Test</title>
+	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
+	</link>
+</head>
+
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<script src="/non-modular/bowljs/bowl.js"></script>
+	<script src="/non-modular/qunit/qunit.js"></script>
+	<script>
+		bowljs.config({
+			libPath: '/jraiser',
+			appPath: '/app',
+			debug: false,
+			preload: [
+				// Function.prototype.bind ? '' : 'compatibility/es5-shim',
+				// window.JSON ? '' : 'compatibility/json2',
+				// window.localStorage ? '' : 'compatibility/localstorage'
+			]
+		});
+
+		require(['dom/1.2/dom-base'], function(base) {
+			QUnit.test('isNode test', function(assert) {
+				var errArr = [[], {}, 0, '', undefined, null];
+				errArr.forEach(function(item) {
+					assert.equal(base.isXMLNode(item), false);
+				});
+				assert.equal(base.isNode(document.body), true);
+			});
+
+			QUnit.test('isXMLNode test', function(assert) {
+				var errArr = [[], {}, 0, '', undefined, null];
+				errArr.forEach(function(item) {
+					assert.equal(base.isXMLNode(item), false);
+				});
+				assert.equal(base.isXMLNode(document.body), true);
+			});
+
+			QUnit.test('isWindow test', function(assert) {
+				var errArr = [[], {}, 0, '', undefined, null];
+				errArr.forEach(function(item) {
+					assert.equal(base.isWindow(item), false);
+				});
+				assert.equal(base.isWindow(window), true);
+			});
+
+			QUnit.test('isHTMLElement test', function(assert) {
+				var errArr = [[], {}, 0, '', undefined, null, window];
+				errArr.forEach(function(item) {
+					assert.equal(base.isHTMLElement(item), false);
+				});
+				assert.equal(base.isHTMLElement(document), true);
+				assert.equal(base.isHTMLElement(document.body), true);
+			});
+
+			QUnit.test('getWindow test', function(assert) {
+				var errArr = [document.body, document.createTextNode('')];
+				errArr.forEach(function(item) {
+					assert.equal(base.getWindow(item), null);
+				});
+				assert.equal(base.getWindow(document), window);
+			});
+
+			QUnit.test('splitBySpace test', function(assert) {
+				assert.equal(base.splitBySpace('a   a').toString(), 'a,a');
+				assert.equal(base.splitBySpace('a   a   a').toString(), 'a,a,a');
+				assert.equal(base.splitBySpace('aa').toString(), 'aa');
+			});
+		});
+	</script>
+</body>
+
+</html>
