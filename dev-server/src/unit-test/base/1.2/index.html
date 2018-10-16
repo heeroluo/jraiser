@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>Test</title>
+	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
+	</link>
+</head>
+
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<script src="/non-modular/bowljs/bowl.js"></script>
+	<script src="/non-modular/qunit/qunit.js"></script>
+	<script>
+		bowljs.config({
+			libPath: '/jraiser',
+			appPath: '/app',
+			debug: false,
+			preload: [
+				// Function.prototype.bind ? '' : 'compatibility/es5-shim',
+				// window.JSON ? '' : 'compatibility/json2',
+				// window.localStorage ? '' : 'compatibility/localstorage'
+			]
+		});
+
+		// 判断两个数组是否相同
+		function arrEqual(arr1, arr2) {
+			return arr1.toString() === arr2.toString();
+		}
+
+		require(['base/1.2/base'], function (base) {
+
+			QUnit.test('base.isFunction test', function (assert) {
+				var passValue = function () {},
+					errArr = [0, [], '', {}, undefined];
+				assert.equal(base.isFunction(passValue), true);
+				errArr.forEach(function (item) {
+					assert.equal(base.isFunction(item), false);
+				});
+			});
+
+			QUnit.test('base.isDate test', function (assert) {
+				var passValue = new Date(),
+					errArr = [{},
+						[], 0, undefined, ''
+					];
+
+				assert.equal(base.isDate(passValue), true);
+				errArr.forEach(function (item) {
+					assert.equal(base.isDate(item), false);
+				});
+			});
+
+			QUnit.test('base.isObject test', function (assert) {
+				var passValue = {}
+				errArr = [
+					[], 0, undefined, '', new Date()
+				];
+				assert.equal(base.isObject(passValue), true);
+				errArr.forEach(function (item) {
+					assert.equal(base.isObject(item), false);
+				});
+			});
+
+			QUnit.test('base.isEmptyObject test', function (assert) {
+				var passValue = {},
+					errArr = [{
+							a: 1
+						},
+						0,
+						'',
+						undefined,
+						new Date()
+					];
+				assert.equal(base.isEmptyObject(passValue), true);
+				errArr.forEach(function (item) {
+					assert.equal(base.isEmptyObject(item), false);
+				});
+			});
+
+			QUnit.test('base.each test', function (assert) {
+				var passCaseA = {},
+					passCaseB = {
+						a: 1,
+						b: 1,
+						c: 1
+					},
+					passCaseC = [1, 1, 1],
+					errArr = [
+						0,
+						'',
+						undefined
+					]
+
+				function testHandler(obj) {
+					var i = 0;
+					base.each(obj, function (item) {
+						i++;
+					});
+					return i;
+				}
+
+				assert.equal(testHandler(passCaseA), 0);
+				assert.equal(testHandler(passCaseB), 3);
+				assert.equal(testHandler(passCaseC), 3);
+				errArr.forEach(function (item) {
+					assert.equal(testHandler(item), 0);
+				});
+			});
+
+			QUnit.test('base.toArray test', function (assert) {
+				var passCaseA = {
+					'0': 0,
+					'1': 1,
+					'2': 2,
+					length: 3
+				};
+				var result = base.toArray(passCaseA);
+				assert.equal(arrEqual(result, [0, 1, 2]), true);
+			});
+
+			QUnit.test('base.mergeArray test', function (assert) {
+				var arr1 = [1, 2],
+					arr2 = [3, 4];
+
+				assert.equal(arrEqual(base.mergeArray(arr1, arr2), [1, 2, 3, 4]), true);
+			});
+
+			QUnit.test('base.randomStr test', function (assert) {
+				var arr = [];
+				for (var i = 0; i < 2; i++) {
+					arr.push(base.randomStr('prefix'));
+				}
+
+				assert.equal(arr[0] !== arr[1], true);
+				assert.equal(arr[0].indexOf('prefix') > -1, true);
+				assert.equal(arr[1].indexOf('prefix') > -1, true);
+			});
+
+			var globalVar1 = 'i can not be delete';
+			QUnit.test('base.deleteGlobalVar test', function (assert) {
+				window.globalVar2 = 'i can be delete';
+				base.deleteGlobalVar('globalVar1');
+				base.deleteGlobalVar('globalVar2');
+
+				assert.equal(window.globalVar1, null);
+				assert.equal(window.globalVar2, undefined);
+			});
+
+			QUnit.test('base.createClass test', function (assert) {
+				var construtor = function () {
+						this.child = 'hello child';
+					},
+					methods = {
+						a: function () {
+							return 'a';
+						}
+					},
+					parent = function (arg1, arg2) {
+						this.parent = arg1 + ' ' + arg2;
+					},
+					parentArgs = ['hello', 'parent'];
+
+				var newClass = base.createClass(construtor, methods, parent, parentArgs);
+				var instance = new newClass();
+
+				assert.equal(instance.parent, 'hello parent');
+				assert.equal(instance.a(), 'a');
+				assert.equal(instance.child, 'hello child');
+			});
+		});
+	</script>
+</body>
+
+</html>
