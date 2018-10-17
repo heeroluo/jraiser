@@ -3,9 +3,8 @@
 
 <head>
 	<meta charset="utf-8" />
-	<title>Test</title>
+	<title>单元测试-cookie</title>
 	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
-	</link>
 </head>
 
 <body>
@@ -47,19 +46,18 @@
 				document.cookie = content;
 			};
 
-			QUnit.test('cookie.get test', function(assert) {
+			QUnit.test('get', function(assert) {
 				setCookie('case1-key', 'case1-value');
 				assert.equal(cookie.get('case1-key'), 'case1-value');
 			});
 
-			QUnit.test('cookie.set test', function(assert) {
+			QUnit.test('set', function(assert) {
 				cookie.set('case2-key', 'case2-value');
 				assert.equal(cookie.get('case2-key'), 'case2-value');
 			});
 
-			QUnit.test('cookie.remove', function(assert) {
+			QUnit.test('remove', function(assert) {
 				cookie.set('case3-key', 'case3-value');
-				assert.equal(cookie.get('case3-key'), 'case3-value');
 				cookie.remove('case3-key');
 				assert.equal(cookie.get('case3-key'), null);
 			});

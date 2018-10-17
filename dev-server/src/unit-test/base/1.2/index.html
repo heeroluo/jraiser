@@ -3,9 +3,8 @@
 
 <head>
 	<meta charset="utf-8" />
-	<title>Test</title>
+	<title>单元测试-base1.2</title>
 	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
-	</link>
 </head>
 
 <body>
@@ -13,6 +12,7 @@
 	<div id="qunit-fixture"></div>
 	<script src="/non-modular/bowljs/bowl.js"></script>
 	<script src="/non-modular/qunit/qunit.js"></script>
+	<script src="/non-modular/test-utils.js"></script>
 	<script>
 		bowljs.config({
 			libPath: '/jraiser',
@@ -32,67 +32,63 @@
 
 		require(['base/1.2/base'], function (base) {
 
-			QUnit.test('base.isFunction test', function (assert) {
+			QUnit.test('isFunction', function (assert) {
 				var passValue = function () {},
 					errArr = [0, [], '', {}, undefined];
-				assert.equal(base.isFunction(passValue), true);
+				assert.equal(base.isFunction(passValue), true, '合法值测试');
 				errArr.forEach(function (item) {
-					assert.equal(base.isFunction(item), false);
+					assert.equal(base.isFunction(item), false, window.testUtils.getErrByType(item));
 				});
 			});
 
-			QUnit.test('base.isDate test', function (assert) {
+			QUnit.test('isDate', function (assert) {
 				var passValue = new Date(),
 					errArr = [{},
 						[], 0, undefined, ''
 					];
 
-				assert.equal(base.isDate(passValue), true);
+				assert.equal(base.isDate(passValue), true, '合法值测试');
 				errArr.forEach(function (item) {
-					assert.equal(base.isDate(item), false);
+					assert.equal(base.isDate(item), false, window.testUtils.getErrByType(item));
 				});
 			});
 
-			QUnit.test('base.isObject test', function (assert) {
+			QUnit.test('isObject', function (assert) {
 				var passValue = {}
 				errArr = [
 					[], 0, undefined, '', new Date()
 				];
-				assert.equal(base.isObject(passValue), true);
+				assert.equal(base.isObject(passValue), true, '合法值测试');
 				errArr.forEach(function (item) {
-					assert.equal(base.isObject(item), false);
+					assert.equal(base.isObject(item), false, window.testUtils.getErrByType(item));
 				});
 			});
 
-			QUnit.test('base.isEmptyObject test', function (assert) {
+			QUnit.test('isEmptyObject', function (assert) {
 				var passValue = {},
 					errArr = [{
 							a: 1
 						},
 						0,
 						'',
+						[],
 						undefined,
 						new Date()
 					];
-				assert.equal(base.isEmptyObject(passValue), true);
+				assert.equal(base.isEmptyObject(passValue), true, '合法值测试');
 				errArr.forEach(function (item) {
-					assert.equal(base.isEmptyObject(item), false);
+					assert.equal(base.isEmptyObject(item), false, window.testUtils.getErrByType(item));
 				});
 			});
 
-			QUnit.test('base.each test', function (assert) {
+			QUnit.test('each', function (assert) {
 				var passCaseA = {},
 					passCaseB = {
 						a: 1,
 						b: 1,
 						c: 1
 					},
-					passCaseC = [1, 1, 1],
-					errArr = [
-						0,
-						'',
-						undefined
-					]
+					passCaseC = [1, 1, 1];
 
 				function testHandler(obj) {
 					var i = 0;
@@ -102,54 +98,55 @@
 					return i;
 				}
 
-				assert.equal(testHandler(passCaseA), 0);
-				assert.equal(testHandler(passCaseB), 3);
-				assert.equal(testHandler(passCaseC), 3);
-				errArr.forEach(function (item) {
-					assert.equal(testHandler(item), 0);
-				});
+				assert.equal(testHandler(passCaseA), 0, '合法值测试-空对象');
+				assert.equal(testHandler(passCaseB), 3, '合法值测试-对象');
+				assert.equal(testHandler(passCaseC), 3, '合法值测试-数组');
 			});
 
-			QUnit.test('base.toArray test', function (assert) {
+			QUnit.test('toArray', function (assert) {
 				var passCaseA = {
 					'0': 0,
 					'1': 1,
 					'2': 2,
 					length: 3
 				};
+				var passCaseB = {
+					length: 0
+				};
 				var result = base.toArray(passCaseA);
-				assert.equal(arrEqual(result, [0, 1, 2]), true);
+				assert.equal(arrEqual(result, [0, 1, 2]), true, '合法值测试');
+				assert.equal(arrEqual(base.toArray(passCaseB), []), true, '合法值测试-空数组');
 			});
 
-			QUnit.test('base.mergeArray test', function (assert) {
+			QUnit.test('mergeArray', function (assert) {
 				var arr1 = [1, 2],
 					arr2 = [3, 4];
 
-				assert.equal(arrEqual(base.mergeArray(arr1, arr2), [1, 2, 3, 4]), true);
+				assert.equal(arrEqual(base.mergeArray(arr1, arr2), [1, 2, 3, 4]), true, '合法值测试');
 			});
 
-			QUnit.test('base.randomStr test', function (assert) {
+			QUnit.test('randomStr', function (assert) {
 				var arr = [];
 				for (var i = 0; i < 2; i++) {
 					arr.push(base.randomStr('prefix'));
 				}
 
-				assert.equal(arr[0] !== arr[1], true);
-				assert.equal(arr[0].indexOf('prefix') > -1, true);
-				assert.equal(arr[1].indexOf('prefix') > -1, true);
+				assert.equal(arr[0] !== arr[1], true, '合法值测试 ');
+				assert.equal(arr[0].indexOf('prefix') > -1, true, '合法值测试 ');
+				assert.equal(arr[1].indexOf('prefix') > -1, true, '合法值测试 ');
 			});
 
 			var globalVar1 = 'i can not be delete';
-			QUnit.test('base.deleteGlobalVar test', function (assert) {
+			QUnit.test('deleteGlobalVar', function (assert) {
 				window.globalVar2 = 'i can be delete';
 				base.deleteGlobalVar('globalVar1');
 				base.deleteGlobalVar('globalVar2');
 
-				assert.equal(window.globalVar1, null);
-				assert.equal(window.globalVar2, undefined);
+				assert.equal(window.globalVar1, null, '测试删除var声明的全局变量');
+				assert.equal(window.globalVar2, undefined, '测试删除window对象下挂载的属性');
 			});
 
-			QUnit.test('base.createClass test', function (assert) {
+			QUnit.test('createClass', function (assert) {
 				var construtor = function () {
 						this.child = 'hello child';
 					},
@@ -165,10 +162,10 @@
 
 				var newClass = base.createClass(construtor, methods, parent, parentArgs);
 				var instance = new newClass();
-
-				assert.equal(instance.parent, 'hello parent');
-				assert.equal(instance.a(), 'a');
-				assert.equal(instance.child, 'hello child');
+				
+				assert.equal(instance.child, 'hello child', '测试类的构造函数');
+				assert.equal(instance.parent, 'hello parent',  '测试父类的构造函数');
+				assert.equal(instance.a(), 'a', '测试原型链上的方法');
 			});
 		});
 	</script>
