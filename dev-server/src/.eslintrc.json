@@ -1,0 +1,84 @@
+{
+	"parserOptions": {
+		"ecmaVersion": 3,
+		"sourceType": "script"
+	},
+	"extends": "eslint:recommended",
+	"env": {
+		"browser": true,
+		"node": true,
+		"amd": true
+	},
+	"rules": {
+		"no-console": ["warn", {
+			"allow": ["warn", "error", "info"]
+		}],
+		"no-constant-condition": "warn",
+		"block-scoped-var": "error",
+		"curly": ["error", "multi-line"],
+		"dot-notation": ["warn", { "allowKeywords": false }],
+		"no-extra-bind": "error",
+		"no-extra-label": "error",
+		"no-extra-boolean-cast": "off",
+		"no-empty": ["error", { "allowEmptyCatch": true }],
+		"no-floating-decimal": "error",
+		"no-global-assign": "error",
+		"no-implied-eval": "error",
+		"no-iterator": "error",
+		"no-loop-func": "error",
+		"no-multi-spaces": "error",
+		"no-proto": "error",
+		"no-script-url": "error",
+		"no-throw-literal": "error",
+		"no-useless-call": "error",
+		"no-with": "error",
+		"prefer-promise-reject-errors": "error",
+		"wrap-iife": ["error", "inside"],
+		"no-use-before-define": "error",
+		"array-bracket-spacing": ["error", "never"],
+		"block-spacing": "error",
+		"brace-style":  ["error", "1tbs", {
+			"allowSingleLine": true
+		}],
+		"camelcase": "error",
+		"comma-dangle": "error",
+		"comma-spacing": "error",
+		"comma-style": "error",
+		"computed-property-spacing": "error",
+		"eol-last": ["error", "never"],
+		"func-call-spacing": "error",
+		"func-name-matching": "error",
+		"indent": ["error", "tab", {
+			"SwitchCase": 1
+		}],
+		"key-spacing": "error",
+		"keyword-spacing": "error",
+		"linebreak-style": "error",
+		"new-cap": "error",
+		"newline-per-chained-call": "error",
+		"no-trailing-spaces": "error",
+		"no-whitespace-before-property": "error",
+		"object-curly-spacing": ["error", "always"],
+		"object-property-newline": "error",
+		"operator-linebreak": ["error", "after"],
+		"quote-props": ["error", "as-needed", {
+			"keywords": true
+		}],
+		"quotes": ["error", "single", {
+			"avoidEscape": true
+		}],
+		"semi": "error",
+		"semi-spacing": "error",
+		"space-before-blocks": "error",
+		"space-before-function-paren": ["error", "never"],
+		"space-in-parens": "error",
+		"space-infix-ops": "error",
+		"space-unary-ops": "error",
+		"spaced-comment": ["error", "always", {
+			"block": {
+				"markers": ["!"],
+				"balanced": true
+			}
+		}]
+	}
+}
