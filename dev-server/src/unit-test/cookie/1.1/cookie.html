@@ -11,18 +11,19 @@
 	<div id="qunit"></div>
 	<div id="qunit-fixture"></div>
 	<script src="/non-modular/bowljs/bowl.js"></script>
+	<script src="/non-modular/bowl-config.js"></script>
 	<script src="/non-modular/qunit/qunit.js"></script>
 	<script>
-		bowljs.config({
-			libPath: '/jraiser',
-			appPath: '/app',
-			debug: false,
-			preload: [
-				// Function.prototype.bind ? '' : 'compatibility/es5-shim',
-				// window.JSON ? '' : 'compatibility/json2',
-				// window.localStorage ? '' : 'compatibility/localstorage'
-			]
-		});
+		// bowljs.config({
+		// 	libPath: '/jraiser',
+		// 	appPath: '/app',
+		// 	debug: false,
+		// 	preload: [
+		// 		// Function.prototype.bind ? '' : 'compatibility/es5-shim',
+		// 		// window.JSON ? '' : 'compatibility/json2',
+		// 		// window.localStorage ? '' : 'compatibility/localstorage'
+		// 	]
+		// });
 
 		require(['cookie/1.1/cookie', 'base/1.2/base'], function(cookie, base) {
 			// 验证思路：先用setCookie方法验证cookie.get，再用cookie.get验证cookie.set，最后验证cookie.remove

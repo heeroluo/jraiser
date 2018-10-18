@@ -11,20 +11,10 @@
 	<div id="qunit"></div>
 	<div id="qunit-fixture"></div>
 	<script src="/non-modular/bowljs/bowl.js"></script>
+	<script src="/non-modular/bowl-config.js"></script>
 	<script src="/non-modular/qunit/qunit.js"></script>
 	<script src="/non-modular/test-utils.js"></script>
 	<script>
-		bowljs.config({
-			libPath: '/jraiser',
-			appPath: '/app',
-			debug: false,
-			preload: [
-				// Function.prototype.bind ? '' : 'compatibility/es5-shim',
-				// window.JSON ? '' : 'compatibility/json2',
-				// window.localStorage ? '' : 'compatibility/localstorage'
-			]
-		});
-
 		// 判断两个数组是否相同
 		function arrEqual(arr1, arr2) {
 			return arr1.toString() === arr2.toString();
