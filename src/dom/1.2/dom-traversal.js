@@ -67,9 +67,17 @@ function sortAndFilter(nodes, position, selector, NodeList) {
 }
 
 // 按照相对位置查找节点，直到遇到符合特定规则的节点为止
-function findNodesUntil(nodes, position, until, filter) {
+function findNodesUntil(nodes, contexts, position, until, filter) {
 	if (typeof until === 'string') {
-		until = Sizzle(until); // eslint-disable-line new-cap
+		if (contexts) {
+			var untilNodes = [], len = contexts.length, i = -1;
+			while (++i < len) {
+				Sizzle(until, contexts[i], untilNodes); // eslint-disable-line new-cap
+			}
+			until = untilNodes;
+		} else {
+			until = Sizzle(until); // eslint-disable-line new-cap
+		}
 	} else if (domBase.isNode(until)) {
 		until = [until];
 	}
@@ -283,7 +291,7 @@ exports.shortcuts = {
 	 * @return {NodeList} 结果集。
 	 */
 	nextUntil: function(until, filter) {
-		return findNodesUntil(this, 'nextSibling', until, filter);
+		return findNodesUntil(this, this.parent(), 'nextSibling', until, filter);
 	},
 
 	/**
@@ -295,7 +303,7 @@ exports.shortcuts = {
 	 * @return {NodeList} 结果集
 	 */
 	prevUntil: function(until, filter) {
-		return findNodesUntil(this, 'previousSibling', until, filter);
+		return findNodesUntil(this, this.parent(), 'previousSibling', until, filter);
 	},
 
 	/**
@@ -307,6 +315,6 @@ exports.shortcuts = {
 	 * @return {NodeList} 结果集。
 	 */
 	parentsUntil: function(until, filter) {
-		return findNodesUntil(this, 'parentNode', until, filter);
+		return findNodesUntil(this, this.parent(), 'parentNode', until, filter);
 	}
 };
