@@ -67,26 +67,23 @@ function sortAndFilter(nodes, position, selector, NodeList) {
 }
 
 // 按照相对位置查找节点，直到遇到符合特定规则的节点为止
-function findNodesUntil(nodes, contexts, position, until, filter) {
+function findNodesUntil(nodes, position, until, filter) {
+	var canMatch;
 	if (typeof until === 'string') {
-		if (contexts) {
-			var untilNodes = [], len = contexts.length, i = -1;
-			while (++i < len) {
-				Sizzle(until, contexts[i], untilNodes); // eslint-disable-line new-cap
-			}
-			until = untilNodes;
-		} else {
-			until = Sizzle(until); // eslint-disable-line new-cap
-		}
+		canMatch = function(node) {
+			return Sizzle.matchesSelector(node, until); // eslint-disable-line new-cap
+		};
 	} else if (domBase.isNode(until)) {
-		until = [until];
+		canMatch = function(node) {
+			return node === until;
+		};
 	}
 
 	var result = [];
 	nodes.forEach(function(node) {
 		while ((node = node[position])) {
 			if (node.nodeType === 1 || node.nodeType === 9) {
-				if (!until || until.indexOf(node) === -1) {
+				if (!until || !canMatch(node)) {
 					result.push(node);
 				} else {
 					break;
@@ -291,7 +288,7 @@ exports.shortcuts = {
 	 * @return {NodeList} 结果集。
 	 */
 	nextUntil: function(until, filter) {
-		return findNodesUntil(this, this.parent(), 'nextSibling', until, filter);
+		return findNodesUntil(this, 'nextSibling', until, filter);
 	},
 
 	/**
@@ -303,7 +300,7 @@ exports.shortcuts = {
 	 * @return {NodeList} 结果集
 	 */
 	prevUntil: function(until, filter) {
-		return findNodesUntil(this, this.parent(), 'previousSibling', until, filter);
+		return findNodesUntil(this, 'previousSibling', until, filter);
 	},
 
 	/**
@@ -315,6 +312,6 @@ exports.shortcuts = {
 	 * @return {NodeList} 结果集。
 	 */
 	parentsUntil: function(until, filter) {
-		return findNodesUntil(this, this.parent(), 'parentNode', until, filter);
+		return findNodesUntil(this, 'parentNode', until, filter);
 	}
 };
