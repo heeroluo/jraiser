@@ -166,7 +166,7 @@ var NodeList = base.createClass(function(nodes) {
 	add: function(selector, context) {
 		return new this.constructor(
 			Sizzle.uniqueSort(
-				base.merge(this.toArray(), query(selector, context))
+				base.mergeArray(this.toArray(), query(selector, context))
 			)
 		);
 	},
