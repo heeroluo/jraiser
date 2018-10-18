@@ -65,7 +65,7 @@ exports.isObject = function(value) {
 };
 
 /**
- * 检查对象是否空对象（无任何own property）。
+ * 检查对象是否空对象（无任何own property，或者为null、undefined）。
  * @method isEmptyObject
  * @param {Object} obj 待测对象。
  * @return {Boolean} 待测对象是否空对象。
