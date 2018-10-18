@@ -168,7 +168,7 @@ function insertTo(target, ref, fn, condition) {
 			while (++i < len) {
 				if (!condition || condition.call(this, ref[i]) !== false) {
 					myTarget = i === len - 1 ? target : cloneNode(target, true, true);
-					base.merge(result, myTarget.childNodes);
+					base.mergeArray(result, myTarget.childNodes);
 					fn.call(this, myTarget, ref[i]);
 				}
 			}
