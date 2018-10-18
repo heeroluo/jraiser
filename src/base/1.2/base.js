@@ -12,7 +12,7 @@
  * @param {Any*} [source] 源对象。若有同名属性，则后者覆盖前者。
  * @return {Any} 目标对象。
  */
-exports.extend = Object.assign ?
+var extend = exports.extend = Object.assign ?
 	Object.assign :
 	function(target) {
 		if (target == null) { throw new Error('target cannot be null'); }
@@ -216,6 +216,9 @@ exports.createClass = function(constructor, methods, Parent, parentArgs) {
 		$Parent.prototype = Parent.prototype;
 		$Class.prototype = new $Parent();
 		$Class.prototype.constructor = $Class;
+
+		// 复制静态方法
+		extend($Class, Parent);
 	}
 
 	if (methods) {
