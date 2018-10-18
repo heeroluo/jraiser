@@ -68,17 +68,22 @@ function sortAndFilter(nodes, position, selector, NodeList) {
 
 // 按照相对位置查找节点，直到遇到符合特定规则的节点为止
 function findNodesUntil(nodes, position, until, filter) {
+	var canMatch;
 	if (typeof until === 'string') {
-		until = Sizzle(until); // eslint-disable-line new-cap
+		canMatch = function(node) {
+			return Sizzle.matchesSelector(node, until); // eslint-disable-line new-cap
+		};
 	} else if (domBase.isNode(until)) {
-		until = [until];
+		canMatch = function(node) {
+			return node === until;
+		};
 	}
 
 	var result = [];
 	nodes.forEach(function(node) {
 		while ((node = node[position])) {
 			if (node.nodeType === 1 || node.nodeType === 9) {
-				if (!until || until.indexOf(node) === -1) {
+				if (!until || !canMatch(node)) {
 					result.push(node);
 				} else {
 					break;
