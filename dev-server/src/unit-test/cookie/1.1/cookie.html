@@ -22,20 +22,24 @@
 			});
 
 			QUnit.test('set', function(assert) {
-				// var done = assert.async();
+				var done = assert.async();
 				cookie.set('case2-key', 'case2-value');
 				assert.equal(cookie.get('case2-key'), 'case2-value');
 				cookie.set('case2-key', 'case2-value', {
 					expires: 1000
 				});
-				var flag = true;
-				var time = new Date().getTime();
-				while(flag) {
-					if (new Date().getTime() - time > 2000) {
-						flag = false
-					}
-				}
-				assert.equal(cookie.get('case2-key'), null, '测试过期情况');
+				// 获取一秒后的时间
+				var time = new Date(new Date().getTime() + 1000);
+				cookie.set('case4-key', 'case4-value', {
+					expires: time
+				});
+				assert.equal(cookie.get('case2-key'), 'case2-value', '测试未过期情况1');
+				assert.equal(cookie.get('case4-key'), 'case4-value', '测试未过期情况2');
+				setTimeout(function() {
+					assert.equal(cookie.get('case2-key'), null, '测试过期情况1');
+					assert.equal(cookie.get('case4-key'), null, '测试过期情况2');
+					done();
+				}, 1500);
 			});
 
 			QUnit.test('remove', function(assert) {
