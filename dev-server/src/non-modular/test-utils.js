@@ -19,6 +19,6 @@ window.testUtils = {};
 	testUtils.parseDOM = function(html) {
 		var div = document.createElement('div');
 		div.innerHTML = html;
-		return div.childNodes;
+		return div.childNodes[0];
 	};
 })(window.testUtils);
