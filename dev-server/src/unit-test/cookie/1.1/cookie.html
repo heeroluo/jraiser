@@ -14,47 +14,28 @@
 	<script src="/non-modular/bowl-config.js"></script>
 	<script src="/non-modular/qunit/qunit.js"></script>
 	<script>
-		// bowljs.config({
-		// 	libPath: '/jraiser',
-		// 	appPath: '/app',
-		// 	debug: false,
-		// 	preload: [
-		// 		// Function.prototype.bind ? '' : 'compatibility/es5-shim',
-		// 		// window.JSON ? '' : 'compatibility/json2',
-		// 		// window.localStorage ? '' : 'compatibility/localstorage'
-		// 	]
-		// });
-
 		require(['cookie/1.1/cookie', 'base/1.2/base'], function(cookie, base) {
-			// 验证思路：先用setCookie方法验证cookie.get，再用cookie.get验证cookie.set，最后验证cookie.remove
-			var setCookie = function(key, value, options) {
-				options = base.extend({
-					encode: encodeURIComponent
-				}, options);
-
-				var content = options.encode(key) + '=' + options.encode(value);
-				if (options.expires != null) {
-					content += '; expires=' + (
-						base.isDate(options.expires) ?
-							options.expires :
-							timespan.addToDate(new Date(), options.expires)
-					);
-				}
-				if (options.path) { content += '; path=' + options.path; }
-				if (options.domain) { content += '; domain=' + options.domain; }
-				if (options.secure === true) { content += '; secure'; }
-
-				document.cookie = content;
-			};
-
+			window.cookie = cookie;
 			QUnit.test('get', function(assert) {
-				setCookie('case1-key', 'case1-value');
+				document.cookie = 'case1-key=case1-value';
 				assert.equal(cookie.get('case1-key'), 'case1-value');
 			});
 
 			QUnit.test('set', function(assert) {
+				// var done = assert.async();
 				cookie.set('case2-key', 'case2-value');
 				assert.equal(cookie.get('case2-key'), 'case2-value');
+				cookie.set('case2-key', 'case2-value', {
+					expires: 1000
+				});
+				var flag = true;
+				var time = new Date().getTime();
+				while(flag) {
+					if (new Date().getTime() - time > 2000) {
+						flag = false
+					}
+				}
+				assert.equal(cookie.get('case2-key'), null, '测试过期情况');
 			});
 
 			QUnit.test('remove', function(assert) {

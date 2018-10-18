@@ -64,13 +64,13 @@
 			});
 			QUnit.test('prev', function(assert) {
 				var $list = $('.dom-traversal span');
-				var $last = $list.$last();
+				var $last = $list.last();
 				var text = $last.prev()[0].innerHTML;
 				assert.equal(text, 3);
 			});
 			QUnit.test('prevAll', function(assert) {
 				var $list = $('.dom-traversal span');
-				var $last = $list.$last();
+				var $last = $list.last();
 				assert.equal($($last).prevAll().length, 3);
 			});
 			QUnit.test('parent', function(assert) {
