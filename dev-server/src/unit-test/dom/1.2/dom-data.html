@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>单元测试:dom-data</title>
+	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<script src="/non-modular/bowljs/bowl.js"></script>
+	<script src="/non-modular/bowl-config.js"></script>
+	<script src="/non-modular/qunit/qunit.js"></script>
+	<script src="/non-modular/test-utils.js"></script>
+	<script>
+		require(['dom/1.2/dom', 'base/1.2/base'], function($, base) {
+			// dom-data
+			QUnit.module( 'dom-data');
+			QUnit.test('测试set和get方法', function(assert) {
+				var node = $('body');
+				assert.equal(node.data('key'), undefined, '测试获取为空的情况');
+				node.data('key', 'value');
+				assert.equal(node.data('key'), 'value', '测试获取有值的情况');
+			});
+
+			QUnit.test('测试remove方法', function(assert) {
+				var node = $('body');
+				node.data('key1', 'vlaue1');
+				node.data('key2', 'value2');
+				node.removeData('key1');
+				assert.equal(node.data('key1') === undefined && node.data('key2') === 'value2', true, '测试删除某个key');
+				node.removeData();
+				assert.equal(node.data('key2') === undefined, true, '测试删除所有key');
+			});
+		});
+	</script>
+</body>
+
+</html>

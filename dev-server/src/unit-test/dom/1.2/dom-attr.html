@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>单元测试:dom-attr</title>
+	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<script src="/non-modular/bowljs/bowl.js"></script>
+	<script src="/non-modular/bowl-config.js"></script>
+	<script src="/non-modular/qunit/qunit.js"></script>
+	<script src="/non-modular/test-utils.js"></script>
+	<script>
+		require(['dom/1.2/dom', 'base/1.2/base'], function($, base) {
+			QUnit.test('attr & removeAttr', function(assert) {
+				var node = testUtils.parseDOM('<div data-num=1></div>');
+				assert.equal($(node).attr('data-num'), 1, 'attr获取');
+				$(node).attr('data-num', 2);
+				assert.equal($(node).attr('data-num'), 2, 'attr设置');
+				$(node).removeAttr('data-num');
+				assert.equal($(node).attr('data-num'), undefined, 'removeAttr');
+			});
+			QUnit.test('prop', function(assert) {
+				var node = testUtils.parseDOM('<input type="checkbox" checked="checked" />');
+				assert.equal($(node).prop('checked'), true, 'prop获取');
+				$(node).prop('checked', false);
+				assert.equal($(node).prop('checked'), false, 'prop设置');
+				$(node).removeAttr('checked');
+				assert.equal($(node).prop('checked'), false, 'removeProp');
+			});
+			QUnit.test('text', function(assert) {
+				var node = testUtils.parseDOM('<div>test</div>');
+				var text = $(node).text();
+				
+				assert.equal(text, 'test', '获取值');
+			});
+		});
+	</script>
+</body>
+
+</html>

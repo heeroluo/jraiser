@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8" />
-	<title>单元测试-dom</title>
+	<title>单元测试:dom-traversal</title>
 	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -24,27 +24,6 @@
 	<script src="/non-modular/test-utils.js"></script>
 	<script>
 		require(['dom/1.2/dom', 'base/1.2/base'], function($, base) {
-			// dom-data
-			QUnit.module( 'dom-data');
-			QUnit.test('测试set和get方法', function(assert) {
-				var node = $('body');
-				assert.equal(node.data('key'), undefined, '测试获取为空的情况');
-				node.data('key', 'value');
-				assert.equal(node.data('key'), 'value', '测试获取有值的情况');
-			});
-
-			QUnit.test('测试remove方法', function(assert) {
-				var node = $('body');
-				node.data('key1', 'vlaue1');
-				node.data('key2', 'value2');
-				node.removeData('key1');
-				assert.equal(node.data('key1') === undefined && node.data('key2') === 'value2', true, '测试删除某个key');
-				node.removeData();
-				assert.equal(node.data('key2') === undefined, true, '测试删除所有key');
-			});
-
-			// dom-traversal
-			QUnit.module('dom-traversal');
 			QUnit.test('index', function(assert) {
 				assert.equal($('#dom-traversal-index').index(), 2, '测试不传参情况');
 				assert.equal($('#dom-traversal-index').index('.dom-traversal span'), 2, '测试传入选择器情况');
@@ -124,31 +103,6 @@
 				var node = testUtils.parseDOM(innerHTML);
 				var $parent1 = $(node).find('.parent0');
 				assert.equal($parent1.parentsUntil('.parent4').length, 4);
-			});
-
-			// dom-attr
-			QUnit.module('dom-attr');
-			QUnit.test('attr & removeAttr', function(assert) {
-				var node = testUtils.parseDOM('<div data-num=1></div>');
-				assert.equal($(node).attr('data-num'), 1, 'attr获取');
-				$(node).attr('data-num', 2);
-				assert.equal($(node).attr('data-num'), 2, 'attr设置');
-				$(node).removeAttr('data-num');
-				assert.equal($(node).attr('data-num'), undefined, 'removeAttr');
-			});
-			QUnit.test('prop', function(assert) {
-				var node = testUtils.parseDOM('<input type="checkbox" checked="checked" />');
-				assert.equal($(node).prop('checked'), true, 'prop获取');
-				$(node).prop('checked', false);
-				assert.equal($(node).prop('checked'), false, 'prop设置');
-				$(node).removeAttr('checked');
-				assert.equal($(node).prop('checked'), false, 'removeProp');
-			});
-			QUnit.test('text', function(assert) {
-				var node = testUtils.parseDOM('<div>test</div>');
-				var text = $(node).text();
-				
-				assert.equal(text, 'test', '获取值');
 			});
 		});
 	</script>
