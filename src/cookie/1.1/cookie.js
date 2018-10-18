@@ -33,7 +33,7 @@ var set = exports.set = function(key, value, options) {
 			base.isDate(options.expires) ?
 				options.expires :
 				timespan.addToDate(new Date(), options.expires)
-		);
+		).toUTCString();
 	}
 	if (options.path) { content += '; path=' + options.path; }
 	if (options.domain) { content += '; domain=' + options.domain; }
