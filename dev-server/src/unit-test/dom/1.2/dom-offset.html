@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>单元测试:dom-style</title>
+	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<div id="test-el" style="position: absolute;">
+		<span id="test-el-child" style="position: absolute; top: 0; left: 0;"></span>
+	</div>
+	<div id="scrollTop-el" style="height: 100px; overflow: auto;">
+		<div style="height: 300px;"></div>
+	</div>
+	<div id="scrollLeft-el" style="width: 100px; height: 50px; overflow: auto;">
+		<div style="width: 300px; height: 50px;"></div>
+	</div>
+	<script src="/non-modular/bowljs/bowl.js"></script>
+	<script src="/non-modular/bowl-config.js"></script>
+	<script src="/non-modular/qunit/qunit.js"></script>
+	<script src="/non-modular/test-utils.js"></script>
+	<script>
+		require(['dom/1.2/dom'], function($) {
+			window.$ = $;
+			QUnit.test('offsetParent', function(assert) {
+				var parentId = $('#test-el-child').offsetParent()[0].id;
+				assert.equal(parentId, 'test-el');
+			});
+
+			QUnit.test('offset', function(assert) {
+				var offset = $('#test-el-child').offset();
+				// body margin为8
+				assert.equal(offset.left, 8);
+			});
+
+			QUnit.test('position', function(assert) {
+				var position = $('#test-el-child').position();
+				assert.equal(position.left == 0 && position.top == 0, true);
+			});
+
+			QUnit.test('scrollTop', function(assert) {
+				var $target = $('#scrollTop-el div');
+				var scrollTop1 = $target.scrollTop();
+				assert.equal(scrollTop1, 0);
+				$target.scrollTop(100);
+				assert.equal($target.scrollTop(), 100);
+			});
+
+			QUnit.test('scrollLeft', function(assert) {
+				var $target = $('#scrollLeft-el div');
+				assert.equal($target.scrollLeft(), 0);
+				$target.scrollLeft(50);
+				assert.equal($target.scrollLeft(), 50);
+			});
+		});
+	</script>
+</body>
+
+</html>
