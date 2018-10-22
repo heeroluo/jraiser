@@ -32,37 +32,6 @@
 	<script src="/non-modular/test-utils.js"></script>
 	<script>
 		require(['dom/1.2/dom', 'base/1.2/base'], function($, base) {
-			// function onprogressFn() {
-				
-			// }
-
-			// function oncompleteFn() {
-
-			// }
-			// var $animation = $('#animation');
-			// $animation.animate({
-			// 	width: '300px'
-			// }, {
-			// 	duration: 500
-			// });
-			// requestAnimationFrame(function() {
-			// 	console.log($animation.css('width'));
-			// });
-			// // setTimeout(() => {
-			// // 	console.log($animation.css('width'));
-			// // }, 100);
-			// // setTimeout(() => {
-			// // 	console.log($animation.css('width'));
-			// // }, 200);
-			// function step(timestamp) {
-			// 	var width = $animation.css('width');
-			// 	console.log(timestamp, width);
-			// 	if (width == '300px') {
-			// 		return;
-			// 	}
-			// 	requestAnimationFrame(step);
-			// }
-			// step();
 			QUnit.test('测试animate的最终状态是否正确', function(assert) {
 				var done = assert.async();
 				var $el1 = $('#el-1');
