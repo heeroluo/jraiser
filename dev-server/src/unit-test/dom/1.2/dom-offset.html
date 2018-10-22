@@ -43,7 +43,7 @@
 			});
 
 			QUnit.test('scrollTop', function(assert) {
-				var $target = $('#scrollTop-el div');
+				var $target = $('#scrollTop-el');
 				var scrollTop1 = $target.scrollTop();
 				assert.equal(scrollTop1, 0);
 				$target.scrollTop(100);
@@ -51,7 +51,7 @@
 			});
 
 			QUnit.test('scrollLeft', function(assert) {
-				var $target = $('#scrollLeft-el div');
+				var $target = $('#scrollLeft-el');
 				assert.equal($target.scrollLeft(), 0);
 				$target.scrollLeft(50);
 				assert.equal($target.scrollLeft(), 50);
