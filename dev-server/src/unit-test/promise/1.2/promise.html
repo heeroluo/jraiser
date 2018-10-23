@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>单元测试:promise</title>
+	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
+	<style>
+	</style>
+</head>
+
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<script src="/non-modular/bowljs/bowl.js"></script>
+	<script src="/non-modular/bowl-config.js"></script>
+	<script src="/non-modular/qunit/qunit.js"></script>
+	<script src="/non-modular/test-utils.js"></script>
+	<script>
+		require(['promise/1.2/promise', 'base/1.2/base'], function(Promise, base) {
+			function promiseFactory() {
+				var p1 = new Promise(function(resolve, reject) {
+					setTimeout(() => {
+						resolve('p1');
+					}, 300);
+				});
+				var p2 = new Promise(function(resolve, reject) {
+					setTimeout(() => {
+						resolve('p2');
+					}, 200);
+				});
+				var p3 = new Promise(function(resolve, reject) {
+					setTimeout(() => {
+						resolve('p3');
+					}, 100);
+				});
+				var p4 = new Promise(function(resolve, reject) {
+					setTimeout(() => {
+						reject('p4');
+					}, 200);
+				});
+
+				return {
+					p1: p1,
+					p2: p2,
+					p3: p3,
+					p4: p4
+				};
+			}
+
+			function handler1(promise) {
+				var res;
+				return promise.then(function(val) {
+					return val;
+				}).catch(function(val) {
+					return val;
+				});
+			}
+
+			QUnit.test('测试Promise处理任务的异步顺序', function(assert) {
+				var done = assert.async();
+				var p1 = new Promise(function(resolve, reject) {
+					setTimeout(() => {
+						resolve();
+					}, 300);
+				});
+				
+				var p2 = new Promise(function(resolve, reject) {
+					setTimeout(() => {
+						resolve();
+					}, 200);
+				});
+
+				var queue = [];
+				setTimeout(() => {
+					queue.push('p3');
+				}, 100);
+
+				p1.then(function() {
+					queue.push('p1');
+				});
+				p2.then(function() {
+					queue.push('p2');
+				});
+
+				setTimeout(function() {
+					assert.equal(queue.toString(), ['p3', 'p2', 'p1'].toString());
+					done();
+				}, 500);
+			});
+			QUnit.test('测试resolve和reject是否正常调用', function(assert) {
+				var done = assert.async();
+
+				var testData = promiseFactory();
+				var res1;
+				var res2;
+
+				testData.p1.then(function() {
+					res1 = 'resolve';
+				}).catch(function() {
+					res1 = 'reject';
+				});
+				testData.p4.then(function() {
+					res2 = 'resolve';
+				}).catch(function() {
+					res2 = 'reject';
+				});
+
+				setTimeout(() => {
+					assert.equal(res1, 'resolve', 'reject调用情况');
+					assert.equal(res2, 'reject', 'resolve调用情况');
+					done();
+				}, 500);
+			});
+			QUnit.test('测试finally', function(assert) {
+				var done = assert.async();
+
+				var testData = promiseFactory();
+				var res1;
+				var res2;
+
+				testData.p1.finally(function() {
+					res1 = true;
+					alert();
+				});
+				testData.p4.finally(function() {
+					res2 = true;
+					alert();
+				});
+				
+				setTimeout(function() {
+					assert.equal(!res1 && !res2, true, '时间还没到');
+				}, 0);
+
+				setTimeout(function() {
+					console.log(res1, res2);
+					assert.equal(res1 && res2, true, ' 时间到');
+					done();
+				}, 500);
+			});
+		});
+	</script>
+</body>
+
+</html>
