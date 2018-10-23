@@ -18,6 +18,7 @@
 	<script src="/non-modular/test-utils.js"></script>
 	<script>
 		require(['promise/1.2/promise', 'base/1.2/base'], function(Promise, base) {
+			// 批量生产promise，减少重复代码
 			function promiseFactory() {
 				var p1 = new Promise(function(resolve, reject) {
 					setTimeout(() => {
@@ -40,21 +41,12 @@
 					}, 200);
 				});
 
-				return {
-					p1: p1,
-					p2: p2,
-					p3: p3,
-					p4: p4
-				};
-			}
-
-			function handler1(promise) {
-				var res;
-				return promise.then(function(val) {
-					return val;
-				}).catch(function(val) {
-					return val;
-				});
+				return [
+					p1,
+					p2,
+					p3,
+					p4
+				];
 			}
 
 			QUnit.test('测试Promise处理任务的异步顺序', function(assert) {
@@ -71,6 +63,7 @@
 					}, 200);
 				});
 
+				// 用于识别顺序
 				var queue = [];
 				setTimeout(() => {
 					queue.push('p3');
@@ -95,20 +88,18 @@
 				var res1;
 				var res2;
 
-				testData.p1.then(function() {
-					res1 = 'resolve';
+				testData[0].then(function() {
+					assert.ok(true, '无reject时表现正常');
 				}).catch(function() {
-					res1 = 'reject';
+					assert.ok(false, '错误情况');
 				});
-				testData.p4.then(function() {
-					res2 = 'resolve';
+				testData[3].then(function() {
+					assert.ok(false, '错误情况');
 				}).catch(function() {
-					res2 = 'reject';
+					assert.ok(true, '有reject时表现正常');
 				});
 
 				setTimeout(() => {
-					assert.equal(res1, 'resolve', 'reject调用情况');
-					assert.equal(res2, 'reject', 'resolve调用情况');
 					done();
 				}, 500);
 			});
@@ -119,13 +110,11 @@
 				var res1;
 				var res2;
 
-				testData.p1.finally(function() {
+				testData[0].finally(function() {
 					res1 = true;
-					alert();
 				});
-				testData.p4.finally(function() {
+				testData[3].finally(function() {
 					res2 = true;
-					alert();
 				});
 				
 				setTimeout(function() {
@@ -133,10 +122,110 @@
 				}, 0);
 
 				setTimeout(function() {
-					console.log(res1, res2);
 					assert.equal(res1 && res2, true, ' 时间到');
 					done();
 				}, 500);
+			});
+			QUnit.test('测试方法all & spread', function(assert) {
+				var done = assert.async();
+				var testData = promiseFactory();
+
+				// 有reject的情况
+				Promise.all(testData).then(function(res) {
+					assert.ok(false, '错误情况');
+				}).catch(function(err) {
+					assert.equal(err, 'p4', '有reject的情况下all表现正常');
+				});
+
+				var testData2 = promiseFactory();
+				// 去掉reject的
+				testData2.splice(3, 1);
+				Promise.all(testData2).then(function(res) {
+					assert.equal(res, ['p1', 'p2', 'p3'].toString(), '全是resolve的情况all表现正常')
+				}).catch(function() {
+					assert.ok(false, '错误情况');
+				});
+
+				var p1 = new Promise(function(resolve, reject) {
+					setTimeout(() => {
+						resolve([1, 2, 3]);
+					}, 300);
+				});
+
+				p1.spread(function(res1, res2, res3) {
+					var res = res1 === 1 && res2 === 2 && res3 === 3;
+					assert.equal(res, true, 'spread是否正确传参');
+				}).catch(function() {
+					assert.ok(false, '错误情况');
+				});
+
+				setTimeout(function() {
+					done();
+				}, 500);
+			});
+
+			QUnit.test('测试方法series', function(assert) {
+				var done = assert.async();
+				// 用于测试串行过程
+				var arr = [];
+
+				// 测试无reject只有resolve
+				Promise.series([
+					function() {
+						return new Promise(function(resolve, reject) {
+							arr.push('p1');
+							setTimeout(function() {
+								resolve('p1');
+							}, 200);
+						});
+					},
+					function() {
+						return new Promise(function(resolve, reject) {
+							arr.push('p2');
+							setTimeout(function() {
+								resolve('p2');
+							}, 100);
+						});
+					}
+				]).then(function(res) {
+					let boolean = (res === 'p2' && arr.toString() === ['p1', 'p2'].toString());
+					assert.equal(boolean, true, '无reject时series表现正常');
+				}).catch(function(err) {
+					assert.ok(false, '错误情况');
+				});
+
+				// 测试有reject和resolve
+				Promise.series([
+					function() {
+						return new Promise(function(resolve, reject) {
+							setTimeout(function() {
+								resolve('p1');
+							}, 200);
+						});
+					},
+					function() {
+						return new Promise(function(resolve, reject) {
+							setTimeout(function() {
+								resolve('p2');
+							}, 100);
+						});
+					},
+					function() {
+						return new Promise(function(resolve, reject) {
+							setTimeout(function() {
+								reject('p3');
+							}, 100);
+						});
+					}
+				]).then(function(res1) {
+					assert.ok(false, '错误情况');
+				}).catch(function(err) {
+					assert.equal(err, 'p3', '测试有reject时series表现正常');
+				})
+
+				setTimeout(function() {
+					done();
+				}, 1000);
 			});
 		});
 	</script>
