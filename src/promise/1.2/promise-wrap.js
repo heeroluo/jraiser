@@ -27,8 +27,9 @@ var PromiseWrap = base.createClass(function(executor) {
 	},
 
 	'finally': function(handler) {
-		return new Promise(function(reject, resolve) {
-			this._promise.then(function(value) {
+		var t = this;
+		return new Promise(function(resolve, reject) {
+			t._promise.then(function(value) {
 				handler.apply(this, arguments);
 				resolve(value);
 			}, function(reason) {
