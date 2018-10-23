@@ -9,6 +9,9 @@
 		"node": true,
 		"amd": true
 	},
+	"globals": {
+		"ActiveXObject": false
+	},
 	"rules": {
 		"no-console": ["warn", {
 			"allow": ["warn", "error", "info"]
