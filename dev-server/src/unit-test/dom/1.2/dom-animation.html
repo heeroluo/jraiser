@@ -31,7 +31,7 @@
 	<script src="/non-modular/qunit/qunit.js"></script>
 	<script src="/non-modular/test-utils.js"></script>
 	<script>
-		require(['dom/1.2/dom', 'base/1.2/base'], function($, base) {
+		require(['dom/1.2/dom'], function($) {
 			QUnit.test('测试animate的最终状态是否正确', function(assert) {
 				var done = assert.async();
 				var $el1 = $('#el-1');

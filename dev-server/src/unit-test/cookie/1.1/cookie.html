@@ -14,7 +14,7 @@
 	<script src="/non-modular/bowl-config.js"></script>
 	<script src="/non-modular/qunit/qunit.js"></script>
 	<script>
-		require(['cookie/1.1/cookie', 'base/1.2/base'], function(cookie, base) {
+		require(['cookie/1.1/cookie'], function(cookie) {
 			window.cookie = cookie;
 			QUnit.test('get', function(assert) {
 				document.cookie = 'case1-key=case1-value';

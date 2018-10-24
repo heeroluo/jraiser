@@ -17,7 +17,7 @@
 	<script src="/non-modular/qunit/qunit.js"></script>
 	<script src="/non-modular/test-utils.js"></script>
 	<script>
-		require(['promise/1.2/promise', 'base/1.2/base'], function(Promise, base) {
+		require(['promise/1.2/promise'], function(Promise) {
 			// 批量生产promise，减少重复代码
 			function promiseFactory() {
 				var p1 = new Promise(function(resolve, reject) {

@@ -15,7 +15,7 @@
 	<script src="/non-modular/qunit/qunit.js"></script>
 	<script src="/non-modular/test-utils.js"></script>
 	<script>
-		require(['dom/1.2/dom', 'base/1.2/base'], function($, base) {
+		require(['dom/1.2/dom'], function($) {
 			QUnit.test('attr & removeAttr', function(assert) {
 				var node = testUtils.parseDOM('<div data-num=1></div>');
 				assert.equal($(node).attr('data-num'), 1, 'attr获取');

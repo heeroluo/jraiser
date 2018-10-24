@@ -23,7 +23,7 @@
 	<script src="/non-modular/qunit/qunit.js"></script>
 	<script src="/non-modular/test-utils.js"></script>
 	<script>
-		require(['dom/1.2/dom', 'base/1.2/base'], function($, base) {
+		require(['dom/1.2/dom'], function($) {
 			QUnit.test('index', function(assert) {
 				assert.equal($('#dom-traversal-index').index(), 2, '测试不传参情况');
 				assert.equal($('#dom-traversal-index').index('.dom-traversal span'), 2, '测试传入选择器情况');
