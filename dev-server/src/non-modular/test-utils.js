@@ -21,4 +21,7 @@ window.testUtils = {};
 		div.innerHTML = html;
 		return div.childNodes[0];
 	};
+	testUtils.isEqual = function(o1, o2) {
+		return JSON.stringify(o1) === JSON.stringify(o2);
+	};
 })(window.testUtils);
