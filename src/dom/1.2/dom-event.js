@@ -88,7 +88,7 @@ var eventArgNormalizer = {
 
 			// Add which for click: 1 === left; 2 === middle; 3 === right
 			// Note: button is not normalized, so don't use it
-			if (!event.which && !base.isUndefined(button)) {
+			if (!event.which && button != null) {
 				event.which = (button & 1 ?
 					1 :
 					(button & 2 ? 3 : (button & 4 ? 2 : 0))
