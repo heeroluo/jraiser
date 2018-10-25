@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>单元测试:timespan</title>
+	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
+	<style>
+	</style>
+</head>
+
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<script src="/non-modular/bowljs/bowl.js"></script>
+	<script src="/non-modular/bowl-config.js"></script>
+	<script src="/non-modular/qunit/qunit.js"></script>
+	<script src="/non-modular/test-utils.js"></script>
+	<script>
+		require(['timespan/1.0/timespan'], function(ts) {
+			console.log(ts.parse(10000));
+			console.log(ts.parse('1years'), ts.parse('1months'));
+			QUnit.test('方法parse', function(assert) {
+				// 一天的毫秒数
+				var dayTime = 1000 * 60 * 60 *24;
+				assert.equal(ts.parse('2secs'), 2000, '传参secs');
+				assert.equal(ts.parse('2mins'), 2000 * 60, '传参mins');
+				assert.equal(ts.parse('2hours'), 2000 * 60 *60, '传参hours');
+				assert.equal(ts.parse('2days'), 2 * dayTime, '传参days');
+				assert.equal(ts.parse('2months'), 2 * 30 * dayTime, '传参months');
+				assert.equal(ts.parse('2years'), 2 * 365 * dayTime, '传参years');
+			});
+			// addToDate里使用了parse，上面日期单位部分不再重测
+			QUnit.test('方法addToDate', function(assert) {
+				function getNewDate(value) {
+					var oDate = new Date('2018-10-24');
+					var nDate = ts.addToDate(oDate, value);
+					return nDate;
+				}
+				assert.equal(getNewDate('1days').getTime(), new Date('2018-10-25').getTime());
+				assert.equal(getNewDate(1000 * 60 * 60 *24).getTime(), new Date('2018-10-25').getTime());
+			});
+		});
+	</script>
+</body>
+
+</html>
