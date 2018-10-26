@@ -93,6 +93,15 @@
  *   否则返回以最后一个promise的值解决的promise。
  */
 
+/**
+ * 返回在指定时间后解决的promise。
+ * @method delay
+ * @for Promise
+ * @static
+ * @param {Number} ms 延迟时间（毫秒）。
+ * @return 指定时间后解决的promise。
+ */
+
 module.exports = typeof Promise === 'function' ?
 	require('./promise-wrap') :
 	require('./promise-sim');

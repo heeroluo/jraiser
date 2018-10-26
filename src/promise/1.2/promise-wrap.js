@@ -61,5 +61,11 @@ PromiseWrap.series = function(creators) {
 	}
 };
 
+PromiseWrap.delay = function(ms) {
+	return new Promise(function(resolve) {
+		setTimeout(resolve, ms);
+	});
+};
+
 
 module.exports = PromiseWrap;
