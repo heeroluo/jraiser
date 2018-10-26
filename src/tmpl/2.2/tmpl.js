@@ -231,7 +231,7 @@ Tmpl.fromScripts = function(context) {
 
 	var result = { };
 	var scripts = context.getElementsByTagName('script');
-	for (var i = 0; i < scripts.length; i++) {
+	for (var i = 0, len = scripts.length; i < len; i++) {
 		if (scripts[i].type === 'text/template') {
 			result[scripts[i].getAttribute('data-key') || ''] = scripts[i].innerHTML.trim();
 		}
