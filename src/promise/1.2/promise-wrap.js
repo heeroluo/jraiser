@@ -9,7 +9,7 @@ var base = require('../../base/1.2/base');
 
 
 var PromiseWrap = base.createClass(function(executor) {
-	/* global Promise:true */
+	/* global Promise:false */
 	this._promise = new Promise(executor);
 }, {
 	then: function(onFulfilled, onRejected) {
