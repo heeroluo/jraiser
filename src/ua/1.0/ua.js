@@ -202,7 +202,7 @@ function wrap(type) {
  * 检查当前操作系统
  * @method isOS
  * @param {String} name 操作系统名。可用名称包括：
- *   pcWindow（PC的Windows系统）、
+ *   pcWindows（PC的Windows系统）、
  *   iOS、
  *   macOS（macOS或OS X）、
  *   Android。
