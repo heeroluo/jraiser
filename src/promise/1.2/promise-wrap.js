@@ -1,5 +1,5 @@
 /**
- * 对原生Promise的包装，并扩展spread和finally方法
+ * 对原生Promise的包装，并进行了扩展。
  * @module promise/1.2/promise-wrap
  * @category Infrastructure
  * @ignore

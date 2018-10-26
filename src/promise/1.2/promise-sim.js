@@ -1,5 +1,5 @@
 /**
- * Promise的兼容实现，且扩展了spread和finally方法
+ * Promise的兼容实现，并进行了扩展。
  * @module promise/1.2/promise-sim
  * @category Infrastructure
  * @ignore
