@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>单元测试:dom-traversal</title>
+	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<div class="test-node">
+		<div class="dom-traversal">
+			<span>1</span>
+			<span>2</span>
+			<span id="dom-traversal-index">3</span>
+			<span>4</span>
+		</div>
+	</div>
+	<script src="/non-modular/bowljs/bowl.js"></script>
+	<script src="/non-modular/bowl-config.js"></script>
+	<script src="/non-modular/qunit/qunit.js"></script>
+	<script src="/non-modular/test-utils.js"></script>
+	<script>
+		require(['dom/1.2/dom'], function($) {
+			QUnit.test('index', function(assert) {
+				assert.equal($('#dom-traversal-index').index(), 2, '测试不传参情况');
+				assert.equal($('#dom-traversal-index').index('.dom-traversal span'), 2, '测试传入选择器情况');
+				assert.equal($('.dom-traversal span').index($('#dom-traversal-index')), 2, '测试传入节点的情况');
+			});
+			QUnit.test('children', function(assert) {
+				var $children = $('.dom-traversal').children();
+				assert.equal($children.length, 4);
+			});
+			QUnit.test('next', function(assert) {
+				var $dom = $('#dom-traversal-index').next();
+				assert.equal($dom.index(), 3);
+			});
+			QUnit.test('nextAll', function(assert) {
+				var $first = $('.dom-traversal span')[0];
+				assert.equal($($first).nextAll().length, 3);
+			});
+			QUnit.test('prev', function(assert) {
+				var $list = $('.dom-traversal span');
+				var $last = $list.last();
+				var text = $last.prev()[0].innerHTML;
+				assert.equal(text, 3);
+			});
+			QUnit.test('prevAll', function(assert) {
+				var $list = $('.dom-traversal span');
+				var $last = $list.last();
+				assert.equal($($last).prevAll().length, 3);
+			});
+			QUnit.test('parent', function(assert) {
+				var $dom = $('#dom-traversal-index');
+				assert.equal($dom.parent()[0].className, 'dom-traversal');
+			});
+			QUnit.test('parents', function(assert) {
+				var $dom = $('#dom-traversal-index');
+				function validation() {
+					var node = $dom[0];
+					return $dom.parents().every(function(item) {
+						node = node.parentNode;
+						return node === item;
+					});
+				}
+				assert.equal(validation(), true);
+			});
+			QUnit.test('siblings', function(assert) {
+				function createElement(el) {
+					return document.createElement(el);
+				}
+				var parentNode = createElement('div');
+				parentNode.appendChild(createElement('div'));
+				parentNode.appendChild(createElement('div'));
+				parentNode.appendChild(createElement('div'));
+				parentNode.appendChild(createElement('div'));
+				var targetNode = createElement('div');
+				parentNode.appendChild(targetNode);
+				var nodeList = $(targetNode).siblings();
+				// 正确个数为4
+				assert.equal(nodeList.length, 4);
+			});
+			QUnit.test('nextUntil & prevUntil', function(assert) {
+				var innerHTML = '';
+				for (var i = 0; i < 10; i++) {
+					innerHTML += '<div class="test' + i + '"></div>';
+				}
+				innerHTML = '<div>' + innerHTML + '</div>';
+				var node = testUtils.parseDOM(innerHTML);
+				var $list = $(node).children();
+				var $first = $list.first();
+				var $last = $list.last();
+				assert.equal($first.nextUntil('.test8').length, 8, 'nextUntil测试');
+				assert.equal($last.prevUntil('.test1').length, 8, 'prevUntil测试');
+			});
+			QUnit.test('parentsUntil', function(assert) {
+				var innerHTML = '';
+				for (var i = 0; i < 5; i++) {
+					innerHTML = '<div class="parent' + i + '">' + innerHTML + '</div>';
+				}
+				var node = testUtils.parseDOM(innerHTML);
+				var $parent1 = $(node).find('.parent0');
+				assert.equal($parent1.parentsUntil('.parent4').length, 4);
+			});
+		});
+	</script>
+</body>
+
+</html>

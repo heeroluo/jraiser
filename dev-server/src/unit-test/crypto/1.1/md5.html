@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>单元测试:md5</title>
+	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
+	<style>
+	</style>
+</head>
+
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<script src="/non-modular/bowljs/bowl.js"></script>
+	<script src="/non-modular/bowl-config.js"></script>
+	<script src="/non-modular/qunit/qunit.js"></script>
+	<script src="/non-modular/test-utils.js"></script>
+	<script>
+		require(['crypto/1.1/md5'], function(md5) {
+			QUnit.test('验证md5加密是否正确', function(assert) {
+				var str = md5('The quick brown fox jumps over the lazy dog');
+				assert.equal(str, '9e107d9d372bb6826bd81d3542a419d6');
+			});
+		});
+	</script>
+</body>
+
+</html>

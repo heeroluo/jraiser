@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>单元测试:dom-insertion</title>
+	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<script src="/non-modular/bowljs/bowl.js"></script>
+	<script src="/non-modular/bowl-config.js"></script>
+	<script src="/non-modular/qunit/qunit.js"></script>
+	<script src="/non-modular/test-utils.js"></script>
+	<script>
+		require(['dom/1.2/dom'], function($) {
+			// 获取测试用的参数，四种类型String,Element,ArrayLike<Element>,DocumentFragment
+			function getTestParameter() {
+				var str = '<div class="test"></div>';
+				var el = testUtils.parseDOM('<div class="test"></div>');
+				var arr = [
+					testUtils.parseDOM('<div class="test"></div>'),
+					testUtils.parseDOM('<div class="test"></div>')
+				];
+				var documentFragment = document.createDocumentFragment();
+				documentFragment.appendChild(testUtils.parseDOM('<div class="test"></div>'));
+				return [
+					{
+						type: 'String',
+						value: str
+					},
+					{
+						type: 'Element',
+						value: el
+					},
+					{
+						type: 'ArrayLike<Element>',
+						value: arr
+					},
+					{
+						type: 'DocumentFragment',
+						value: documentFragment
+					}
+				];
+			}
+
+			// 生成一个挂载n个子节点的节点，n为传参 
+			function getNodeWithChilds(num) {
+				var innerHTML = '';
+				for (var i = 1; i <= num; i ++) {
+					innerHTML += '<div class="child' + i + '"></div>';
+				}
+				innerHTML = '<div>' + innerHTML + '</div>';
+				return testUtils.parseDOM(innerHTML);
+			}
+
+			QUnit.test('append', function(assert) {
+				getTestParameter().forEach(function(item) {
+					var node = testUtils.parseDOM('<div><div class="child"></div></div>');
+					$(node).append(item.value);
+					var className = $(node).children().last()[0].className;
+					assert.equal(className, 'test', item.type + '类型测试');
+				});
+			});
+
+			QUnit.test('appendTo', function(assert) {
+				getTestParameter().forEach(function(item) {
+					var node = testUtils.parseDOM('<div><div class="child"></div></div>');
+					console.log(1, $(item.value).appendTo);
+					$(item.value).appendTo(node);
+					var className = $(node).children().last()[0].className;
+					assert.equal(className, 'test', item.type + '类型测试');
+				});
+			});
+
+			QUnit.test('prepend', function(assert) {
+				getTestParameter().forEach(function(item) {
+					var node = testUtils.parseDOM('<div><div class="child"></div></div>');
+					$(node).prepend(item.value);
+					var className = $(node).children().first()[0].className;
+					assert.equal(className, 'test', item.type + '类型测试');
+				});
+			});
+
+			QUnit.test('prependTo', function(assert) {
+				getTestParameter().forEach(function(item) {
+					var node = testUtils.parseDOM('<div><div class="child"></div></div>');
+					$(item.value).prependTo(node);
+					var className = $(node).children().first()[0].className;
+					assert.equal(className, 'test', item.type + '类型测试');
+				});
+			});
+
+			QUnit.test('before', function(assert) {
+				getTestParameter().forEach(function(item) {
+					var node = getNodeWithChilds(2);
+					$(node).children().before(item.value);
+					var className = $(node).children().first()[0].className;
+					assert.equal(className, 'test', item.type + '类型测试');
+				});
+			});
+
+			QUnit.test('insertBefore', function(assert) {
+				getTestParameter().forEach(function(item) {
+					var node = getNodeWithChilds(2);
+					$(item.value).insertBefore($(node).children());
+					var className = $(node).children().first()[0].className;
+					assert.equal(className, 'test', item.type + '类型测试');
+				});
+			});
+
+			QUnit.test('after', function(assert) {
+				getTestParameter().forEach(function(item) {
+					var node = getNodeWithChilds(2);
+					$(node).children().after(item.value);
+					var className = $(node).children().last()[0].className;
+					assert.equal(className, 'test', item.type + '类型测试');
+				});
+			});
+
+			QUnit.test('insertAfter', function(assert) {
+				getTestParameter().forEach(function(item) {
+					var node = getNodeWithChilds(2);
+					$(item.value).insertAfter($(node).children());
+					var className = $(node).children().last()[0].className;
+					assert.equal(className, 'test', item.type + '类型测试');
+				});
+			});
+
+			QUnit.test('replaceWith', function(assert) {
+				getTestParameter().forEach(function(item) {
+					var node = getNodeWithChilds(2);
+					$(node).children().last().replaceWith(item.value);
+					// 替换成功的条件：1. child2节点消失 2. 新增test节点
+					var boolean = !$(node).find('.child2').length &&
+								$(node).children().last()[0].className == 'test';
+					assert.equal(boolean, true, item.type + '类型测试');
+				});
+			});
+
+			QUnit.test('replaceAll', function(assert) {
+				getTestParameter().forEach(function(item) {
+					var node = getNodeWithChilds(2);
+					$(item.value).replaceAll($(node).children());
+					// 成功条件：剩余节点全都是替换目标节点
+					var boolean = $(node).children().length == $(node).find('.test').length;
+					assert.equal(boolean, true, item.type + '类型测试');
+				});
+			});
+
+			QUnit.test('detach', function(assert) {
+				var node = testUtils.parseDOM('<div><p></p></div>');
+				$(node.childNodes[0]).data('key', 'value');
+				var $p = $(node.childNodes[0]).detach();
+				assert.equal(node.childNodes[0], undefined);
+				assert.equal($p.data('key'), 'value', '测试删除后的数据情况 ');
+			});
+
+			QUnit.test('remove', function(assert) {
+				var node = testUtils.parseDOM('<div><p></p></div>');
+				$(node.childNodes[0]).data('key', 'value');
+				var $p = $(node.childNodes[0]).remove();
+				assert.equal(node.childNodes[0], undefined);
+				assert.equal($p.data('key'), undefined, '测试删除后的数据情况 ');
+			});
+
+			QUnit.test('empty', function(assert) {
+				var node = testUtils.parseDOM('<div><span><span></span></span></div>');
+				$(node).empty();
+				assert.equal(node.childNodes.length, 0);
+			});
+
+			QUnit.test('clone', function(assert) {
+				var node = testUtils.parseDOM('<div><span><span>hello world</span></span></div>');
+				$(node).data('key', 'value');
+				$(node.childNodes[0]).data('key2', 'value2');
+				var cloneEl1 = $(node).clone()[0];
+				var cloneEl2 = $(node).clone(true, true)[0];
+				console.log(cloneEl1[0], node);
+				assert.equal($(cloneEl1).data('key'), undefined, '测试withData=false时是否没带数据');
+				assert.equal($(cloneEl1.childNodes[0]).data('key'), undefined, '测试deepWithData=false时是否没有后代');
+				assert.equal($(cloneEl2).data('key'), 'value', '测试withData=true时是否没带数据');
+				assert.equal($(cloneEl2.childNodes[0]).data('key2'), 'value2', '测试deepWithData=true时是否没有后代');
+			});
+		});
+	</script>
+</body>
+
+</html>

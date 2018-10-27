@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>单元测试:cookie</title>
+	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<script src="/non-modular/bowljs/bowl.js"></script>
+	<script src="/non-modular/bowl-config.js"></script>
+	<script src="/non-modular/qunit/qunit.js"></script>
+	<script>
+		require(['cookie/1.1/cookie'], function(cookie) {
+			window.cookie = cookie;
+			QUnit.test('get', function(assert) {
+				document.cookie = 'case1-key=case1-value';
+				assert.equal(cookie.get('case1-key'), 'case1-value');
+			});
+
+			QUnit.test('set', function(assert) {
+				var done = assert.async();
+				cookie.set('case2-key', 'case2-value');
+				assert.equal(cookie.get('case2-key'), 'case2-value');
+				cookie.set('case2-key', 'case2-value', {
+					expires: 1000
+				});
+				// 获取一秒后的时间
+				var time = new Date(new Date().getTime() + 1000);
+				cookie.set('case4-key', 'case4-value', {
+					expires: time
+				});
+				assert.equal(cookie.get('case2-key'), 'case2-value', '测试未过期情况1');
+				assert.equal(cookie.get('case4-key'), 'case4-value', '测试未过期情况2');
+				setTimeout(function() {
+					assert.equal(cookie.get('case2-key'), null, '测试过期情况1');
+					assert.equal(cookie.get('case4-key'), null, '测试过期情况2');
+					done();
+				}, 1500);
+			});
+
+			QUnit.test('remove', function(assert) {
+				cookie.set('case3-key', 'case3-value');
+				cookie.remove('case3-key');
+				assert.equal(cookie.get('case3-key'), null);
+			});
+		});
+	</script>
+</body>
+
+</html>

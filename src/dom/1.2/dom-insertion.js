@@ -288,7 +288,8 @@ exports.shortcuts = {
 	 * @method replaceAll
 	 * @for NodeList
 	 * @param {String|Element|ArrayLike<Element>|DocumentFragment} target 目标节点。
-	 * @return {NodeList} 包含被插入节点的节点集合。。
+	 * @return {NodeList} 包含被
+	 * 插入节点的节点集合。。
 	 */
 	replaceAll: function(target) {
 		return new this.constructor(insertTo(this, target, replaceWith, hasParent));
