@@ -4,14 +4,24 @@
  * @category Infrastructure
  */
 
+var Promise;
+if (typeof global !== 'undefined') {
+	Promise = global.Promise;
+} else if (typeof window !== 'undefined') {
+	Promise = window.Promise;
+}
+
 
 /**
- * ES6 Promise的兼容实现，并进行了扩展
+ * ES6 Promise的兼容实现，并进行了扩展。
  * @class Promise
  * @constructor
  * @exports
  * @param {Function(resolve,reject)} executor 执行函数。
  */
+Promise = Promise ?
+	require('./promise-wrap') :
+	require('./promise-sim');
 
 /**
  * 指定当前promise被解决后的操作。
@@ -92,6 +102,17 @@
  * @return {Promise} 如果执行过程中出现拒绝状态，则返回以该状态解决的promise；
  *   否则返回以最后一个promise的值解决的promise。
  */
+Promise.series = function(creators) {
+	if (creators.length) {
+		return creators.slice(1).reduce(function(promise, creator) {
+			return promise.then(function(value) {
+				return creator(value);
+			});
+		}, creators[0]());
+	} else {
+		return Promise.resolve();
+	}
+};
 
 /**
  * 返回在指定时间后解决的promise。
@@ -101,7 +122,11 @@
  * @param {Number} ms 延迟时间（毫秒）。
  * @return 指定时间后解决的promise。
  */
+Promise.delay = function(ms) {
+	return new Promise(function(resolve) {
+		setTimeout(resolve, ms);
+	});
+};
 
-module.exports = typeof Promise === 'function' ?
-	require('./promise-wrap') :
-	require('./promise-sim');
+
+module.exports = Promise;

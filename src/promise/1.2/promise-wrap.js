@@ -49,23 +49,5 @@ var PromiseWrap = base.createClass(function(executor) {
 	PromiseWrap[method] = Promise[method];
 });
 
-PromiseWrap.series = function(creators) {
-	if (creators.length) {
-		return creators.slice(1).reduce(function(promise, creator) {
-			return promise.then(function(value) {
-				return creator(value);
-			});
-		}, creators[0]());
-	} else {
-		return PromiseWrap.resolve();
-	}
-};
-
-PromiseWrap.delay = function(ms) {
-	return new Promise(function(resolve) {
-		setTimeout(resolve, ms);
-	});
-};
-
 
 module.exports = PromiseWrap;

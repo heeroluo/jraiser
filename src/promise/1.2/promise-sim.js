@@ -228,24 +228,6 @@ base.extend(Promise, {
 		return new Promise(function(resolve, reject) {
 			reject(reason);
 		});
-	},
-
-	series: function(creators) {
-		if (creators.length) {
-			return creators.slice(1).reduce(function(promise, creator) {
-				return promise.then(function(value) {
-					return creator(value);
-				});
-			}, creators[0]());
-		} else {
-			return Promise.resolve();
-		}
-	},
-
-	delay: function(ms) {
-		return new Promise(function(resolve) {
-			setTimeout(resolve, ms);
-		});
 	}
 });
 
