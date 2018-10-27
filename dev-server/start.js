@@ -83,9 +83,11 @@ app.use((req, res, next) => {
 				// 构建，增加 define 包装
 				fse.outputFileSync(
 					path.join(BUILD_DIR, assetPath),
-					'define(function(require, exports, module) { "use strict";\n' +
-					content +
-					'\n});'
+					/\.nmd\.js$/.test(assetPath) ?
+						content :
+						'define(function(require, exports, module) { "use strict";\n' +
+							content +
+						'\n});'
 				);
 			},
 			res
