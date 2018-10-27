@@ -1,15 +1,17 @@
 /*!
  * Bowl.js
- * Javascript module loader for browser - v1.1.0 (2016-02-10T11:57:42+0800)
+ * Javascript module loader for browser - v1.2.1
  * http://jraiser.org/ | Released under MIT license
  */
-!function(global, undefined) { 'use strict';
+(function(global, undefined) {
+
+'use strict';
 
 // 防止重复初始化
 if (global.bowljs) { return; }
 
 var bowljs = global.bowljs = {
-	version: '1.1.0',
+	version: '1.2.1',
 	logs: [ ]
 };
 
@@ -28,7 +30,7 @@ var config = { },
 // 检查是否空对象
 function isEmptyObject(obj) {
 	for (var p in obj) {
-		if ( obj.hasOwnProperty(p) ) { return false; }
+		if (obj.hasOwnProperty(p)) { return false; }
 	}
 	return true;
 }
@@ -36,7 +38,7 @@ function isEmptyObject(obj) {
 // 扩展对象
 function extend(target, src) {
 	for (var p in src) {
-		if ( src.hasOwnProperty(p) ) { target[p] = src[p]; }
+		if (src.hasOwnProperty(p)) { target[p] = src[p]; }
 	}
 	return target;
 }
@@ -45,7 +47,9 @@ function extend(target, src) {
 function trim(str) {
 	return str == null ?
 		'' :
-		String(str).replace(/^\s+/, '').replace(/\s+$/, '');
+		String(str)
+			.replace(/^\s+/, '')
+			.replace(/\s+$/, '');
 }
 
 // 判断是否数组
@@ -57,12 +61,12 @@ var isArray = Array.isArray || (function() {
 })();
 
 // 统一为数组结构
-function unifyArray(val) { return isArray(val) ? val : [val]; }
+function unifyArray(val) { return isArray(val) ? val : [ val ]; }
 
 // 保证字符串以某字符开头
 function ensurePrefix(str, prefix) {
 	str = trim(str);
-	return !str || str.charAt(0) == prefix ? str : prefix + str;
+	return !str || str.charAt(0) === prefix ? str : prefix + str;
 }
 
 // 保证字符串以某字符结尾
@@ -85,8 +89,18 @@ function createDivContainsA(href) {
 
 // 转换为绝对路径
 function toAbsPath(path) {
+	// 修正路径中有两个“/”的情况
+	var protocol = '';
+	path = path.replace(/^(?:[a-z]+:)?\/\//i, function(match) {
+		// 协议中有两个“/”，先提取出来
+		protocol = match;
+		return '';
+	}).replace(/\/{2,}/g, '/');
+	path = protocol + path;
+
 	var div = createDivContainsA(path);
 	path = div.firstChild.href;
+
 	div = null;
 	return path;
 }
@@ -94,12 +108,24 @@ function toAbsPath(path) {
 // URL类，记录URL的解析结果，也可以修改某个部分形成新的URL
 function URL(url) {
 	var div = createDivContainsA(url), a = div.firstChild;
+	/* eslint-disable no-self-assign */
 	a.href = a.href;
 
 	var t = this;
 	// 解析出URL的各个部分
 	t.protocol = a.protocol;
-	t.host = a.host.replace(/:80$/, '');
+
+	// IE<=9会在host中添加默认端口号，移除之
+	switch (t.protocol) {
+		case 'http:':
+			t.host = a.host.replace(/:80$/, '');
+			break;
+
+		case 'https:':
+			t.host = a.host.replace(/:443$/, '');
+			break;
+	}
+
 	t.hostname = a.hostname;
 	t.port = a.port;
 	t.pathname = ensurePrefix(a.pathname, '/');
@@ -119,13 +145,20 @@ URL.prototype.toString = function() {
 
 // 解析相对路径（ref必须以/结尾）
 function resolvePath(to, from) {
-	if ( /^\//.test(to) ) {
-		// 以“/”开头的路径，上下文路径为应用路径
-		from = config.appPath;
-		to = to.substr(1);
-	} else if ( !/^\./.test(to) ) {
-		// 非相对路径情况下，上下文路径为类库路径
-		from = config.libPath;
+	var reBeginWithDot = /^\./;
+	if (config.basePath) {
+		if (!from || !reBeginWithDot.test(to)) {
+			from = config.basePath;
+		}
+	} else {
+		if (/^\//.test(to)) {
+			// 以“/”开头的路径，上下文路径为应用路径
+			from = config.appPath;
+			to = to.substr(1);
+		} else if (!reBeginWithDot.test(to)) {
+			// 非相对路径情况下，上下文路径为类库路径
+			from = config.libPath;
+		}
 	}
 
 	return toAbsPath(from + to);
@@ -151,7 +184,7 @@ function idToURL(id, ref) {
 			return '';
 		})
 		// 解析 module@version 为 module/version/module
-		.replace(/([^\\\/]+)@([^\\\/]+)/g, function(match, module, version) {
+		.replace(/([^\\/]+)@([^\\/]+)/g, function(match, module, version) {
 			return module + '/' + version + '/' + module;
 		})
 		.split('/');
@@ -168,26 +201,27 @@ function idToURL(id, ref) {
 	extname = extname || 'js';
 
 	// 处理调试后缀
-	var re_debug = /-debug$/;
-	if ( config.debug && !re_debug.test(filename) ) {
+	var reDebug = /-debug$/;
+	if (config.debug && !reDebug.test(filename)) {
 		filename += '-debug';
-	} else if ( !config.debug && re_debug.test(filename) ) {
-		filename = filename.replace(re_debug, '');
+	} else if (!config.debug && reDebug.test(filename)) {
+		filename = filename.replace(reDebug, '');
 	}
 	id.push(filename + '.' + extname);
 
 	var url = id.join('/') + suffix;
-	if ( !isAbsPath(url) ) { url = resolvePath(url, ref || ''); }
+	if (!isAbsPath(url)) { url = resolvePath(url, ref || ''); }
+	url = new URL(url);
 
 	// 地址映射
 	var map = config.map;
 	if (map) {
-		url = new URL(url);
 		for (var i = 0; i < map.length; i++) {
 			map[i](url);
 		}
-		url = url.toString();
 	}
+
+	url = url.toString();
 
 	// 记录解析结果
 	if (canBeCached) { idURLMapping[cacheKey] = url; }
@@ -197,7 +231,7 @@ function idToURL(id, ref) {
 
 // 分析出依赖（require）的模块
 function parseDeps(code) {
-	var pattern = /(?:^|[^.$])\brequire\s*\(\s*(["'])([^"'\s\)]+)\1\s*\)/g,
+	var pattern = /(?:^|[^.$])\brequire\s*\(\s*(["'])([^"'\s)]+)\1\s*\)/g,
 		result = [ ],
 		match;
 
@@ -206,7 +240,7 @@ function parseDeps(code) {
 		.replace(/^\s*\/\*[\s\S]*?\*\/\s*$/mg, '') 	// 多行注释
 		.replace(/^\s*\/\/.*$/mg, '');				// 单行注释
 
-	while ( match = pattern.exec(code) ) {
+	while (!!(match = pattern.exec(code))) {
 		if (match[2]) { result.push(match[2]); }
 	}
 
@@ -313,8 +347,8 @@ var dependentChain = (function() {
 		add: function(moduleId, depId) {
 			log('dependentChain.add', 'moduleId(' + moduleId + '), depId(' + depId + ')');
 
-			var which = whichDepOnMe[depId] = whichDepOnMe[depId] || [ ];
-			which.push(moduleId);
+			whichDepOnMe[depId] = whichDepOnMe[depId] || [ ];
+			whichDepOnMe[depId].push(moduleId);
 		},
 
 		// 获取依赖于指定模块的模块记录
@@ -330,6 +364,9 @@ var dependentChain = (function() {
 })();
 
 
+// 记录所有模块
+var allModules = { };
+
 // 任务管理器
 var taskManager = (function() {
 	var autoId = 0, queue = [ ];
@@ -344,10 +381,10 @@ var taskManager = (function() {
 	function tryExecute() {
 		var task;
 		// 从最前面开始执行
-		while (task = queue[0]) {
-			if ( task.isReady() ) {
+		while (!!(task = queue[0])) {
+			if (task.isReady()) {
 				queue.shift();
-				delete Module.all[task.id()];
+				delete allModules[task.id()];
 				task.execute();
 			} else {
 				break;
@@ -359,19 +396,23 @@ var taskManager = (function() {
 	var preloadTask = {
 		init: function() {
 			var t = this, scripts = config.preload.slice(), counter = 0, total = 0;
+
+			function onLoad() {
+				counter++;
+				// 所有script已经就绪
+				if (counter >= total) {
+					delete t._scripts;
+					tryExecute();
+				}
+			}
+
 			for (var i = 0; i < scripts.length; i++) {
 				if (scripts[i]) {
 					total++;
-					scriptLoader.load(idToURL(scripts[i]), function() {
-						counter++;
-						// 所有script已经就绪
-						if (counter >= total) {
-							delete t._scripts;
-							tryExecute();
-						}
-					});
+					scriptLoader.load(idToURL(scripts[i]), onLoad);
 				}
 			}
+
 			if (total) { t._scripts = scripts; }
 		},
 
@@ -393,37 +434,13 @@ var taskManager = (function() {
 				preloadTask = null;
 			}
 			queue.push(task);
-			task.setId( nextId() );
+			task.setId(nextId());
 		},
 
 		// 尝试执行任务
 		tryExecute: tryExecute
 	};
 })();
-
-
-/**
- * 调用模块
- * @method require
- * @global
- * @param {String|Array<String>} ids 模块id
- * @param {Function} [callback] 回调函数。各参数依次为调用模块的exports
- */
-var require = global.require = function(ids, callback) {
-	log('globalRequire', ids);
-
-	taskManager.add(
-		new Module( null, callback, unifyArray(ids) )
-	);
-};
-
-/**
- * 解析模块id为URL
- * @method require.resolve
- * @global
- * @param {String} id 模块id
- */
-require.resolve = function(id) { return idToURL(id); };
 
 
 // 模块类（模块id，构造器，依赖的模块，模块所在目录）
@@ -444,7 +461,7 @@ function Module(id, factory, deps, dirname) {
 extend(Module, {
 	// 请求模块
 	require: function(id) {
-		var module = Module.all[id];
+		var module = allModules[id];
 		if (module) {
 			return module.exports();
 		} else {
@@ -454,31 +471,30 @@ extend(Module, {
 
 	// 模块是否就绪
 	isReady: function(id) {
-		var module = Module.all[id];
+		var module = allModules[id];
 		return module && module.isReady();
 	},
 
 	// 加载模块
 	load: function(id) {
-		if (Module.all[id]) { return; }
+		if (allModules[id]) { return; }
 
 		log('Module.load', id);
 
 		scriptLoader.load(id, function() {
-			if (Module.all[id]) { return; }
+			if (allModules[id]) { return; }
 
 			if (!useInteractive && Module.anonymous) {
 				Module.anonymous.setId(id);
 			}
 
-			if (!Module.all[id]) {
+			if (!allModules[id]) {
 				throw new Error('module "' + id + '" lost');
 			}
 		});
 	},
 
-	// 记录所有模块
-	all: { }
+	all: allModules
 });
 // Module类方法
 extend(Module.prototype, {
@@ -494,14 +510,14 @@ extend(Module.prototype, {
 
 		if (Module.anonymous === t) { delete Module.anonymous; }
 
-		if (Module.all[id]) {
+		if (allModules[id]) {
 			return;
 		} else {
-			Module.all[id] = t;
+			allModules[id] = t;
 		}
 
 		// 解析模块所在目录
-		t._dirname = t._dirname || ( t.isTask() ? '' : id.substr(0, id.lastIndexOf('/') + 1) );
+		t._dirname = t._dirname || (t.isTask() ? '' : id.substr(0, id.lastIndexOf('/') + 1));
 
 		var deps = t._deps;
 		if (deps) {
@@ -512,7 +528,7 @@ extend(Module.prototype, {
 				t._deps[i] = dep = idToURL(deps[i], t._dirname);
 
 				// 模块不存在或尚未就绪
-				if ( !Module.isReady(dep) ) {
+				if (!Module.isReady(dep)) {
 					// 记录到依赖链
 					dependentChain.add(id, dep);
 					// 记录此模块尚未就绪
@@ -524,7 +540,7 @@ extend(Module.prototype, {
 				}
 			}
 
-			if ( isEmptyObject(readyStates) ) { delete t._readyStates; }
+			if (isEmptyObject(readyStates)) { delete t._readyStates; }
 		}
 
 		t._checkReady();
@@ -537,14 +553,14 @@ extend(Module.prototype, {
 		log('module._checkReady', 'id(' + id + '), isReady(' + isReady + ')');
 
 		if (isReady) {
-			if ( this.isTask() ) {
+			if (this.isTask()) {
 				taskManager.tryExecute();
 			} else {
 				var moduleIds = dependentChain.get(id);
 				if (moduleIds) {
 					// 逐一通知被依赖模块
 					for (var i = moduleIds.length - 1, module; i >= 0; i--) {
-						module = Module.all[ moduleIds[i] ];
+						module = allModules[moduleIds[i]];
 						if (module) {
 							module.notifyReady(id);
 							log('module(notifyTo)', 'from(' + id + '), to(' + moduleIds[i] + ')');
@@ -570,7 +586,7 @@ extend(Module.prototype, {
 		var readyStates = this._readyStates;
 		if (readyStates) {
 			delete readyStates[depId];
-			if ( isEmptyObject(readyStates) ) {
+			if (isEmptyObject(readyStates)) {
 				delete this._readyStates;
 			}
 		}
@@ -580,11 +596,11 @@ extend(Module.prototype, {
 
 	// 执行任务回调
 	execute: function() {
-		log( 'module.execute', this.id() );
+		log('module.execute', this.id());
 
 		var deps = this._deps, modules = [ ];
 		for (var i = deps.length - 1; i >= 0; i--) {
-			modules[i] = Module.all[ deps[i] ].exports();
+			modules[i] = allModules[deps[i]].exports();
 		}
 
 		if (this._factory) { this._factory.apply(window, modules); }
@@ -602,7 +618,7 @@ extend(Module.prototype, {
 			if (typeof t._factory === 'function') {
 				module.exports = { };
 				var myRequire = function(id) {
-					return Module.require( idToURL(id, t._dirname) );
+					return Module.require(idToURL(id, t._dirname));
 				};
 				myRequire.async = function(ids, callback) {
 					log('asyncRequire', 'require(' + ids + '), moduleId(' + t.id() + ')');
@@ -629,6 +645,30 @@ extend(Module.prototype, {
 
 
 /**
+ * 调用模块
+ * @method require
+ * @global
+ * @param {String|Array<String>} ids 模块id
+ * @param {Function} [callback] 回调函数。各参数依次为调用模块的exports
+ */
+var require = global.require = function(ids, callback) {
+	log('globalRequire', ids);
+
+	taskManager.add(
+		new Module(null, callback, unifyArray(ids))
+	);
+};
+
+/**
+ * 解析模块id为URL
+ * @method require.resolve
+ * @global
+ * @param {String} id 模块id
+ */
+require.resolve = function(id) { return idToURL(id); };
+
+
+/**
  * 声明模块
  * @method define
  * @global
@@ -641,7 +681,7 @@ global.define = function() {
 	switch (args.length) {
 		case 1:
 			factory = args[0];
-			deps = parseDeps( factory.toString() );
+			deps = parseDeps(factory.toString());
 			break;
 
 		case 2:
@@ -663,8 +703,9 @@ global.define = function() {
 
 	log('globalDefine', id || '');
 
-	new Module( id, factory, unifyArray(deps) );
+	new Module(id, factory, unifyArray(deps));
 };
+
 // 兼容AMD规范，没什么实质的作用
 global.define.amd = { };
 
@@ -677,6 +718,7 @@ global.define.amd = { };
  * @param {Object} newConfig 新配置
  *   @param {String} [newConfig.libPath] 类库路径
  *   @param {String} [newConfig.appPath] 应用路径
+ *   @param {String} [newConfig.basePath] 基础路径。如果此项不为空，则libPath和appPath均无效
  *   @param {Boolean} [newConfig.debug] 是否调试模式
  *   @param {Array} [newConfig.map] URL映射，多次配置会合并
  *   @param {String|Function} [newConfig.charset] 编码
@@ -685,18 +727,19 @@ global.define.amd = { };
 bowljs.config = function(newConfig) {
 	// 处理路径配置（转成绝对路径，路径末尾加上/）
 	var fixPath = function(path) {
-		if ( !isAbsPath(path) ) { path = toAbsPath(path); }
+		if (!isAbsPath(path)) { path = toAbsPath(path); }
 		return ensureSuffix(path, '/');
 	};
 
 	if (newConfig.libPath) { config.libPath = fixPath(newConfig.libPath); }
 	if (newConfig.appPath) { config.appPath = fixPath(newConfig.appPath); }
+	if (newConfig.basePath) { config.basePath = fixPath(newConfig.basePath); }
 
 	var search = global.location.search;
-	// 指定调试模式，优先级：URL参数>配置参数>默认值 
-	if ( /[?|&]debug(&|$)/.test(search) ) {
+	// 指定调试模式，优先级：URL参数>配置参数>默认值
+	if (/[?|&]debug(&|$)/.test(search)) {
 		config.debug = true;
-	} else if ( /[?|&]nondebug(&|$)/.test(search) ) {
+	} else if (/[?|&]nondebug(&|$)/.test(search)) {
 		config.debug = false;
 	} else if (newConfig.debug != null) {
 		config.debug = !!newConfig.debug;
@@ -721,4 +764,4 @@ bowljs.config({
 
 log('bowljs(ready)', 'version(' + bowljs.version + ')');
 
-}(window);
+})(window);
