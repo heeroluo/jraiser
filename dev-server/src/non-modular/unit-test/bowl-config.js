@@ -1,6 +1,6 @@
 window.bowljs.config({
 	libPath: '/jraiser',
-	appPath: '/app',
+	appPath: '/unit-test',
 	debug: false,
 	preload: [
 		// Function.prototype.bind ? '' : 'compatibility/es5-shim',
