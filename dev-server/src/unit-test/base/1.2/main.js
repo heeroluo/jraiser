@@ -1,5 +1,5 @@
 var base = require('base/1.2/base');
-var testUtils = require('/test-utils/test-utils');
+var testUtils = require('/util');
 var QUnit = window.QUnit;
 
 
