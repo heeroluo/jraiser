@@ -38,13 +38,13 @@ QUnit.test('append', function(assert) {
 	var url1 = 'https://heeroluo.github.io/jraiser/';
 	var url2 = 'https://heeroluo.github.io/jraiser/?author=Heero.Law';
 
-	assert.deepEqual(
+	assert.strictEqual(
 		qs.append(url1, obj1),
 		url1 + '?id=0&str=hello',
 		'无参数URL'
 	);
 
-	assert.deepEqual(
+	assert.strictEqual(
 		qs.append(url2, obj1),
 		url2 + '&id=0&str=hello',
 		'带参数URL'
