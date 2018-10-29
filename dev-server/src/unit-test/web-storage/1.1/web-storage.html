@@ -1,54 +1,18 @@
 <!DOCTYPE HTML>
 <html>
-
 <head>
-	<meta charset="utf-8" />
-	<title>单元测试:web-storage</title>
-	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
-	<style>
-	</style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>web-storage@1.1</title>
+<link href="/non-modular/unit-test/qunit-1.23.1.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-	<div id="qunit"></div>
-	<div id="qunit-fixture"></div>
-	<script src="/non-modular/bowljs/bowl.js"></script>
-	<script src="/non-modular/bowl-config.js"></script>
-	<script src="/non-modular/qunit/qunit.js"></script>
-	<script src="/non-modular/test-utils.js"></script>
-	<script>
-		require(['web-storage/1.1/web-storage'], function(webStorage) {
-			QUnit.test('get', function(assert) {
-				sessionStorage['case1'] = 'hello world';
-				assert.equal(webStorage.get('case1'), 'hello world');
-				localStorage['case1-2'] = JSON.stringify({
-					value: 'hello world2'
-				});
-				assert.equal(webStorage.get('case1-2'), 'hello world2');
-			});
-
-			QUnit.test('set', function(assert) {
-				var done = assert.async();
-				webStorage.set('case2', 'hello world');
-				assert.equal(webStorage.get('case2'), 'hello world');
-				webStorage.set('case2', 'hello world', 1000);
-				setTimeout(function() {
-					assert.equal(webStorage.get('case2'), 'hello world');
-					done();
-				}, 500);
-				setTimeout(function() {
-					assert.equal(webStorage.get('case2'), null);
-					done();
-				}, 1000);
-			});
-
-			QUnit.test('remove', function(assert) {
-				webStorage.set('case3', 'hello world');
-				webStorage.remove('case3');
-				assert.equal(webStorage.get('case3'), null);
-			});
-		});
-	</script>
+<script src="/non-modular/unit-test/qunit-1.23.1.js"></script>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="/non-modular/bowljs/bowl.js"></script>
+<script src="/non-modular/unit-test/bowl-config.js"></script>
+<script>require('/web-storage/1.1/main');</script>
 </body>
-
 </html>
