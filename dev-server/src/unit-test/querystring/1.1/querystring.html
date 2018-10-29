@@ -1,65 +1,18 @@
 <!DOCTYPE HTML>
 <html>
-
 <head>
-	<meta charset="utf-8" />
-	<title>单元测试:querystring</title>
-	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
-	<style>
-	</style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>querystring@1.1</title>
+<link href="/non-modular/unit-test/qunit-1.23.1.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-	<div id="qunit"></div>
-	<div id="qunit-fixture"></div>
-	<script src="/non-modular/bowljs/bowl.js"></script>
-	<script src="/non-modular/bowl-config.js"></script>
-	<script src="/non-modular/qunit/qunit.js"></script>
-	<script src="/non-modular/test-utils.js"></script>
-	<script>
-		require(['querystring/1.1/querystring'], function(qs) {
-			var obj1 = {
-				id: '0',
-				str: 'hello',
-				for: 'world'
-			};
-			var obj2 = {
-				id: '0',
-				str: 'hello',
-				for: 'world',
-				empty: ''
-			};
-			var str1 = 'id=0&str=hello&for=world';
-			var str2 = 'id=0&str=hello&for=world&empty=';
-			var options = {
-				ignoreEmpty: true
-			};
-
-			QUnit.test('parse', function(assert) {
-				var res1 = qs.parse(str2);
-				var	res2 = qs.parse(str2, options);
-				assert.equal(testUtils.isEqual(res1, obj2), true, 'ignoreEmpty为false的情况');
-				assert.equal(testUtils.isEqual(res2. obj1), true, 'ignoreEmpty为true的情况');
-			});
-			QUnit.test('stringify', function(assert) {
-				var res1 = qs.stringify(obj2);
-				var res2 = qs.stringify(obj2, options);
-				assert.equal(res1 === str2, true, 'ignoreEmpty为false的情况');
-				assert.equal(res2 === str1, true, 'ignoreEmpty为true的情况');
-			});
-			QUnit.test('append', function(assert) {
-				var url = 'www.jraiser.com?author=Heero.Law';
-				var res1 = qs.append(url, obj2);
-				var res2 = qs.append(url, obj2, options);
-				// var res1 = 'www.jraiser.com?author=Heero.Law&id=0&str=hello&for=world';
-				// var res2 = 'www.jraiser.com?author=Heero.Law&id=0&str=hello&for=world&empty=';
-				assert.equal(res2, 'www.jraiser.com?author=Heero.Law&id=0&str=hello&for=world',
-				'ignoreEmpty为false的情况');
-				assert.equal(res1, 'www.jraiser.com?author=Heero.Law&id=0&str=hello&for=world&empty=',
-				'ignoreEmpty为true的情况');
-			});
-		});
-	</script>
+<script src="/non-modular/unit-test/qunit-1.23.1.js"></script>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="/non-modular/bowljs/bowl.js"></script>
+<script src="/non-modular/unit-test/bowl-config.js"></script>
+<script>require('/querystring/1.1/main');</script>
 </body>
-
 </html>
