@@ -1,52 +1,24 @@
 <!DOCTYPE HTML>
 <html>
-
 <head>
-	<meta charset="utf-8" />
-	<title>单元测试:tmpl</title>
-	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
-	<style>
-	</style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>tmpl@2.2</title>
+<link href="/non-modular/unit-test/qunit-1.23.1.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-	<div id="qunit"></div>
-	<div id="qunit-fixture"></div>
-	<div id="test-el">
-		<div id="el-1"></div>
-	</div>
-	<script src="/non-modular/bowljs/bowl.js"></script>
-	<script src="/non-modular/bowl-config.js"></script>
-	<script src="/non-modular/qunit/qunit.js"></script>
-	<script src="/non-modular/test-utils.js"></script>
-	<script type="text/template" data-key="tmpl1">
-		<div>hello world</div>
-	</script>
-	<script>
-		require(['tmpl/2.2/tmpl', 'dom/1.2/dom'], function(Tmpl, $) {
-			var $el1 = $('#el-1');
-			QUnit.test('方法render', function(assert) {
-				var tmpl = '<%=id%>';
-				var data = {
-					id: 1
-				};
-				$el1.html(Tmpl.render(tmpl, data));
-				var res = $el1.html();
-				assert.equal(res, '1');
-			});
-			QUnit.test('方法escape', function(assert) {
-				var res = Tmpl.escape('<div class="hello"></div>');
-				assert.equal(res, '&lt;div class=&quot;hello&quot;&gt;&lt;/div&gt;');
-			});
-			QUnit.test('fromScripts', function(assert) {
-				var res = Tmpl.fromScripts(document);
-				var isEqual = testUtils.isEqual(res, {
-					'tmpl1': '<div>hello world</div>'
-				});
-				assert.equal(isEqual, true);
-			});
-		});
-	</script>
+<script src="/non-modular/unit-test/qunit-1.23.1.js"></script>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="/non-modular/bowljs/bowl.js"></script>
+<script src="/non-modular/unit-test/bowl-config.js"></script>
+<script>require('/tmpl/2.2/main');</script>
+<script type="text/template" data-key="test-loop">
+<% for (var i = 0; i < 2; i++) { %><div><%=value%>,<%=i%></div><% } %>
+</script>
+<script type="text/template" data-key="test-if">
+<% if (value) { %><div><%-value%></div><% } %>
+</script>
 </body>
-
 </html>
