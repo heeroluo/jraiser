@@ -3,8 +3,8 @@ window.bowljs.config({
 	appPath: '/unit-test',
 	debug: false,
 	preload: [
-		// Function.prototype.bind ? '' : 'compatibility/es5-shim',
-		// window.JSON ? '' : 'compatibility/json2',
-		// window.localStorage ? '' : 'compatibility/localstorage'
+		Function.prototype.bind ? '' : 'shims/es5-shim.nmd.js',
+		window.JSON ? '' : 'shims/json2.nmd.js',
+		window.localStorage ? '' : 'shims/localstorage.nmd.js'
 	]
 });
