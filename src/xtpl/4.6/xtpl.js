@@ -6,158 +6,99 @@
 
 var base = require('../../base/1.2/base');
 var XTemplate = require('./xtemplate/index');
+var Promise = require('../../promise/1.2/promise');
 
 
 /**
- * XTemplate模板引擎包装类，语法见 https://github.com/xtemplate/xtemplate/blob/master/docs/syntax-cn.md 。
+ * XTemplate模板包装类
  * @class XTpl
  * @constructor
- * @exports
- * @param {Object} [templates] 初始模板。
- * @param {Object} [config] 其他配置。
- *   @param {Object} [config.commands] 命令定义。
+ * @param {Object} options 选项
+ *   @param {Function:Promise} options.loadTpl 加载模板的函数
+ *   @param {Object} [options.commands] 模板指令
  */
-var XTpl = base.createClass(function(templates, config) {
+var XTpl = base.createClass(function(options) {
 	var t = this;
-
-	t._tplCache = { };
-	t._instanceCache = { };
+	t._loadTpl = options.loadTpl;
+	t._commands = base.extend({ }, options.commands);
 	t._fnCache = { };
-	t._config = config;
+	t._instanceCache = { };
 
+	// 用于加载extend、parse、include指令的模板
 	t._loader = {
-		load: function(tplWrap, callback) {
-			var key = tplWrap.name, fn = t._fnCache[key];
-			if (!fn) {
-				try {
-					fn = tplWrap.root.compile(t._findTpl(key), key);
-				} catch (e) {
-					return callback(e);
-				}
-				t._fnCache[key] = fn;
-			}
-			callback(null, fn);
+		load: function(tpl, callback) {
+			t._getTplFn(tpl.root, tpl.name).then(function(fn) {
+				callback(null, fn);
+			});
 		}
 	};
-
-	t.add(templates);
 }, {
-	/**
-	 * 增加模板。
-	 * @method add
-	 * @for XTpl
-	 * @param {String} key 模板识别符。
-	 * @param {String} tpl 模板字符串。
-	 */
-	/**
-	 * 增加模板。
-	 * @method add
-	 * @for XTpl
-	 * @param {Object<key,tpl>} tpls 模板。
-	 */
-	add: function(key, tpl) {
-		var tplCache = this._tplCache;
-		// 重载
-		if (typeof key === 'object') {
-			base.extend(tplCache, key);
-		} else {
-			tplCache[key] = tpl;
-		}
+	_getInstance: function(tplPath) {
+		var loadTpl = this._loadTpl;
+		var commands = this._commands;
+		var instanceCache = this._instanceCache;
+		var loader = this._loader;
+
+		return new Promise(function(resolve) {
+			if (instanceCache[tplPath]) {
+				resolve(instanceCache[tplPath]);
+			} else {
+				loadTpl(tplPath).then(function(tpl) {
+					instanceCache[tplPath] = new XTemplate(tpl, {
+						name: tplPath,
+						loader: loader,
+						commands: commands
+					});
+					resolve(instanceCache[tplPath]);
+				});
+			}
+		});
+	},
+
+	_getTplFn: function(root, tplPath) {
+		var fnCache = this._fnCache;
+		var loadTpl = this._loadTpl;
+
+		return new Promise(function(resolve) {
+			if (fnCache[tplPath]) {
+				resolve(fnCache[tplPath]);
+			} else {
+				loadTpl(tplPath).then(function(tpl) {
+					var fn = root.compile(tpl, tplPath);
+					fnCache[tplPath] = fn;
+					resolve(fn);
+				});
+			}
+		});
 	},
 
 	/**
-	 * 是否存在指定模板。
-	 * @method has
-	 * @for XTpl
-	 * @param {String} key 模板识别符。
-	 * @return {Boolean} 是否存在指定模板。
-	 */
-	has: function(key) { return this._tplCache.hasOwnProperty(key); },
-
-	/**
-	 * 寻找模板（如果找不到，则抛出异常）。
-	 * @method _findTpl
-	 * @protected
-	 * @for XTpl
-	 * @param {String} key 模板名。
-	 * @return {String} 模板。
-	 */
-	_findTpl: function(key) {
-		var tpl = this._tplCache[key];
-		if (tpl == null) {
-			throw new Error('Template "' + key + '" does not exist');
-		}
-		return tpl;
-	},
-
-	/**
-	 * 渲染模板。
+	 * 渲染模板
 	 * @method render
 	 * @for XTpl
-	 * @param {String} key 模板识别符。
-	 * @param {Object} [data] 数据。
-	 * @param {Boolean} [cached=true] 是否缓存模板。
-	 * @return {String} 渲染结果。
+	 * @param {String} tplPath 模板路径
+	 * @param {Object} data 数据
+	 * @return {Promise} 渲染模板的promise
 	 */
-	render: function(key, data, cached) {
-		var t = this, instance = t._instanceCache[key];
-		if (!instance) {
-			instance = t._instanceCache[key] = new XTemplate(
-				t._findTpl(key),
-				{
-					name: key,
-					loader: t._loader
-				}
-			);
-		}
-
-		if (cached === false) { t.clear(key); }
-
-		return instance.render(data, t._config);
-	},
-
-	/**
-	 * 清理模板。
-	 * @method clear
-	 * @for XTpl
-	 * @param {String} key 模板名。如果为空，则清理所有模板。
-	 */
-	clear: function(key) {
-		var t = this;
-		if (key) {
-			delete t._tplCache[key];
-			delete t._instanceCache[key];
-			delete t._fnCache[key];
-		} else {
-			t._tplCache = { };
-			t._instanceCache = { };
-			t._fnCache = { };
-		}
+	render: function(tplPath, data) {
+		return this._getInstance(tplPath).then(function(instance) {
+			return new Promise(function(resolve, reject) {
+				instance.render(data, function(err, res) {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(res);
+					}
+				});
+			});
+		});
 	}
 });
 
-
-var defaultTpl;
 /**
- * 使用默认设定渲染模板。
- * @method render
- * @for XTpl
- * @static
- * @param {String} tpl 模版。
- * @param {Object} data 数据。
- * @param {Boolean} [cached=true] 是否缓存模版。
- * @return {String} 渲染结果。
- */
-XTpl.render = function(tpl, data, cached) {
-	defaultTpl = defaultTpl || new XTpl();
-	if (!defaultTpl.has(tpl)) { defaultTpl.add(tpl, tpl); }
-	return defaultTpl.render(tpl, data, cached);
-};
-
-/**
- * 加载script节点中的模板（只有type为text/xtemplate的会被加载）。
+ * 加载script节点中的模板（只有type为text/xtemplate的会被加载，节点的data-key属性为模板的key）。
  * @method fromScripts
- * @for XTpl
+ * @for Tmpl
  * @static
  * @param {Element|NodeList} [context] 上下文元素，默认为document。
  * @return {Object} 模板集合。
@@ -180,5 +121,6 @@ XTpl.fromScripts = function(context) {
 
 	return result;
 };
+
 
 module.exports = XTpl;
