@@ -13,22 +13,35 @@ var PromiseWrap = base.createClass(function(executor) {
 	this._promise = new Promise(executor);
 }, {
 	then: function(onFulfilled, onRejected) {
-		return this._promise.then(onFulfilled, onRejected);
+		var t = this;
+		return new PromiseWrap(function(resolve) {
+			resolve(t._promise.then(onFulfilled, onRejected));
+		});
 	},
 
 	spread: function(onFulfilled, onRejected) {
-		return this._promise.then(function(value) {
-			return onFulfilled.apply(this, value);
-		}, onRejected);
+		var t = this;
+		return new PromiseWrap(function(resolve) {
+			resolve(
+				t._promise.then(function(value) {
+					return onFulfilled.apply(this, value);
+				}, onRejected)
+			);
+		});
 	},
 
 	'catch': function(onFulfilled) {
-		return this._promise['catch'](onFulfilled);
+		var t = this;
+		return new PromiseWrap(function(resolve) {
+			resolve(
+				t._promise['catch'](onFulfilled)
+			);
+		});
 	},
 
 	'finally': function(handler) {
 		var t = this;
-		return new Promise(function(resolve, reject) {
+		return new PromiseWrap(function(resolve, reject) {
 			t._promise.then(function(value) {
 				handler.apply(this, arguments);
 				resolve(value);
