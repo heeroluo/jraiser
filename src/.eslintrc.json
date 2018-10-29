@@ -58,7 +58,6 @@
 		"keyword-spacing": "error",
 		"linebreak-style": "error",
 		"new-cap": "error",
-		"newline-per-chained-call": "error",
 		"no-trailing-spaces": "error",
 		"no-whitespace-before-property": "error",
 		"object-curly-spacing": ["error", "always"],
