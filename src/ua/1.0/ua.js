@@ -4,48 +4,7 @@
  * @category Utility
  */
 
-var ua = typeof window !== 'undefined' ? window.navigator.userAgent : '';
-
-
-// 缓存匹配结果
-var cache = { };
-
-// 执行规则匹配
-function execRules(rules) {
-	if (!ua) { return; }
-
-	var i, match;
-	for (i = 0; i < rules.length; i++) {
-		match = ua.match(rules[i].rule);
-		if (match) {
-			// 版本号处理
-			var version = match[1] || '';
-			if (version) {
-				version = version
-					// 某些版本号用下划线分隔，替换为点号
-					.replace(/_/g, '.')
-					// 非法值修正
-					.replace(/\.{2,}/g, '.')
-					.replace(/\.+$/, '')
-					// 分割为数组，限制长度
-					.split('.');
-
-				// 最多保留三段版本号
-				if (version.length > 3) { version.length = 3; }
-
-				version = version.join('.');
-
-				// 版本号合法性判断
-				if (!/^\d+(?:\.\d+)*$/.test(version)) { version = null; }
-			}
-
-			return {
-				name: rules[i].name,
-				version: version
-			};
-		}
-	}
-}
+var base = require('../../base/1.2/base');
 
 
 // 各类识别规则
@@ -133,10 +92,47 @@ var rules = {
 		},
 		{
 			name: 'Weibo',
-			rule: /(?:\b|_)Weibo(?:\b|_)/i
+			rule: /weibo/i
 		}
 	]
 };
+
+// 执行规则匹配
+function execRules(ua, rules) {
+	if (!ua) { return; }
+
+	var i, match;
+	for (i = 0; i < rules.length; i++) {
+		match = ua.match(rules[i].rule);
+		if (match) {
+			// 版本号处理
+			var version = match[1] || '';
+			if (version) {
+				version = version
+					// 某些版本号用下划线分隔，替换为点号
+					.replace(/_/g, '.')
+					// 非法值修正
+					.replace(/\.{2,}/g, '.')
+					.replace(/\.+$/, '')
+					// 分割为数组，限制长度
+					.split('.');
+
+				// 最多保留4段版本号
+				if (version.length > 4) { version.length = 4; }
+
+				version = version.join('.');
+
+				// 版本号合法性判断
+				if (!/^\d+(?:\.\d+)*$/.test(version)) { version = null; }
+			}
+
+			return {
+				name: rules[i].name,
+				version: version
+			};
+		}
+	}
+}
 
 
 // 比较版本号。比较结果：1表示a>b，-1表示a<b，0表示相等。
@@ -171,17 +167,47 @@ var cmpOpers = {
 };
 
 
+// 缓存匹配结果
+var uaAnalyzer = (function() {
+	// 缓存分析结果
+	var cache = { };
+
+	// 封装检查缓存、执行分析的过程
+	function wrap(type, fn) {
+		return function(ua) {
+			cache[ua] = cache[ua] || { };
+			if (!cache[ua].hasOwnProperty(type)) {
+				cache[ua][type] = fn ? fn(ua) : execRules(ua, rules[type]);
+			}
+			return cache[ua][type];
+		};
+	}
+
+	return {
+		basic: wrap('basic', function(ua) {
+			var result = {
+				isMobile: /android|mobile|phone/i.test(ua)
+			};
+			result.isTablet = /iPad/.test(ua) || (result.isMobile && !/mobile/i.test(ua));
+			result.isPC = !result.isMobile && result.isTablet;
+			return result;
+		}),
+
+		os: wrap('os'),
+
+		browserCore: wrap('browserCore'),
+
+		browser: wrap('browser'),
+
+		client: wrap('client')
+	};
+})();
+
+
 // 生成检测对应类型的函数
 function wrap(type) {
 	return function(name, cmp, version) {
-		var result;
-		if (cache.hasOwnProperty(type)) {
-			result = cache[type];
-		} else {
-			result = cache[type] = execRules(rules[type]);
-			// 有匹配结果之后，规则就没用了
-			delete rules[type];
-		}
+		var result = uaAnalyzer[type](this._ua);
 
 		// 名称对比
 		if (!result || result.name !== name) { return false; }
@@ -198,80 +224,110 @@ function wrap(type) {
 }
 
 
-/**
- * 检查当前操作系统
- * @method isOS
- * @param {String} name 操作系统名。可用名称包括：
- *   pcWindows（PC的Windows系统）、
- *   iOS、
- *   macOS（macOS或OS X）、
- *   Android。
- * @param {String} cmp 版本号对比符号。可用符号包括：
- *   gt（大于）、
- *   gte（大于等于）、
- *   lt（小于）、
- *   lte（小于等于）、
- *   eq（等于）。
- * @param {String} version 对比版本号。
- * @return {Boolean} 检查结果。
- */
-exports.isOS = wrap('os');
 
 /**
- * 检查当前浏览器核心。
- * @method isBrowserCore
- * @param {String} name 浏览器核心名。可用名称只有Webkit。
- * @param {String} cmp 版本号对比符号，同isOS。
- * @param {String} version 对比版本号。
- * @return {Boolean} 检查结果。
+ * UserAgent检测类
+ * @class UA
+ * @constructor
+ * @param {String} ua UserAgent字符串
  */
-exports.isBrowserCore = wrap('browserCore');
+var UA = base.createClass(function(ua) {
+	this._ua = ua;
 
-/**
- * 检查当前浏览器。
- * @method isBrowser
- * @param {String} name 浏览器名。可用名称有：
- *   IE（包括PC端和移动端）、
- *   Edge（包括PC端和移动端）、
- *   mUC（移动端UC浏览器）、
- *   mQQ（移动端QQ浏览器）、
- *   Chrome（包括PC端和移动端）。
- * @param {String} cmp 版本号对比符号，同isOS。
- * @param {String} version 对比版本号。
- * @return {Boolean} 检查结果。
- */
-exports.isBrowser = wrap('browser');
+	/**
+	 * 当前是否移动端设备。
+	 * @property isMobile
+	 * @type {Boolean}
+	 * @for UA
+	 */
 
-/**
- * 检查当前客户端。
- * @method isClient
- * @param {String} name 客户端名。可用名称有：
- *   Weixin（微信，包括PC端和移动端）、
- *   mQQ（手机QQ）、
- *   Weibo（手机端微博）。
- * @param {String} cmp 版本号对比符号，同isOS。
- * @param {String} version 对比版本号。
- * @return {Boolean} 检查结果。
- */
-exports.isClient = wrap('client');
+	/**
+	 * 当前是否平板电脑设备。
+	 * @property isTablet
+	 * @type {Boolean}
+	 * @for UA
+	 */
 
-/**
- * 当前是否移动端设备。
- * @property isMobile
- * @type {Boolean}
- */
-var isMobile = exports.isMobile = /android|mobile|phone/i.test(ua);
+	/**
+	 * 当前是否PC设备。
+	 * @property isPC
+	 * @type {Boolean}
+	 * @for UA
+	 */
 
-/**
- * 当前是否平板电脑设备。
- * @property isTablet
- * @type {Boolean}
- */
-exports.isTablet = /iPad/.test(ua) || (isMobile && !/mobile/i.test(ua));
+	base.extend(this, uaAnalyzer.basic(ua));
+}, {
+	/**
+	 * 检查当前操作系统
+	 * @method isOS
+	 * @for UA
+	 * @param {String} name 操作系统名。可用名称包括：
+	 *   pcWindows（PC的Windows系统）、
+	 *   iOS、
+	 *   macOS（macOS或OS X）、
+	 *   Android。
+	 * @param {String} cmp 版本号对比符号。可用符号包括：
+	 *   gt（大于）、
+	 *   gte（大于等于）、
+	 *   lt（小于）、
+	 *   lte（小于等于）、
+	 *   eq（等于）。
+	 * @param {String} version 对比版本号。
+	 * @return {Boolean} 检查结果。
+	 */
+	isOS: wrap('os'),
 
-/**
- * 当前是否PC设备。
- * @property isPC
- * @type {Boolean}
- */
-exports.isPC = !isMobile;
+	/**
+	 * 检查当前浏览器核心。
+	 * @method isBrowserCore
+	 * @for UA
+	 * @param {String} name 浏览器核心名。可用名称只有Webkit。
+	 * @param {String} cmp 版本号对比符号，同isOS。
+	 * @param {String} version 对比版本号。
+	 * @return {Boolean} 检查结果。
+	 */
+	isBrowserCore: wrap('browserCore'),
+
+	/**
+	 * 检查当前浏览器。
+	 * @method isBrowser
+	 * @for UA
+	 * @param {String} name 浏览器名。可用名称有：
+	 *   IE（包括PC端和移动端）、
+	 *   Edge（包括PC端和移动端）、
+	 *   mUC（移动端UC浏览器）、
+	 *   mQQ（移动端QQ浏览器）、
+	 *   Chrome（包括PC端和移动端）。
+	 * @param {String} cmp 版本号对比符号，同isOS。
+	 * @param {String} version 对比版本号。
+	 * @return {Boolean} 检查结果。
+	 */
+	isBrowser: wrap('browser'),
+
+	/**
+	 * 检查当前客户端。
+	 * @method isClient
+	 * @for UA
+	 * @param {String} name 客户端名。可用名称有：
+	 *   Weixin（微信，包括PC端和移动端）、
+	 *   mQQ（手机QQ）、
+	 *   Weibo（手机端微博）。
+	 * @param {String} cmp 版本号对比符号，同isOS。
+	 * @param {String} version 对比版本号。
+	 * @return {Boolean} 检查结果。
+ 	*/
+	isClient: wrap('client')
+});
+
+if (typeof window !== 'undefined') {
+	/**
+	 * 当前浏览器的UserAgent检测对象
+	 * @property current
+	 * @type {Object}
+	 * @static
+	 */
+	UA.current = new UA(window.navigator.userAgent);
+}
+
+
+module.exports = UA;
