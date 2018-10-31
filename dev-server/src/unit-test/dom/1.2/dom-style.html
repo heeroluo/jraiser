@@ -1,125 +1,32 @@
 <!DOCTYPE HTML>
 <html>
-
 <head>
-	<meta charset="utf-8" />
-	<title>单元测试:dom-style</title>
-	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>dom/1.2/dom-style</title>
+<link href="/non-modular/unit-test/qunit-1.23.1.css" rel="stylesheet" type="text/css" />
+<style>
+.test {
+	visibility: hidden;
+}
+.size {
+	width: 50px;
+	height: 50px;
+}
+.abs {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+</style>
 </head>
 
 <body>
-	<div id="qunit"></div>
-	<div id="qunit-fixture"></div>
-	<div id="test-el"></div>
-	<div id="test-el2"
-		style="width: 100px; height: 50px; border: 3px solid #fff;padding: 14px; margin: 16px;"
-	></div>
-	<div id="test-el3"></div>
-	<script src="/non-modular/bowljs/bowl.js"></script>
-	<script src="/non-modular/bowl-config.js"></script>
-	<script src="/non-modular/qunit/qunit.js"></script>
-	<script src="/non-modular/test-utils.js"></script>
-	<script>
-		require(['dom/1.2/dom'], function($) {
-			// 获取真实尺寸
-			function getStyle(el) { 
-				if(window.getComputedStyle) { 
-					return window.getComputedStyle(el, null); 
-				}else{ 
-					return el.currentStyle; 
-				} 
-			}
-			var $testEl = $('#test-el');
-			var $testEl2 = $('#test-el2');
-			var $testEl3 = $('#test-el3');
-			QUnit.test('css', function(assert) {
-				var node = testUtils.parseDOM('<div></div>');
-				$(node).css('width', '100px');
-				assert.equal(node.style.width, '100px');
-			});
-
-			QUnit.test('hasClass', function(assert) {
-				var node = testUtils.parseDOM('<div class="something"></div>');
-				assert.equal($(node).hasClass('something'), true);
-			});
-
-			QUnit.test('addClass', function(assert) {
-				var node = testUtils.parseDOM('<div></div>');
-				$(node).addClass('something');
-				assert.equal(node.className, 'something');
-			});
-
-			QUnit.test('removeClass', function(assert) {
-				var node = testUtils.parseDOM('<div class="something"></div>');
-				$(node).removeClass('something');
-				assert.equal(node.className, '');
-			});
-
-			QUnit.test('toggleClass', function(assert) {
-				var node = testUtils.parseDOM('<div></div>');
-				$(node).toggleClass('something');
-				assert.equal(node.className, 'something');
-				$(node).toggleClass('something');
-				assert.equal(node.className, '');
-			});
-
-
-			var $globalEl = testUtils.parseDOM('<div></div>');
-			$globalEl.style.width = '100px';
-			$globalEl.style.height = '50px';
-			$globalEl.style.padding = '14px';
-			$globalEl.style.margin = '16px';
-			$globalEl = $($globalEl);
-			QUnit.test('width', function(assert) {
-				$testEl.width('100px');
-				var style = getStyle($testEl[0]);
-				assert.equal(style.width, '100px');
-			});
-
-			QUnit.test('height', function(assert) {
-				$testEl.height('100px');
-				var style = getStyle($testEl[0]);
-				assert.equal(style.height, '100px');
-			});
-
-			QUnit.test('innerWidth', function(assert) {
-				var innerWidth = $testEl2.innerWidth();
-				assert.equal(innerWidth, '128');
-			});
-
-			QUnit.test('innerHeight', function(assert) {
-				var innerHeight = $testEl2.innerHeight();
-				assert.equal(innerHeight, '78');
-			});
-
-			QUnit.test('outerWidth', function(assert) {
-				var outerWidth = $testEl2.outerWidth();
-				assert.equal(outerWidth, '134');
-			});
-
-			QUnit.test('outerHeight', function(assert) {
-				var outerHeight = $testEl2.outerHeight();
-				assert.equal(outerHeight, '84');
-			});
-
-			QUnit.test('show & hide', function(assert) {
-				var node = testUtils.parseDOM('<div></div>');
-				$(node).hide();
-				assert.equal(node.style.display, 'none');
-				$(node).show();
-				assert.equal(node.style.display, '');
-			});
-
-			QUnit.test('toggle', function(assert) {
-				// 不支持非window下的节点
-				// var node = testUtils.parseDOM('<div></div>');
-				$testEl3.toggle();
-				assert.equal($testEl3[0].style.display, 'none');
-				$testEl3.toggle();
-				assert.equal($testEl3[0].style.display, '');
-			});
-		});
-	</script>
+<script src="/non-modular/unit-test/qunit-1.23.1.js"></script>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="/non-modular/bowljs/bowl.js"></script>
+<script src="/non-modular/unit-test/bowl-config.js"></script>
+<script>require('/dom/1.2/dom-style');</script>
 </body>
-
 </html>
