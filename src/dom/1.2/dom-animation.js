@@ -5,6 +5,7 @@
  * @ignore
  */
 
+var Promise = require('../../promise/1.2/promise');
 var tween = require('../../tween/1.0/tween');
 var domBase = require('./dom-base');
 var domData = require('./dom-data');
@@ -110,11 +111,15 @@ function start(node, endStyle, options) {
 	// 停止已有的动画，防止冲突
 	stop(node);
 
-	var taskId = tween.create({
+	return tween.create({
 		startValue: startStyle,
 		endValue: endStyle,
 		duration: options.duration,
 		easing: options.easing,
+		receiveId: function(id) {
+			// 记录任务id（停止动画时清除）
+			idSpace.set(node, 'taskId', id);
+		},
 		frame: function(value, key) {
 			if (rScroll.test(key)) {
 				domOffset.setScroll(node, RegExp.$1, value);
@@ -133,17 +138,13 @@ function start(node, endStyle, options) {
 		},
 		onprogress: function() {
 			if (options.onprogress) { options.onprogress.apply(node, arguments); }
-		},
-		oncomplete: function() {
-			// 动画执行完成，清理任务id
-			idSpace.clear(node);
-			// 执行回调函数
-			if (options.oncomplete) { options.oncomplete.call(node); }
 		}
+	})['finally'](function() {
+		// 动画执行完成，清理任务id
+		idSpace.clear(node);
+		// 执行回调函数
+		if (options.oncomplete) { options.oncomplete.call(node); }
 	});
-
-	// 记录任务id（停止动画时清除）
-	idSpace.set(node, 'taskId', taskId);
 }
 
 
@@ -158,18 +159,31 @@ exports.shortcuts = {
 	 *   @param {String|Function} [options.easing='linear'] 缓动函数。
 	 *   @param {Function(value,progress,remaining)} [options.onprogress] 动画每一帧执行后的回调函数。
 	 *   @param {Function} [options.oncomplete] 动画执行完成后的回调函数。
-	 * @return {NodeList} 当前节点集合。
+	 * @param {Boolean} [returnPromise] 为true时返回动画promise。
+	 * @return {NodeList|Promise} 当前节点集合或动画promise。
 	 */
-	animate: function(endStyle, options) {
+	animate: function(endStyle, options, returnPromise) {
+		// 重载，允许省略options
+		if (typeof options === 'boolean') {
+			returnPromise = options;
+			options = null;
+		}
+
 		for (var name in endStyle) {
 			if (endStyle.hasOwnProperty(name)) {
 				endStyle[name] = parseStyleValue(name, endStyle[name]);
 			}
 		}
 
-		this.forEach(function(node) { start(node, endStyle, options); });
+		var promises = this.map(function(node) {
+			return start(node, endStyle, options);
+		});
 
-		return this;
+		if (returnPromise) {
+			return Promise.all(promises);
+		} else {
+			return this;
+		}
 	},
 
 	/**
