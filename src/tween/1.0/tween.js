@@ -5,6 +5,17 @@
  */
 
 var base = require('../../base/1.2/base');
+var Promise = require('../../promise/1.2/promise');
+
+// 兼容浏览器和Node.js的全局作用域
+var theGlobal;
+if (typeof global !== 'undefined') {
+	theGlobal = global;
+} else if (typeof window !== 'undefined') {
+	theGlobal = window;
+} else {
+	theGlobal = this;
+}
 
 
 // 内置缓动函数
@@ -191,7 +202,15 @@ function runStep(task, percentage, key) {
 			percentage
 		);
 
-		task.frame.call(window, nextValue, key);
+		try {
+			task.frame.call(theGlobal, nextValue, key);
+		} catch (e) {
+			if (task.onerror) {
+				task.onerror.call(theGlobal, e);
+			} else {
+				throw e;
+			}
+		}
 	}
 
 	return nextValue;
@@ -204,10 +223,10 @@ function runTask(task, remaining) {
 	var stepValue = runStep(task, percentage);
 
 	if (task.onprogress) {
-		task.onprogress.call(window, stepValue, percentage, remaining);
+		task.onprogress.call(theGlobal, stepValue, percentage, remaining);
 	}
 	if (percentage >= 1 && task.oncomplete) {
-		task.oncomplete.call(window);
+		task.oncomplete.call(theGlobal);
 	}
 
 	return percentage;
@@ -272,8 +291,8 @@ var queueManager = (function() {
 
 // 补间任务管理
 var schedule = (function() {
-	var doc = window.document;
-	var requestAnimationFrame = window.requestAnimationFrame;
+	var doc = theGlobal.document;
+	var requestAnimationFrame = theGlobal.requestAnimationFrame;
 
 	// 使用setTimeout时的间隔
 	var TICK_INVERVAL = 13;
@@ -287,7 +306,7 @@ var schedule = (function() {
 			isRunning = false;
 		} else {
 			isRunning = true;
-			if (doc.hidden === false && requestAnimationFrame) {
+			if (doc && doc.hidden === false && requestAnimationFrame) {
 				requestAnimationFrame(run);
 			} else {
 				setTimeout(run, TICK_INVERVAL);
@@ -314,34 +333,42 @@ var schedule = (function() {
  *   @param {Number} [options.duration=400] 持续时间。
  *   @param {Function|String} [options.easing='linear'] 缓动函数。
  *   @param {Function(value,progress,remaining)} [options.onprogress] 每一帧执行后的回调函数。
- *   @param {Function(taskId)} [options.oncomplete] 补间结束后的回调函数。
- * @return {Number} 补间任务id。
+ *   @param {Function(taskId)} [options.receiveId] 接收补间任务id的函数。
+ * @return {Promise} 补间promise。
  */
 exports.create = function(options) {
-	var easing = options.easing || 'linear';
-	if (typeof easing !== 'function') {
-		var easingType = String(easing);
-		easing = easings[easingType];
-		if (!easing) {
-			throw new Error('Easing "' + easingType + '" does not exist');
+	return new Promise(function(resolve, reject) {
+		var easing = options.easing || 'linear';
+		if (typeof easing !== 'function') {
+			var easingType = String(easing);
+			easing = easings[easingType];
+			if (!easing) {
+				reject(new Error('Easing "' + easingType + '" does not exist'));
+				return;
+			}
 		}
-	}
 
-	options = base.extend({}, options, { easing: easing });
-	options.duration = Math.abs(parseFloat(options.duration)) || 400;
+		options = base.extend({}, options, { easing: easing });
+		options.duration = Math.abs(parseFloat(options.duration)) || 400;
+		if (!options.frame) {
+			reject(new Error('Please specify the "frame" function'));
+			return;
+		}
 
-	if (!options.frame) {
-		throw new Error('Please specify the "frame" function');
-	}
+		options.oncomplete = resolve;
+		options.onerror = reject;
 
-	var taskId = queueManager.add(options);
-	schedule.run();
-	return taskId;
+		var taskId = queueManager.add(options);
+		schedule.run();
+		if (options.receiveId) {
+			options.receiveId.call(theGlobal, taskId);
+		}
+	});
 };
 
 
 /**
- * 移除补间任务。
+ * 移除补间任务（移除后补间promise将马上解决）。
  * @method remove
  * @param {Number} taskId 任务id。
  * @param {Boolean} [jumpToEnd=false] 是否执行补间最后一帧（跳到完成状态）。
@@ -350,6 +377,10 @@ exports.remove = function(taskId, jumpToEnd) {
 	var i = queueManager.findIndex(taskId);
 	if (i !== -1) {
 		var task = queueManager.remove(i);
-		if (jumpToEnd) { runTask(task, 0); }
+		if (jumpToEnd) {
+			runTask(task, 0);
+		} else {
+			task.oncomplete.call(theGlobal);
+		}
 	}
 };
