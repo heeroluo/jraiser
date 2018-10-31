@@ -1,135 +1,28 @@
 <!DOCTYPE HTML>
 <html>
-
 <head>
-	<meta charset="utf-8" />
-	<title>单元测试:dom-animation</title>
-	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
-	<style>
-		.test-el {
-			height: 100px;
-		}
-		.animation-case {
-			height: 100px;
-			width: 100px;
-			background: red;
-			margin-bottom: 20px;
-		}
-	</style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>dom/1.2/dom-animation</title>
+<link href="/non-modular/unit-test/qunit-1.23.1.css" rel="stylesheet" type="text/css" />
+<style>
+.square {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 50px;
+	height: 50px;
+	background: #333;
+}
+</style>
 </head>
 
 <body>
-	<div id="qunit"></div>
-	<div id="qunit-fixture"></div>
-	<div class="test-el">
-		<div id="el-1" class="animation-case"></div>
-		<div id="el-2" class="animation-case"></div>
-		<div id="el-3" class="animation-case"></div>
-	</div>
-	<script src="/non-modular/bowljs/bowl.js"></script>
-	<script src="/non-modular/bowl-config.js"></script>
-	<script src="/non-modular/qunit/qunit.js"></script>
-	<script src="/non-modular/test-utils.js"></script>
-	<script>
-		require(['dom/1.2/dom'], function($) {
-			QUnit.test('测试animate的最终状态是否正确', function(assert) {
-				var done = assert.async();
-				var $el1 = $('#el-1');
-				$el1.animate({
-					width: '300px'
-				}, {
-					duration: 500
-				});
-				setTimeout(function() {
-					assert.equal($el1.css('width'), '300px', '测试节点的宽度是否达到目标宽度');
-					done();
-				}, 600);
-			});
-			// 计时器生成器
-			var timerFactory = function() {
-				var i = 0;
-				return {
-					add: function() {
-						i ++;
-					},
-					get: function() {
-						return i;
-					}
-				}
-			};
-			QUnit.test('测试animatie的动画过程是否正确', function(assert) {
-				var done = assert.async();
-				// 两个记录器，记录下回调函数运行的次数
-				var onprogressTimer = timerFactory();
-				var oncompleteTimer = timerFactory();
-				var $el2 = $('#el-2');
-				$el2.animate({
-					width: '300px'
-				}, {
-					duration: 500,
-					onprogress: onprogressTimer.add,
-					oncomplete: oncompleteTimer.add
-				});
-
-				// arr用于存放动画pregress过程的变化每一帧的时间
-				var arr = [];
-				// 动画每一帧都触发的函数
-				function tick() {
-					var timestamp = Number(performance.now().toFixed(3));
-					arr.push(timestamp);
-					var width = $el2.css('width');
-					// 达到终点状态后判断结果
-					if (width == '300px') {
-						assert.equal(onprogressTimer.get() == arr.length, true, '测试onprogress函数的回调情况');
-						assert.equal(oncompleteTimer.get(), 1, '测试oncomplete函数的回调情况');
-						var duration = arr[arr.length - 1] - arr[0];
-						// 前后预留500秒的误差
-						assert.equal(duration > 450 && duration < 550, true, '测试动画的时间是否准确');
-						done();
-						return;
-					}
-					requestAnimationFrame(tick);
-				}
-				tick();
-			});
-			QUnit.test('测试动画的stop方法', function(assert) {
-				var done = assert.async();
-				// 两个记录器，记录下回调函数运行的次数
-				var onprogressTimer = timerFactory();
-				var oncompleteTimer = timerFactory();
-
-				var $el3 = $('#el-3');
-				$el3.animate({
-					width: '300px'
-				}, {
-					duration: 500,
-					onprogress: onprogressTimer.add,
-					oncomplete: oncompleteTimer.add
-				});
-
-				// 记录需要stop时候的宽度
-				var width = '';
-				// 动画每一帧都触发的函数
-				function tick() {
-					var width = $el3.css('width');
-					// 达到目的状态
-					if (parseFloat(width) >= 200) {
-						$el3.stop();
-						var progressTime = onprogressTimer.get();
-						setTimeout(function() {
-							assert.equal($el3.css('width'), width, '暂停后状态是否持续不变');
-							assert.equal(onprogressTimer.get(), progressTime, 'onprogress回调函数是否正常');
-							assert.equal(oncompleteTimer.get(), 0, 'oncomplete回调函数是否正常');
-							done();
-						}, 200);
-						return;
-					}
-					requestAnimationFrame(tick);
-				}
-				tick();
-			});
-		});
-	</script>
+<script src="/non-modular/unit-test/qunit-1.23.1.js"></script>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="/non-modular/bowljs/bowl.js"></script>
+<script src="/non-modular/unit-test/bowl-config.js"></script>
+<script>require('/dom/1.2/dom-animation');</script>
 </body>
-
 </html>
