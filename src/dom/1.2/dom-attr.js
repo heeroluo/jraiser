@@ -117,12 +117,8 @@ getAttr = doIfSupportAttr(function(node, name) {
 			result = hook.get(node, name);
 		} else {
 			result = getNodeAttribute(node, name);
-			if (reBoolAttr.test(name)) {
-				if (result === true || result === 'true' || result === name) {
-					result = name;
-				} else {
-					result = '';
-				}
+			if (result != null && reBoolAttr.test(name)) {
+				result = getProp(node, name) ? name : '';
 			}
 		}
 	}
