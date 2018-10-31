@@ -1,63 +1,18 @@
 <!DOCTYPE HTML>
 <html>
-
 <head>
-	<meta charset="utf-8" />
-	<title>单元测试:dom-attr</title>
-	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>dom/1.2/dom-attr</title>
+<link href="/non-modular/unit-test/qunit-1.23.1.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-	<div id="qunit"></div>
-	<div id="qunit-fixture"></div>
-	<script src="/non-modular/bowljs/bowl.js"></script>
-	<script src="/non-modular/bowl-config.js"></script>
-	<script src="/non-modular/qunit/qunit.js"></script>
-	<script src="/non-modular/test-utils.js"></script>
-	<script>
-		require(['dom/1.2/dom'], function($) {
-			QUnit.test('attr & removeAttr', function(assert) {
-				var node = testUtils.parseDOM('<div data-num=1></div>');
-				assert.equal($(node).attr('data-num'), 1, 'attr获取');
-				$(node).attr('data-num', 2);
-				assert.equal($(node).attr('data-num'), 2, 'attr设置');
-				$(node).removeAttr('data-num');
-				assert.equal($(node).attr('data-num'), undefined, 'removeAttr');
-			});
-			QUnit.test('prop', function(assert) {
-				var node = testUtils.parseDOM('<input type="checkbox" checked="checked" />');
-				assert.equal($(node).prop('checked'), true, 'prop获取');
-				$(node).prop('checked', false);
-				assert.equal($(node).prop('checked'), false, 'prop设置');
-				$(node).removeAttr('checked');
-				assert.equal($(node).prop('checked'), false, 'removeProp');
-			});
-			QUnit.test('text', function(assert) {
-				var node = testUtils.parseDOM('<div>test</div>');
-				var text = $(node).text();
-				
-				assert.equal(text, 'test', '获取值');
-				$(node).text('new content');
-				assert.equal($(node).text(), 'new content', '设置值');
-			});
-			QUnit.test('html', function(assert) {
-				var node = testUtils.parseDOM('<div>test</div>');
-				var text = $(node).html();
-				
-				assert.equal(text, 'test', '获取值');
-				$(node).html('new content');
-				assert.equal($(node).html(), 'new content', '设置值');
-				$(node).html('<div class="child"></div>');
-				assert.equal($(node).children().length, 1, '设置节点');
-			});
-			QUnit.test('val', function(assert) {
-				var node = testUtils.parseDOM('<input value="old content" />');
-				assert.equal($(node).val(), 'old content', '获取值');
-				$(node).val('new content');
-				assert.equal($(node).val(), 'new content', '设置值');
-			});
-		});
-	</script>
+<script src="/non-modular/unit-test/qunit-1.23.1.js"></script>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="/non-modular/bowljs/bowl.js"></script>
+<script src="/non-modular/unit-test/bowl-config.js"></script>
+<script>require('/dom/1.2/dom-attr');</script>
 </body>
-
 </html>
