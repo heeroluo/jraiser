@@ -58,17 +58,26 @@ function parseNodes(target, ownerDocument) {
 }
 
 
+// 检测是否会克隆自定义特性
+var willCloneCustomizedProperty = (function() {
+	var node = document.createElement('div');
+	node.uniqueId = 1;
+	var node2 = node.cloneNode();
+	return node2.uniqueId != null;
+})();
+
 // 克隆节点
 function cloneNode(node, withData, deepWithData) {
 	var node2 = node.cloneNode(true);
+	var all2, i, shouldClearId;
 
 	if (withData) {
 		if (deepWithData) {
 			var all = domTraversal.selfAndDescendants(node);
 			if (all) {
-				var all2 = domTraversal.selfAndDescendants(node2);
+				all2 = domTraversal.selfAndDescendants(node2);
 				// 遍历当前节点及其所有后代节点，克隆数据
-				for (var i = all.length - 1; i >= 0; i--) {
+				for (i = all.length - 1; i >= 0; i--) {
 					// 移除复制过来的节点id
 					domData.removeUniqueId(all2[i]);
 					// 克隆当前节点及其后代节点的数据
@@ -80,6 +89,20 @@ function cloneNode(node, withData, deepWithData) {
 			domData.removeUniqueId(node2);
 			// 只克隆当前节点数据
 			domData.cloneAll(node2, node);
+
+			// 要清理后代节点的节点id
+			shouldClearId = 1;
+		}
+	} else {
+		// 要清理自身及后代节点的节点id
+		shouldClearId = 0;
+	}
+
+	// 旧版本IE浏览器下调用cloneNode会克隆自定义特性（节点id），清除之
+	if (willCloneCustomizedProperty && shouldClearId != null) {
+		all2 = domTraversal.selfAndDescendants(node2);
+		for (i = all2.length - 1; i >= shouldClearId; i--) {
+			domData.removeUniqueId(all2[i]);
 		}
 	}
 
@@ -180,7 +203,7 @@ function insertTo(target, ref, fn, condition) {
 
 
 // 是否有父节点
-function hasParent(node) { return node.parentNode != null }
+function hasParent(node) { return node.parentNode != null; }
 // 是否可以有子节点
 function canHasChild(node) { return node.nodeType === 1 || node.nodeType === 11; }
 
