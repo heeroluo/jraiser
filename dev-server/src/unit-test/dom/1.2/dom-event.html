@@ -1,87 +1,22 @@
 <!DOCTYPE HTML>
 <html>
-
 <head>
-	<meta charset="utf-8" />
-	<title>单元测试:dom-event</title>
-	<link href="/non-modular/qunit/qunit.css" rel="stylesheet" type="text/css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<title>dom/1.2/dom-event</title>
+<link href="/non-modular/unit-test/qunit-1.23.1.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-	<div id="qunit"></div>
-	<div id="qunit-fixture"></div>
-	<div id="test-el">
-		<div id="el-1" onclick="window.clickTimer1.add()"></div>
-		<div id="el-2" onclick="window.clickTimer2.add()"></div>
-		<div id="el-3"></div>
-		<div id="el-4"></div>
-	</div>
-	<script src="/non-modular/bowljs/bowl.js"></script>
-	<script src="/non-modular/bowl-config.js"></script>
-	<script src="/non-modular/qunit/qunit.js"></script>
-	<script src="/non-modular/test-utils.js"></script>
-	<script>
-		require(['dom/1.2/dom'], function($) {
-			window.$ = $;
-			var $el1 = $('#el-1');
-			var $el2 = $('#el-2');
-			var $el3 = $('#el-3');
-			var $el4 = $('#el-4');
-			function timerFactory() {
-				var i = 0;
-				return {
-					add: function() {
-						i++;
-					},
-					get: function() {
-						return i;
-					}
-				};
-			}
-
-			QUnit.test('trigger', function(assert) {
-				window.clickTimer1 = timerFactory();
-				$el1.trigger('click');
-				assert.equal(clickTimer1.get(), 1); 
-			});
-			QUnit.test('on', function(assert) {
-				window.clickTimer3 = timerFactory();
-				$el3.on('click', function() {
-					clickTimer3.add();
-				})
-				$el3.trigger('click');
-				assert.equal(clickTimer3.get(), 1);
-			});
-			QUnit.test('off', function(assert) {
-				window.clickTimer2 = timerFactory();
-				$el2.off('click');
-				$el2.trigger('click');
-				assert.equal(clickTimer2.get(), 0);
-				$el2.on('click', function() {
-					assert.ok(false, '错误情况');
-				});
-				$el2.off();
-				$el2.trigger('click');
-			});
-			QUnit.test('测试命名空间', function(assert) {
-				var clickTimer1 = timerFactory();
-				var clickTimer2 = timerFactory();
-
-				$el4.on('click.space1', function() {
-					clickTimer1.add();
-				});
-				$el4.on('click.space2', function() {
-					clickTimer2.add();
-				})
-				$el4.off('click.space2');
-				$el4.trigger('click');
-
-				var t1 = clickTimer1.get(),
-					t2 = clickTimer2.get();
-				assert.equal(t1 === 1 && t2 === 0, true);
-			});
-		});
-	</script>
+<script src="/non-modular/unit-test/qunit-1.23.1.js"></script>
+<div id="test" style="position: absolute; right: 0; bottom: 0; background: #ddd; width: 100px; height: 100px; visibility: hidden;">
+	<div class="test1" style="width: 50%; height: 50%; background: #bbb;"></div>
+	<div class="test2" style="width: 50%; height: 50%; background: #999;"></div>
+</div>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="/non-modular/bowljs/bowl.js"></script>
+<script src="/non-modular/unit-test/bowl-config.js"></script>
+<script>require('/dom/1.2/dom-event');</script>
 </body>
-
 </html>
