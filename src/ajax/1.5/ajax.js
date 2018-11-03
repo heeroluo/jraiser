@@ -11,7 +11,7 @@ var qs = require('../../querystring/1.1/querystring');
 
 var win = window;
 var doc = win.document;
-var head = doc.head;
+var head = doc.head || doc.getElementsByTagName('head')[0];
 
 
 // 创建放弃请求的错误
@@ -48,7 +48,9 @@ function wrap(fn) {
 		// 添加timestamp防止缓存
 		if (options.nocache) { data._ = +new Date; }
 		// 添加GET参数
-		url = qs.append(url, options.data);
+		url = qs.append(url, data, {
+			ignoreEmpty: true
+		});
 
 		var args = [url, options];
 		// 把后续参数放回参数数组
@@ -170,7 +172,7 @@ function postScript(action, options, callbackName) {
 		// JSONP回调函数
 		if (callbackName) {
 			win[callbackName] = function() {
-				if (!cancelled) { resolve(Array.from(arguments)); }
+				if (!cancelled) { resolve(base.toArray(arguments)); }
 			};
 		}
 
@@ -211,7 +213,7 @@ function postScript(action, options, callbackName) {
 		div = doc.createElement('div');
 		div.style.display = 'none';
 
-		var targetId = base.rndStr('form-target-');
+		var targetId = base.randomStr('form-target-');
 		div.innerHTML =
 			'<form action="' + action + '" target="' + targetId + '" method="post">' +
 				'<input type="hidden" name="callback" value="' + callbackName + '" />' +
@@ -370,9 +372,9 @@ exports.getImage = wrap(function(src) {
  * @method createXHR
  * @return {XMLHttpRequest} XMLHttpRequest对象。
  */
-var createXHR = exports.createXHR = win.ActiveXObject && doc.documentMode < 9 ?
-	function() { return new win.ActiveXObject('Microsoft.XMLHTTP'); } :
-	function() { return new XMLHttpRequest(); };
+var createXHR = exports.createXHR = win.XMLHttpRequest ?
+	function() { return new win.XMLHttpRequest(); } :
+	function() { return new win.ActiveXObject('Microsoft.XMLHTTP'); };
 
 // 判断是否跨域
 function isCrossDomain(url) {
@@ -405,18 +407,20 @@ function parseMIMEType(contentType) {
  * @param {Object} [options] 其他选项。
  *   @param {String} [options.url] 请求URL。
  *   @param {Object} [options.data] 发送的数据。
- *   @param {String} [options.dataType] 返回的数据格式：json、jsonp、xml或text。
+ *   @param {String} [options.responseType] 返回的数据格式：json、jsonp、xml或text。
  *     默认根据响应头的Content-Type自动识别。
+ *   @param {String} [options.requestType] 请求的数据格式：form或json。
+ *     responseType为jsonp时无效。
  *   @param {String} [options.method='GET'] 请求方式：GET、POST、PUT或DELETE。
  *   @param {Boolean} [options.nocache=false] 是否在URL中添加时间戳（参数名为“_”）防止缓存。
- *   @param {Object} [options.headers] 要设置的HTTP头，dataType为jsonp时无效。
+ *   @param {Object} [options.headers] 要设置的HTTP头，responseType为jsonp时无效。
  *	 @param {Number|String} [options.timeout] 超时时间，仅在异步请求时有效，可传入数字（毫秒）或timespan模块支持的格式。
  *   @param {Boolean} [options.withCredentials] 是否在跨域请求中发送凭据(cookie等）。
- *   @param {Boolean} [options.async=true] 是否使用异步方式请求，dataType为jsonp时只能为true。
- *   @param {Function(xhr)} [options.beforeSend] 发送请求前执行的回调函数，dataType为jsonp时无效。
+ *   @param {Boolean} [options.async=true] 是否使用异步方式请求，responseType为jsonp时只能为true。
+ *   @param {Function(xhr)} [options.beforeSend] 发送请求前执行的回调函数，responseType为jsonp时无效。
  *   @param {Function(abort)} [options.receiveCancel] 接收放弃请求方法的函数。
  *   @param {String} [options.callbackName] jsonp回调函数名，如不指定则按照特定规则生成。
- *     仅当dataType为jsonp时有效。
+ *     仅当responseType为jsonp时有效。
  * @return {Promise} 发送请求的promise。
  */
 exports.send = function(url, options) {
@@ -427,8 +431,8 @@ exports.send = function(url, options) {
 	}
 	options = options || { };
 
-	var dataType = String(options.dataType || '').toLowerCase();
-	if (dataType === 'jsonp') {
+	var responseType = String(options.responseType || '').toLowerCase();
+	if (responseType === 'jsonp') {
 		return jsonp(url, options);
 	}
 
@@ -460,8 +464,9 @@ exports.send = function(url, options) {
 			if (timeoutTimer) { clearTimeout(timeoutTimer); }
 
 			var response, errMsg;
-			dataType = dataType || parseMIMEType(xhr.getResponseHeader('Content-Type'));
-			switch (dataType) {
+			responseType = responseType ||
+				parseMIMEType(xhr.getResponseHeader('Content-Type'));
+			switch (responseType) {
 				case 'json':
 					var responseText = (xhr.responseText || '').trim();
 					if (responseText) {
@@ -507,15 +512,24 @@ exports.send = function(url, options) {
 		var async = typeof options.async === 'boolean' ? options.async : true;
 		var data = options.data;
 		var headers = options.headers || { };
+		var requestType = String(options.requestType || 'form').toLowerCase();
 
 		if (data) {
-			data = qs.stringify(data);
+			if (requestType === 'json') {
+				data = JSON.stringify(data);
+			} else if (typeof data !== 'string') {
+				data = qs.stringify(data, {
+					ignoreEmpty: true
+				});
+			}
 			if (method === 'GET') {
 				url = qs.append(url, data);
 				data = null;
 			} else {
 				headers['Content-Type'] = headers['Content-Type'] ||
-					'application/x-www-form-urlencoded; charset=UTF-8';
+					(requestType === 'json' ?
+						'application/json; charset=utf-8' :
+						'application/x-www-form-urlencoded; charset=utf-8');
 			}
 		}
 
