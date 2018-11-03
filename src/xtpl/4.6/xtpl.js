@@ -10,12 +10,12 @@ var Promise = require('../../promise/1.2/promise');
 
 
 /**
- * XTemplate模板包装类
+ * XTemplate模板包装类。
  * @class XTpl
  * @constructor
- * @param {Object} options 选项
- *   @param {Function:Promise} options.loadTpl 加载模板的函数
- *   @param {Object} [options.commands] 模板指令
+ * @param {Object} options 选项。
+ *   @param {Function:Promise} options.loadTpl 加载模板的函数。
+ *   @param {Object} [options.commands] 模板指令。
  */
 var XTpl = base.createClass(function(options) {
 	var t = this;
@@ -73,12 +73,12 @@ var XTpl = base.createClass(function(options) {
 	},
 
 	/**
-	 * 渲染模板
+	 * 渲染模板。
 	 * @method render
 	 * @for XTpl
-	 * @param {String} tplPath 模板路径
-	 * @param {Object} data 数据
-	 * @return {Promise} 渲染模板的promise
+	 * @param {String} tplPath 模板路径。
+	 * @param {Object} data 数据。
+	 * @return {Promise} 渲染模板的promise。
 	 */
 	render: function(tplPath, data) {
 		return this._getInstance(tplPath).then(function(instance) {

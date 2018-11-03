@@ -226,10 +226,10 @@ function wrap(type) {
 
 
 /**
- * UserAgent检测类
+ * UserAgent检测类。
  * @class UA
  * @constructor
- * @param {String} ua UserAgent字符串
+ * @param {String} ua UserAgent字符串。
  */
 var UA = base.createClass(function(ua) {
 	this._ua = ua;
@@ -258,7 +258,7 @@ var UA = base.createClass(function(ua) {
 	base.extend(this, uaAnalyzer.basic(ua));
 }, {
 	/**
-	 * 检查当前操作系统
+	 * 检查当前操作系统。
 	 * @method isOS
 	 * @for UA
 	 * @param {String} name 操作系统名。可用名称包括：
@@ -321,7 +321,7 @@ var UA = base.createClass(function(ua) {
 
 if (typeof window !== 'undefined') {
 	/**
-	 * 当前浏览器的UserAgent检测对象
+	 * 当前浏览器的UserAgent检测对象。
 	 * @property current
 	 * @type {Object}
 	 * @static

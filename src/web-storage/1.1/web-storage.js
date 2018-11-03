@@ -42,10 +42,10 @@ exports.get = function(key) {
 
 
 /**
- * 获取存储项并转换成JSON对象
+ * 获取存储项并转换成JSON对象。
  * @method getAsJSON
- * @param {String} key 键名
- * @return {Object} JSON对象
+ * @param {String} key 键名。
+ * @return {Object} JSON对象。
  */
 exports.getAsJSON = function(key) {
 	var value = this.get(key);
