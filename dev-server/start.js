@@ -6,6 +6,7 @@
 const path = require('path');
 const http = require('http');
 const express = require('express');
+const bodyParser = require('body-parser');
 const fse = require('fs-extra');
 
 
@@ -42,6 +43,10 @@ function ifModified(filePath, fn, res) {
 
 
 const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use('/ajax', require('./ajax-test'));
 
 app.use((req, res, next) => {
 	let assetPath = req.originalUrl;
@@ -65,7 +70,6 @@ app.use((req, res, next) => {
 		);
 
 	} else {
-
 		let isLib;
 		let subPath = assetPath.replace(/^\/jraiser\//, () => {
 			isLib = true;
