@@ -155,6 +155,7 @@ QUnit.test('createClass', function(assert) {
 			return 'a';
 		}
 	});
+	ClassA.staticMethod = function() {};
 
 	var ClassB = base.createClass(function() {
 		logs.push('B');
@@ -167,4 +168,5 @@ QUnit.test('createClass', function(assert) {
 	var instance = new ClassB();
 	assert.deepEqual(logs, ['A', 'B'], '执行顺序');
 	assert.strictEqual(instance.aMethod(), 'b', '方法调用');
+	assert.notEqual(ClassB.staticMethod, null, '静态方法');
 });
