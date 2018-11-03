@@ -17,6 +17,8 @@ var base = require('../../base/1.2/base');
  * @return {Object} 解析结果。
  */
 exports.parse = function(str, options) {
+	if (typeof str !== 'string') { return {}; }
+
 	options = base.extend({
 		decode: decodeURIComponent
 	}, options);
@@ -56,6 +58,8 @@ exports.parse = function(str, options) {
  * @return {String} 序列化结果。
  */
 var stringify = exports.stringify = function(data, options) {
+	if (typeof data !== 'object') { return ''; }
+
 	options = base.extend({
 		encode: encodeURIComponent
 	}, options);
