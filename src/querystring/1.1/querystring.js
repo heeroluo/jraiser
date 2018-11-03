@@ -103,7 +103,12 @@ var stringify = exports.stringify = function(data, options) {
  */
 exports.append = function(url, data, options) {
 	// 数据为空，直接返回url
-	if (data == null || base.isEmptyObject(data)) { return url; }
+	if (!(
+		(typeof data === 'string' && data !== '') ||
+		(typeof data === 'object' && !base.isEmptyObject(data))
+	)) {
+		return url;
+	}
 
 	// 如果url中包含hash，要先剪出来
 	var temp = url.indexOf('#');
