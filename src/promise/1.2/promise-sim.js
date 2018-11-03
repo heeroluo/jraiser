@@ -11,7 +11,7 @@ var base = require('../../base/1.2/base');
 // 输出错误日志（兼容旧浏览器）
 var logError = typeof console !== 'undefined' && typeof console.error === 'function' ?
 	function(e) { console.error('Uncaught (in promise) %o', e); } :
-	function() { };
+	function(e) { throw e; };
 
 
 // 判断某个对象是否支持then方法
