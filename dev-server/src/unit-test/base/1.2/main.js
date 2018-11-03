@@ -1,6 +1,27 @@
 var base = require('base/1.2/base');
-var testUtils = require('/util');
 var QUnit = window.QUnit;
+
+
+function getType(value) {
+	var toString = Object.prototype.toString;
+	var type = '';
+	var valueDisplay = JSON.stringify(value);
+	if (typeof value === 'object') {
+		switch (toString.call(value)) {
+			case '[object Array]':
+				type = 'array';
+				break;
+			case '[object Date]':
+				type = 'date';
+				break;
+			default:
+				type = 'object';
+		}
+	} else {
+		type = typeof value;
+	}
+	return type + '(' + valueDisplay + ')';
+}
 
 
 QUnit.test('isFunction', function(assert) {
@@ -16,7 +37,7 @@ QUnit.test('isFunction', function(assert) {
 		assert.strictEqual(
 			base.isFunction(item),
 			false,
-			testUtils.getType(item)
+			getType(item)
 		);
 	});
 });
@@ -34,7 +55,7 @@ QUnit.test('isDate', function(assert) {
 		assert.strictEqual(
 			base.isDate(item),
 			false,
-			testUtils.getType(item)
+			getType(item)
 		);
 	});
 });
@@ -52,7 +73,7 @@ QUnit.test('isObject', function(assert) {
 		assert.strictEqual(
 			base.isObject(item),
 			false,
-			testUtils.getType(item)
+			getType(item)
 		);
 	});
 });
@@ -67,7 +88,7 @@ QUnit.test('isEmptyObject', function(assert) {
 		assert.strictEqual(
 			base.isEmptyObject(item),
 			true,
-			'okay-' + testUtils.getType(item)
+			'okay-' + getType(item)
 		);
 	});
 
@@ -80,7 +101,7 @@ QUnit.test('isEmptyObject', function(assert) {
 		assert.strictEqual(
 			base.isEmptyObject(item),
 			false,
-			testUtils.getType(item)
+			getType(item)
 		);
 	});
 });
