@@ -1,11 +1,11 @@
 {
 	"template_path": "./doc-template",
-	"output_path": "./docs/api/",
+	"output_path": "./docs/api/3.0",
 	"category_order": [
 		"Infrastructure",
 		"Utility",
 		"UI",
 		""
 	],
-	"ignored_paths": ["bowl", "compatibility", "example", "doc-template", "docs"]
+	"ignored_paths": ["shims"]
 }

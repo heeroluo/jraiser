@@ -10,7 +10,8 @@
   },
   "scripts": {
     "start": "node dev-server/start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx gulp compileJS",
+    "doc": "npx gulp genDoc"
   },
   "repository": {
     "type": "git",
@@ -22,9 +23,9 @@
     "library"
   ],
   "author": {
-    "name": "Heero.Luo",
+    "name": "Mr.Luo",
     "email": "heeroluo@126.com",
-    "url": "http://heeroluo.net/"
+    "url": "https://mrluo.life/"
   },
   "license": "MIT",
   "bugs": {
@@ -36,7 +37,11 @@
   },
   "devDependencies": {
     "body-parser": "^1.18.3",
+    "bowljs-cli": "^1.0.5",
     "express": "^4.16.3",
-    "fs-extra": "^7.0.0"
+    "fs-extra": "^7.0.0",
+    "gulp": "^3.9.1",
+    "gulp-modify": "^0.1.1",
+    "pump": "^3.0.0"
   }
 }

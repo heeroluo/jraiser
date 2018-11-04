@@ -1,5 +1,5 @@
 {
-	"lib_path": "./lib",
+	"lib_path": "./dist",
 	"include_subs": true,
 	"list": [
 		{
@@ -21,6 +21,6 @@
 	],
 	"ignored_paths": ["bowl", "compatibility", "example", "doc-template"],
 	"uglify_options": {
-		"comments": "^\\!"
+		"comments": "^!"
 	}
 }
