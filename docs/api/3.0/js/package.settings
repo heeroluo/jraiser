@@ -1,0 +1,7 @@
+{
+	"import": "./lib.settings",
+	"app_path": "./app/",
+	"list": [
+		{ "target": "^/" }
+	]
+}

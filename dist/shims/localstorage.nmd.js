@@ -1,0 +1,4 @@
+/*!
+ * localStorage implemented by UserData
+ */
+!function(t){if(!t.localStorage){var e,r=t.document,i=t.location;t.localStorage=((e=new Date).setFullYear(e.getFullYear()+1),new n(i.host,e.toUTCString()))}function n(e,i){var n=r.createElement("input");function o(t){t?n.expires=t.toUTCString():i&&(n.expires=i),n.save(e)}n.type="hidden",n.addBehavior("#default#userData"),r.body.insertBefore(n,r.body.firstChild),e=e.replace(":","$"),n.load(e),this.getItem=function(t){return n.load(e),n.getAttribute(t)},this.setItem=function(t,e){n.setAttribute(t,e),o()},this.removeItem=function(t){n.removeAttribute(t),o()},this.clear=function(){o(new Date(315532799e3))}}}(window);
