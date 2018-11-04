@@ -70,15 +70,16 @@ app.use((req, res, next) => {
 		);
 
 	} else {
-		let isLib;
-		let subPath = assetPath.replace(/^\/jraiser\//, () => {
+		let isLib, isLibDist;
+		let subPath = assetPath.replace(/^\/jraiser(-dist)?\//, (match, $1) => {
 			isLib = true;
+			isLibDist = $1;
 			return '';
 		});
 
 		result = ifModified(
 			isLib ?
-				path.resolve(__dirname, '../src', subPath) :
+				path.resolve(__dirname, isLibDist ? '../dist' : '../src', subPath) :
 				path.join(__dirname, 'src', assetPath),
 			(filePath) => {
 				console.info('Build ' + filePath);
@@ -87,7 +88,7 @@ app.use((req, res, next) => {
 				// 构建，增加 define 包装
 				fse.outputFileSync(
 					path.join(BUILD_DIR, assetPath),
-					/\.nmd\.js$/.test(assetPath) ?
+					/\.nmd\.js$/.test(assetPath) || isLibDist ?
 						content :
 						'define(function(require, exports, module) { "use strict";\n' +
 							content +
