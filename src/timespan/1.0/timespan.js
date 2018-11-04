@@ -19,7 +19,7 @@ var timeUnits = {
 /**
  * 把带单位的时间跨度转换为毫秒表示。
  * @method parse
- * @param {Number|String} 时间跨度。为数字时表示毫秒，为字符串时支持以下格式（%表示数字）：
+ * @param {Number|String} timespan 时间跨度。为数字时表示毫秒，为字符串时支持以下格式（%表示数字）：
  *   %secs；
  *   %mins；
  *   %hours；

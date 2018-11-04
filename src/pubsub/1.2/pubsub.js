@@ -1,6 +1,6 @@
 /**
  * 本模块提供事件驱动机制
- * @module pubsub/1.2/pubsub
+ * @module pubsub@1.2
  * @category Infrastructure
  */
 

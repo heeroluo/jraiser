@@ -1,6 +1,6 @@
 /**
  * 微型模版引擎
- * @module tmpl/2.2/tmpl
+ * @module tmpl@2.2
  * @category Utility
  */
 

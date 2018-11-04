@@ -324,6 +324,7 @@ if (typeof window !== 'undefined') {
 	 * 当前浏览器的UserAgent检测对象。
 	 * @property current
 	 * @type {Object}
+	 * @for UA
 	 * @static
 	 */
 	UA.current = new UA(window.navigator.userAgent);

@@ -98,7 +98,7 @@ var XTpl = base.createClass(function(options) {
 /**
  * 加载script节点中的模板（只有type为text/xtemplate的会被加载，节点的data-key属性为模板的key）。
  * @method fromScripts
- * @for Tmpl
+ * @for XTpl
  * @static
  * @param {Element|NodeList} [context] 上下文元素，默认为document。
  * @return {Object} 模板集合。
