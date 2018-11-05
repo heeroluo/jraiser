@@ -12,13 +12,12 @@ QUnit.test('Attribute', function(assert) {
 	$node.removeAttr('data-value');
 	assert.equal($node.attr('data-value'), null, 'Remove attribute');
 
-	assert.strictEqual($node.attr('checked'), 'checked', 'Get special attribute');
+	assert.strictEqual($node.attr('checked'), 'checked', 'Get boolean attribute');
 	$node.removeAttr('checked');
-	assert.strictEqual(
-		[undefined, ''].indexOf($node.attr('checked')) !== -1,
-		true,
-		'Remove special attribute'
-	);
+	assert.strictEqual($node.attr('checked'), null, 'Remove boolean attribute');
+
+	$node = $('#test-link');
+	assert.strictEqual($node.attr('href'), './test', 'Get href attribute');
 });
 
 QUnit.test('Property', function(assert) {
@@ -30,6 +29,9 @@ QUnit.test('Property', function(assert) {
 
 	$node.removeProp('checked');
 	assert.strictEqual($node.prop('checked'), false, 'Remove property');
+
+	$node = $('#test-link');
+	assert.notEqual($node.prop('href'), './test', 'Get href property');
 });
 
 
