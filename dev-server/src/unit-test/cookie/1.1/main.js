@@ -24,5 +24,5 @@ QUnit.test('set', function(assert) {
 QUnit.test('remove', function(assert) {
 	cookie.set('case4-key', 'case4-value');
 	cookie.remove('case4-key');
-	assert.equal(cookie.get('case4-key'), null);
+	assert.strictEqual([null, ''].indexOf(cookie.get('case4-key')) !== -1, true);
 });
