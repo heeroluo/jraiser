@@ -160,12 +160,6 @@ QUnit.test('randomStr', function(assert) {
 	assert.strictEqual(value.length, 16 + PREFIX.length, '长度测试');
 });
 
-QUnit.test('deleteGlobalVar', function(assert) {
-	window.globalVar = 'global';
-	base.deleteGlobalVar('globalVar');
-	assert.equal(window.globalVar, null);
-});
-
 QUnit.test('createClass', function(assert) {
 	var logs = [];
 
