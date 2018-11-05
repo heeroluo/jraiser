@@ -151,7 +151,7 @@ QUnit.test('XMLHttpRequest(RESTful API)', function(assert) {
 			data: { id: 2 },
 			requestType: 'json'
 		}).then(function(value) {
-			assert.strictEqual(value.id, 2, 'Delete form data');
+			assert.strictEqual(value.id, '2', 'Delete form data');
 		}),
 
 		ajax.send({

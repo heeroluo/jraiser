@@ -55,7 +55,7 @@ ajaxRouter.put('/xhr/put', function(req, res) {
 });
 ajaxRouter.delete('/xhr/delete', function(req, res) {
 	res.json({
-		id: req.body.id
+		id: req.query.id
 	});
 });
 ajaxRouter.delete('/xhr/delete/error', function(req, res) {

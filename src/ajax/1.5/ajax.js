@@ -409,8 +409,8 @@ function parseMIMEType(contentType) {
  *   @param {Object} [options.data] 发送的数据。
  *   @param {String} [options.responseType] 返回的数据格式：json、jsonp、xml或text。
  *     默认根据响应头的Content-Type自动识别。
- *   @param {String} [options.requestType] 请求的数据格式：form或json。
- *     responseType为jsonp时无效。
+ *   @param {String} [options.requestType='form'] 请求的数据格式：form或json。
+ *     responseType为jsonp时或method为GET、DELETE时无效。
  *   @param {String} [options.method='GET'] 请求方式：GET、POST、PUT或DELETE。
  *   @param {Boolean} [options.nocache=false] 是否在URL中添加时间戳（参数名为“_”）防止缓存。
  *   @param {Object} [options.headers] 要设置的HTTP头，responseType为jsonp时无效。
@@ -515,21 +515,19 @@ exports.send = function(url, options) {
 		var requestType = String(options.requestType || 'form').toLowerCase();
 
 		if (data) {
-			if (requestType === 'json') {
-				data = JSON.stringify(data);
-			} else if (typeof data !== 'string') {
-				data = qs.stringify(data, {
-					ignoreEmpty: true
-				});
-			}
-			if (method === 'GET') {
-				url = qs.append(url, data);
+			if (method === 'GET' || method === 'DELETE') {
+				url = qs.append(url, data, { ignoreEmpty: true });
 				data = null;
 			} else {
-				headers['Content-Type'] = headers['Content-Type'] ||
-					(requestType === 'json' ?
-						'application/json; charset=utf-8' :
-						'application/x-www-form-urlencoded; charset=utf-8');
+				var defaultContentType;
+				if (requestType === 'json') {
+					data = JSON.stringify(data);
+					defaultContentType = 'application/json; charset=utf-8';
+				} else if (typeof data !== 'string') {
+					data = qs.stringify(data, { ignoreEmpty: true });
+					defaultContentType = 'application/x-www-form-urlencoded; charset=utf-8';
+				}
+				headers['Content-Type'] = headers['Content-Type'] || defaultContentType;
 			}
 		}
 
