@@ -91,10 +91,35 @@ var getScript = exports.getScript = wrap(function(src, options, callbackName) {
 		// 无法取消script节点的请求，通过这个变量控制不执行回调函数
 		var cancelled;
 
+		// 加载完成或取消后执行的操作
+		function onLoad() {
+			// script节点不存在，说明已经清理过
+			if (!script) { return; }
+
+			// 加载完成后，执行清理并解决promise
+			if (cancelled || !script.readyState || /loaded|complete/.test(script.readyState)) {
+				// 移除script节点
+				script[SCRIPT_ONLOAD] = null;
+				head.removeChild(script);
+				script = null;
+
+				// 清理超时检测计时器
+				if (timeoutTimer) { clearTimeout(timeoutTimer); }
+
+				// 释放JSONP全局回调
+				if (callbackName) {
+					window[callbackName] = null;
+				}
+
+				// 已放弃时不应resolve
+				if (!cancelled) { resolve(); }
+			}
+		}
+
 		function cancel(createError) {
 			if (!cancelled && script) {
 				cancelled = true;
-				script[SCRIPT_ONLOAD]();
+				onLoad();
 				if (createError) { reject(createError()); }
 			}
 		}
@@ -111,27 +136,7 @@ var getScript = exports.getScript = wrap(function(src, options, callbackName) {
 		if (options.charset) { script.charset = options.charset; }
 		script.async = true;
 
-		script[SCRIPT_ONLOAD] = function() {
-			// script节点不存在，说明已经清理过
-			if (!script) { return; }
-
-			// 加载完成后，执行清理并解决promise
-			if (cancelled || !script.readyState || /loaded|complete/.test(script.readyState)) {
-				// 移除script节点
-				script[SCRIPT_ONLOAD] = null;
-				head.removeChild(script);
-				script = null;
-
-				// 清理超时检测计时器
-				if (timeoutTimer) { clearTimeout(timeoutTimer); }
-
-				// 释放JSONP全局回调
-				if (callbackName) { base.deleteGlobalVar(callbackName); }
-
-				// 已放弃时不应resolve
-				if (!cancelled) { resolve(); }
-			}
-		};
+		script[SCRIPT_ONLOAD] = onLoad;
 
 		script.src = src;
 		// 插入到HTML文档中
@@ -196,7 +201,7 @@ function postScript(action, options, callbackName) {
 			if (timeoutTimer) { clearTimeout(timeoutTimer); }
 
 			// 释放全局回调函数
-			if (callbackName) { base.deleteGlobalVar(callbackName); }
+			if (callbackName) { window[callbackName] = null; }
 
 			// 已放弃时不应resolve
 			if (!cancelled) { resolve(); }
@@ -287,9 +292,9 @@ function generateCallbackName(src) {
 	var callbackName = prefix;
 	var counter = 1;
 
-	// 如果不存在名字跟前缀一样的全局变量，就把前缀作为函数名
-	// 否则在后面拼接数字
-	while (win[callbackName] != null) {
+	// 如果不存在名字跟前缀一样的全局变量，就把前缀作为函数名，否则在后面拼接数字
+	// callbackName不应重复（没使用过时为undefined，用完后设为null），否则可能会产生交叉回调
+	while (win[callbackName] !== undefined) {
 		callbackName = prefix + '_' + counter++;
 	}
 
@@ -448,7 +453,7 @@ exports.send = function(url, options) {
 			if (!aborted && xhr.readyState !== 4) {
 				xhr.abort();
 				aborted = true;
-				if (createError) { reject(createError); }
+				if (createError) { reject(createError()); }
 			}
 		}
 

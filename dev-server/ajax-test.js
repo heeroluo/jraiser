@@ -7,7 +7,7 @@ var ajaxRouter = express.Router();
 ajaxRouter.get('/script/normal', function(req, res) {
 	res.format({
 		js: function() {
-			res.end('testGetScript(' + JSON.stringify(req.query._) + ')');
+			res.end('window.testGetScript && testGetScript(' + JSON.stringify(req.query._) + ')');
 		}
 	});
 });
@@ -15,7 +15,7 @@ ajaxRouter.get('/script/timeout', function(req, res) {
 	setTimeout(function() {
 		res.format({
 			js: function() {
-				res.end('testGetScript(' + JSON.stringify(req.query._) + ')');
+				res.end('window.testGetScript && testGetScript(' + JSON.stringify(req.query._) + ')');
 			}
 		});
 	}, 3000);
@@ -26,7 +26,7 @@ ajaxRouter.get('/jsonp/normal', function(req, res) {
 });
 ajaxRouter.get('/jsonp/timeout', function(req, res) {
 	setTimeout(function() {
-		res.jsonp('');
+		res.jsonp('timeout');
 	}, 3000);
 });
 ajaxRouter.post('/jsonp/post', function(req, res) {
@@ -41,6 +41,11 @@ ajaxRouter.get('/xhr/get', function(req, res) {
 	res.json({
 		id: req.query.id
 	});
+});
+ajaxRouter.get('/xhr/get/timeout', function(req, res) {
+	setTimeout(function() {
+		res.json('');
+	}, 3000);
 });
 ajaxRouter.post('/xhr/post', function(req, res) {
 	res.json({

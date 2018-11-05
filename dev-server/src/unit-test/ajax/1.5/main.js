@@ -35,6 +35,7 @@ QUnit.test('getScript', function(assert) {
 		assert.strictEqual(isNaN(logs[1]), false, '包含防缓存时间戳');
 	}).then(function() {
 		return ajax.getScript('/ajax/script/timeout', {
+			nocache: true,
 			timeout: 1000
 		});
 	})['finally'](function() {
@@ -79,7 +80,9 @@ QUnit.test('jsonp', function(assert) {
 		ajax.jsonp('/ajax/jsonp/timeout', {
 			timeout: 1000,
 			nocache: true
-		})['catch'](function(e) {
+		}).then(function() {
+			assert.ok(false);
+		}, function(e) {
 			assert.strictEqual(e.isAJAXTimeout, true, '超时');
 		})
 	])['finally'](function() {
@@ -88,7 +91,7 @@ QUnit.test('jsonp', function(assert) {
 });
 
 QUnit.test('XMLHttpRequest基本调用', function(assert) {
-	assert.expect(4);
+	assert.expect(5);
 	var done = assert.async();
 
 	Promise.all([
@@ -109,6 +112,14 @@ QUnit.test('XMLHttpRequest基本调用', function(assert) {
 			responseType: 'text'
 		}).then(function(value) {
 			assert.strictEqual(typeof value, 'string', 'Response type: text');
+		}),
+
+		ajax.send({
+			url: '/ajax/xhr/get/timeout',
+			nocache: true,
+			timeout: '1 sec'
+		})['catch'](function(e) {
+			assert.strictEqual(e.isAJAXTimeout, true, 'Timeout');
 		}),
 
 		ajax.send({
@@ -165,4 +176,55 @@ QUnit.test('XMLHttpRequest(RESTful API)', function(assert) {
 	])['finally'](function() {
 		done();
 	});
+});
+
+QUnit.test('取消请求', function(assert) {
+	assert.expect(3);
+	var done = assert.async();
+
+	var cancelScript, cancelJSONP, cancelXHR;
+
+	Promise.all([
+		ajax.getScript('/ajax/script/timeout', {
+			nocache: true,
+			receiveCancel: function(fn) {
+				cancelScript = fn;
+			}
+		}).then(function() {
+			assert.ok(false);
+		}, function(e) {
+			assert.strictEqual(e.isAJAXCancel, true, 'Cancel script');
+		}),
+
+		ajax.jsonp('/ajax/jsonp/timeout', {
+			nocache: true,
+			receiveCancel: function(fn) {
+				cancelJSONP = fn;
+			}
+		}).then(function() {
+			assert.ok(false);
+		}, function(e) {
+			assert.strictEqual(e.isAJAXCancel, true, 'Cancel jsonp');
+		}),
+
+		ajax.send({
+			url: '/ajax/xhr/get/timeout',
+			nocache: true,
+			receiveCancel: function(fn) {
+				cancelXHR = fn;
+			}
+		}).then(function() {
+			assert.ok(false);
+		}, function(e) {
+			assert.strictEqual(e.isAJAXCancel, true, 'Cancel xhr');
+		})
+	])['finally'](function() {
+		done();
+	});
+
+	setTimeout(function() {
+		cancelScript();
+		cancelJSONP();
+		cancelXHR();
+	}, 1000);
 });
