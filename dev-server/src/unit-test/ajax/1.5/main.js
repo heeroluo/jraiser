@@ -37,9 +37,12 @@ QUnit.test('getScript', function(assert) {
 		return ajax.getScript('/ajax/script/timeout', {
 			nocache: true,
 			timeout: 1000
+		}).then(function() {
+			assert.ok(false);
+		}, function(e) {
+			assert.strictEqual(e.isAJAXTimeout, true, '超时');
 		});
 	})['finally'](function() {
-		assert.strictEqual(logs.length, 2, '超时');
 		done();
 	});
 });
@@ -227,4 +230,16 @@ QUnit.test('取消请求', function(assert) {
 		cancelJSONP();
 		cancelXHR();
 	}, 1000);
+});
+
+QUnit.test('Serialize form', function(assert) {
+	assert.deepEqual(
+		ajax.serializeForm(document.getElementById('form')),
+		{
+			a: ['1', '2'],
+			b: '3',
+			c: '1',
+			d: '123 '
+		}
+	);
 });
