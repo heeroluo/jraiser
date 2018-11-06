@@ -598,10 +598,10 @@ exports.send = function(url, options) {
 
 
 /**
- * 获取表单数据
+ * 获取表单数据。
  * @method serializeForm
- * @param {NodeList|Element} form 表单
- * @return {Object<key,value>} 表单数据
+ * @param {NodeList|Element} form 表单。
+ * @return {Object<key,value>} 表单数据。
  */
 exports.serializeForm = function(form) {
 	// 为NodeList类型时，取第一个节点

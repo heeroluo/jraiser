@@ -132,11 +132,11 @@ function binb2hex(binarray) {
 
 
 /**
- * SHA1加密
+ * SHA1加密。
  * @method sha1
  * @exports
- * @param {String} str 要加密的字符串
- * @return {String} 加密结果（英文为小写）
+ * @param {String} str 要加密的字符串。
+ * @return {String} 加密结果（英文为小写）。
  */
 module.exports = function(str) {
 	return binb2hex(

@@ -342,10 +342,10 @@ function createExports(extensions, ParentNodeList) {
 		NodeList: SubNodeList,
 
 		/**
-		 * 返回一套包含扩展NodeList类的模块接口
+		 * 返回一套包含扩展NodeList类的模块接口。
 		 * @method plugin
-		 * @param {Object|Array<Object>} extensions NodeList类的扩展方法
-		 * @return {Function} 包含扩展NodeList类的模块接口
+		 * @param {Object|Array<Object>} extensions NodeList类的扩展方法。
+		 * @return {Function} 包含扩展NodeList类的模块接口。
 		 */
 		plugin: function(extensions) {
 			return createExports(extensions, this.NodeList);

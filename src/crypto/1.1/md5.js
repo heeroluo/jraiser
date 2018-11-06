@@ -239,11 +239,11 @@ function rstr2hex(input) {
 
 
 /**
- * MD5加密
+ * MD5加密。
  * @method md5
  * @exports
- * @param {String} str 要加密的字符串
- * @return {String} 加密结果（英文为小写）
+ * @param {String} str 要加密的字符串。
+ * @return {String} 加密结果（英文为小写）。
  */
 module.exports = function(str) {
 	return rstr2hex(
