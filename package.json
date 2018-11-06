@@ -2,16 +2,11 @@
   "name": "jraiser",
   "version": "3.0.0",
   "description": "Modular JavaScript Foundation Library",
-  "main": "bowl-debug.js",
-  "directories": {
-    "doc": "docs",
-    "example": "example",
-    "lib": "lib"
-  },
   "scripts": {
     "start": "node dev-server/start",
     "build": "npx gulp compileJS",
-    "doc": "npx gulp genDoc"
+	"doc": "npx gulp genDoc",
+	"list-pkg-files": "file_name=$(npm pack) && tar -ztf $file_name && rm $file_name"
   },
   "repository": {
     "type": "git",
@@ -19,8 +14,10 @@
   },
   "keywords": [
     "modular",
-    "loader",
-    "library"
+	"library",
+	"promise",
+	"ajax",
+	"tween"
   ],
   "author": {
     "name": "Mr.Luo",
