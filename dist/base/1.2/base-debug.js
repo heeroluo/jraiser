@@ -177,19 +177,6 @@ exports.randomStr = function(prefix) {
 
 
 /**
- * 移除全局变量。
- * @method deleteGlobalVar
- * @param {String} name 变量名。
- */
-exports.deleteGlobalVar = function(name) {
-	try {
-		delete window[name];
-	} catch (e) { }
-	if (window[name] != null) { window[name] = null; }
-};
-
-
-/**
  * 创建类。
  * @method createClass
  * @param {Function} constructor 构造函数。

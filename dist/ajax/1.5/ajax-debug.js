@@ -94,10 +94,35 @@ var getScript = exports.getScript = wrap(function(src, options, callbackName) {
 		// 无法取消script节点的请求，通过这个变量控制不执行回调函数
 		var cancelled;
 
+		// 加载完成或取消后执行的操作
+		function onLoad() {
+			// script节点不存在，说明已经清理过
+			if (!script) { return; }
+
+			// 加载完成后，执行清理并解决promise
+			if (cancelled || !script.readyState || /loaded|complete/.test(script.readyState)) {
+				// 移除script节点
+				script[SCRIPT_ONLOAD] = null;
+				head.removeChild(script);
+				script = null;
+
+				// 清理超时检测计时器
+				if (timeoutTimer) { clearTimeout(timeoutTimer); }
+
+				// 释放JSONP全局回调
+				if (callbackName) {
+					window[callbackName] = null;
+				}
+
+				// 已放弃时不应resolve
+				if (!cancelled) { resolve(); }
+			}
+		}
+
 		function cancel(createError) {
 			if (!cancelled && script) {
 				cancelled = true;
-				script[SCRIPT_ONLOAD]();
+				onLoad();
 				if (createError) { reject(createError()); }
 			}
 		}
@@ -114,27 +139,7 @@ var getScript = exports.getScript = wrap(function(src, options, callbackName) {
 		if (options.charset) { script.charset = options.charset; }
 		script.async = true;
 
-		script[SCRIPT_ONLOAD] = function() {
-			// script节点不存在，说明已经清理过
-			if (!script) { return; }
-
-			// 加载完成后，执行清理并解决promise
-			if (cancelled || !script.readyState || /loaded|complete/.test(script.readyState)) {
-				// 移除script节点
-				script[SCRIPT_ONLOAD] = null;
-				head.removeChild(script);
-				script = null;
-
-				// 清理超时检测计时器
-				if (timeoutTimer) { clearTimeout(timeoutTimer); }
-
-				// 释放JSONP全局回调
-				if (callbackName) { base.deleteGlobalVar(callbackName); }
-
-				// 已放弃时不应resolve
-				if (!cancelled) { resolve(); }
-			}
-		};
+		script[SCRIPT_ONLOAD] = onLoad;
 
 		script.src = src;
 		// 插入到HTML文档中
@@ -199,7 +204,7 @@ function postScript(action, options, callbackName) {
 			if (timeoutTimer) { clearTimeout(timeoutTimer); }
 
 			// 释放全局回调函数
-			if (callbackName) { base.deleteGlobalVar(callbackName); }
+			if (callbackName) { window[callbackName] = null; }
 
 			// 已放弃时不应resolve
 			if (!cancelled) { resolve(); }
@@ -290,9 +295,9 @@ function generateCallbackName(src) {
 	var callbackName = prefix;
 	var counter = 1;
 
-	// 如果不存在名字跟前缀一样的全局变量，就把前缀作为函数名
-	// 否则在后面拼接数字
-	while (win[callbackName] != null) {
+	// 如果不存在名字跟前缀一样的全局变量，就把前缀作为函数名，否则在后面拼接数字
+	// callbackName不应重复（没使用过时为undefined，用完后设为null），否则可能会产生交叉回调
+	while (win[callbackName] !== undefined) {
 		callbackName = prefix + '_' + counter++;
 	}
 
@@ -412,8 +417,8 @@ function parseMIMEType(contentType) {
  *   @param {Object} [options.data] 发送的数据。
  *   @param {String} [options.responseType] 返回的数据格式：json、jsonp、xml或text。
  *     默认根据响应头的Content-Type自动识别。
- *   @param {String} [options.requestType] 请求的数据格式：form或json。
- *     responseType为jsonp时无效。
+ *   @param {String} [options.requestType='form'] 请求的数据格式：form或json。
+ *     responseType为jsonp时或method为GET、DELETE时无效。
  *   @param {String} [options.method='GET'] 请求方式：GET、POST、PUT或DELETE。
  *   @param {Boolean} [options.nocache=false] 是否在URL中添加时间戳（参数名为“_”）防止缓存。
  *   @param {Object} [options.headers] 要设置的HTTP头，responseType为jsonp时无效。
@@ -434,7 +439,10 @@ exports.send = function(url, options) {
 	}
 	options = options || { };
 
-	var responseType = String(options.responseType || '').toLowerCase();
+	var responseType = String(
+		options.responseType || options.dataType || ''
+	).toLowerCase();
+
 	if (responseType === 'jsonp') {
 		return jsonp(url, options);
 	}
@@ -449,9 +457,9 @@ exports.send = function(url, options) {
 
 		function abort(createError) {
 			if (!aborted && xhr.readyState !== 4) {
-				xhr.abort();
 				aborted = true;
-				if (createError) { reject(createError); }
+				xhr.abort();
+				if (createError) { reject(createError()); }
 			}
 		}
 
@@ -462,6 +470,7 @@ exports.send = function(url, options) {
 
 			var readyState = xhr.readyState;
 			var status = readyState === 4 ? xhr.status : 0;
+
 			if (readyState !== 4 || !status) { return; }
 
 			if (timeoutTimer) { clearTimeout(timeoutTimer); }
@@ -518,21 +527,19 @@ exports.send = function(url, options) {
 		var requestType = String(options.requestType || 'form').toLowerCase();
 
 		if (data) {
-			if (requestType === 'json') {
-				data = JSON.stringify(data);
-			} else if (typeof data !== 'string') {
-				data = qs.stringify(data, {
-					ignoreEmpty: true
-				});
-			}
-			if (method === 'GET') {
-				url = qs.append(url, data);
+			if (method === 'GET' || method === 'DELETE') {
+				url = qs.append(url, data, { ignoreEmpty: true });
 				data = null;
 			} else {
-				headers['Content-Type'] = headers['Content-Type'] ||
-					(requestType === 'json' ?
-						'application/json; charset=utf-8' :
-						'application/x-www-form-urlencoded; charset=utf-8');
+				var defaultContentType;
+				if (requestType === 'json') {
+					data = JSON.stringify(data);
+					defaultContentType = 'application/json; charset=utf-8';
+				} else if (typeof data !== 'string') {
+					data = qs.stringify(data, { ignoreEmpty: true });
+					defaultContentType = 'application/x-www-form-urlencoded; charset=utf-8';
+				}
+				headers['Content-Type'] = headers['Content-Type'] || defaultContentType;
 			}
 		}
 

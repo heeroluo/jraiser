@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 'use strict'; 
 
 /**
- * 本模块提供事件参数类
+ * 本模块提供事件参数类。
  * @module pubsub/1.2/event-arg
  * @catgory Infrastructure
  * @ignore

@@ -71,8 +71,12 @@ var getNodeAttribute, setNodeAttribute, removeNodeAttribute;
 	// 旧IE下一些特殊属性要通过属性节点来获取/设置
 	if (div.className !== 't') {
 		getNodeAttribute = function(node, name) {
-			var attrNode = node.getAttributeNode(name);
-			return attrNode ? attrNode.value : null;
+			if (/^(?:src|href)$/i.test(name)) {
+				return node.getAttribute(name, 2);
+			} else {
+				var attrNode = node.getAttributeNode(name);
+				return attrNode && attrNode.specified ? attrNode.value : null;
+			}
 		};
 		setNodeAttribute = function(node, name, value) {
 			var attrNode = node.getAttributeNode(name);

@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 'use strict'; 
 
 /**
- * 微型模版引擎
+ * 微型模版引擎。
  * @module tmpl@2.2
  * @category Utility
  */

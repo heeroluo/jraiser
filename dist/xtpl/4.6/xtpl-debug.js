@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 'use strict'; 
 
 /**
- * XTemplate模板引擎
+ * XTemplate模板引擎。
  * @module xtpl@4.6
  * @category Utility
  */
@@ -46,14 +46,16 @@ var XTpl = base.createClass(function(options) {
 			if (instanceCache[tplPath]) {
 				resolve(instanceCache[tplPath]);
 			} else {
-				loadTpl(tplPath).then(function(tpl) {
-					instanceCache[tplPath] = new XTemplate(tpl, {
-						name: tplPath,
-						loader: loader,
-						commands: commands
-					});
-					resolve(instanceCache[tplPath]);
-				});
+				resolve(
+					loadTpl(tplPath).then(function(tpl) {
+						instanceCache[tplPath] = new XTemplate(tpl, {
+							name: tplPath,
+							loader: loader,
+							commands: commands
+						});
+						return instanceCache[tplPath];
+					})
+				);
 			}
 		});
 	},
@@ -66,11 +68,12 @@ var XTpl = base.createClass(function(options) {
 			if (fnCache[tplPath]) {
 				resolve(fnCache[tplPath]);
 			} else {
-				loadTpl(tplPath).then(function(tpl) {
-					var fn = root.compile(tpl, tplPath);
-					fnCache[tplPath] = fn;
-					resolve(fn);
-				});
+				resolve(
+					loadTpl(tplPath).then(function(tpl) {
+						fnCache[tplPath] = root.compile(tpl, tplPath);
+						return fnCache[tplPath];
+					})
+				);
 			}
 		});
 	},

@@ -55,7 +55,7 @@ var set = exports.set = function(key, value, options) {
  *   @param {Function(value):String} [o.decode=decodeURIComponent] 解码函数。
  * @return {String} cookie值。
  */
-exports.get = function(key, options) {
+var get = exports.get = function(key, options) {
 	options = base.extend({
 		encode: encodeURIComponent,
 		decode: decodeURIComponent
@@ -75,6 +75,14 @@ exports.get = function(key, options) {
 };
 
 
+// iOS9下设置过期不会马上生效，先设为空
+var shouldSetEmptyBeforeRemove = (function() {
+	var TEST_KEY = '__jraiser__test__cookie__';
+	document.cookie = TEST_KEY + '=1';
+	document.cookie = TEST_KEY + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+	return !!get(TEST_KEY);
+})();
+
 /**
  * 移除cookie。
  * @method remove
@@ -85,6 +93,8 @@ exports.get = function(key, options) {
  *   @param {Function(value):String} [options.encode=encodeURIComponent] 编码函数。
  */
 exports.remove = function(name, options) {
+	if (shouldSetEmptyBeforeRemove) { set(name, '', options); }
+
 	options = options || { };
 	// 让其过期即为删除
 	options.expires = new Date(0);
