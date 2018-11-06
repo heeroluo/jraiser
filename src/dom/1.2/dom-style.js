@@ -259,16 +259,12 @@ var getSize = exports.getSize = function(
 		} while (temp);
 	}
 
-	// 获取边框样式，当边框样式为none时，无需纳入计算范围
-	var borderStyle = getStyle(node, 'borderStyle');
-	if (borderStyle === 'none') { borderStyle = ''; }
-
 	// 计算额外部分
 	(which === 'Width' ? ['Left', 'Right'] : ['Top', 'Bottom']).forEach(function(direction) {
 		if (!includePadding) {
 			size -= parseFloat(getStyle(node, 'padding' + direction)) || 0;
 		}
-		if (!includeBorder && borderStyle) {
+		if (!includeBorder && getStyle(node, 'border' + direction + 'Style') !== 'none') {
 			size -= parseFloat(getStyle(node, 'border' + direction + 'Width')) || 0;
 		}
 		if (includeMargin) {

@@ -454,8 +454,8 @@ exports.send = function(url, options) {
 
 		function abort(createError) {
 			if (!aborted && xhr.readyState !== 4) {
-				xhr.abort();
 				aborted = true;
+				xhr.abort();
 				if (createError) { reject(createError()); }
 			}
 		}
@@ -467,6 +467,7 @@ exports.send = function(url, options) {
 
 			var readyState = xhr.readyState;
 			var status = readyState === 4 ? xhr.status : 0;
+
 			if (readyState !== 4 || !status) { return; }
 
 			if (timeoutTimer) { clearTimeout(timeoutTimer); }
