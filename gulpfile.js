@@ -3,7 +3,7 @@ const gulpModify = require('gulp-modify');
 const pump = require('pump');
 const fse = require('fs-extra');
 const path = require('path');
-var bowljsCLI = require('bowljs-cli');
+const bowljsCLI = require('bowljs-cli');
 
 
 gulp.task('clearDist', function() {
