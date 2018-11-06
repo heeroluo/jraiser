@@ -14,7 +14,7 @@ var timespan = require('../../timespan/1.0/timespan');
  * @param {String} key 键名。
  * @return {String} 存储值。
  */
-exports.get = function(key) {
+var get = exports.get = function(key) {
 	// 先从sessionStorage中获取
 	var value = sessionStorage.getItem(key);
 
@@ -24,9 +24,7 @@ exports.get = function(key) {
 		if (item != null) {
 			try {
 				item = JSON.parse(item);
-			} catch (e) {
-
-			}
+			} catch (e) { }
 
 			if (item.expires && new Date() > item.expires) {
 				// 已经过期，移除之
@@ -48,13 +46,24 @@ exports.get = function(key) {
  * @return {Object} JSON对象。
  */
 exports.getAsJSON = function(key) {
-	var value = this.get(key);
+	var value = get(key);
 	try {
 		value = JSON.parse(value);
 	} catch (e) {
 		value = null;
 	}
 	return value;
+};
+
+
+/**
+ * 移除存储数据。
+ * @method remove
+ * @param {String} key 键名。
+ */
+var remove = exports.remove = function(key) {
+	sessionStorage.removeItem(key);
+	localStorage.removeItem(key);
 };
 
 
@@ -70,7 +79,7 @@ exports.getAsJSON = function(key) {
 exports.set = function(key, value, expires) {
 	// 设置新值前先移除旧值
 	// 防止sessionStorage和localStorage中同时存在数据
-	this.remove(key);
+	remove(key);
 
 	if (value.constructor === Object) { value = JSON.stringify(value); }
 
@@ -79,7 +88,7 @@ exports.set = function(key, value, expires) {
 			expires = timespan.addToDate(new Date(), expires);
 		}
 
-		// 已经过期就不用写入了
+		// 已经过期的就不用写入了
 		if (expires < new Date()) { return; }
 
 		var item = {
@@ -87,29 +96,15 @@ exports.set = function(key, value, expires) {
 			expires: expires.getTime()
 		};
 
-		// 在浏览器的无痕浏览模式下setItem会抛出异常
+		// 在浏览器的隐私模式下setItem会抛出异常
 		// 但getItem和removeItem都不会
 		try {
 			localStorage.setItem(key, JSON.stringify(item));
-		} catch (e) {
+		} catch (e) { }
 
-		}
 	} else {
 		try {
 			sessionStorage.setItem(key, value);
-		} catch (e) {
-
-		}
+		} catch (e) { }
 	}
-};
-
-
-/**
- * 移除存储数据。
- * @method remove
- * @param {String} key 键名。
- */
-exports.remove = function(key) {
-	sessionStorage.removeItem(key);
-	localStorage.removeItem(key);
 };
