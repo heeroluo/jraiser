@@ -1,0 +1,17 @@
+.DS_Store
+.gitattributes
+.gitignore
+
+document.settings
+package.settings
+lib.settings
+gulpfile.js
+
+node_modules
+
+dev-server
+dist
+doc-template
+docs
+
+test*.*
