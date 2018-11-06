@@ -1,5 +1,5 @@
 /**
- * XTemplate模板引擎
+ * XTemplate模板引擎。
  * @module xtpl@4.6
  * @category Utility
  */

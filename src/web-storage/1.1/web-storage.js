@@ -1,5 +1,5 @@
 /**
- * 本模块提供本地存储接口的封装（不兼容IE6/7）
+ * 本模块提供本地存储接口的封装（不兼容IE6/7）。
  * @module web-storage@1.1
  * @category Utility
  */
