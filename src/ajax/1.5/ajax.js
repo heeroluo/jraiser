@@ -436,7 +436,10 @@ exports.send = function(url, options) {
 	}
 	options = options || { };
 
-	var responseType = String(options.responseType || '').toLowerCase();
+	var responseType = String(
+		options.responseType || options.dataType || ''
+	).toLowerCase();
+
 	if (responseType === 'jsonp') {
 		return jsonp(url, options);
 	}
