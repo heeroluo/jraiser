@@ -47,6 +47,12 @@ QUnit.test('基本调用', function(assert) {
 	});
 });
 
+QUnit.test('拒绝状态不阻塞后续执行', function(assert) {
+	assert.expect(1);
+	Promise.reject(new Error('error'));
+	assert.ok('true');
+});
+
 QUnit.test('race', function(assert) {
 	assert.expect(1);
 
