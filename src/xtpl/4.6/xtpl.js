@@ -1,6 +1,6 @@
 /**
  * XTemplate模板引擎。
- * @module xtpl@4.6
+ * @module xtpl/4.6/xtpl
  * @category Utility
  */
 

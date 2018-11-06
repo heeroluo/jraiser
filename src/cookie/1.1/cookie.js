@@ -1,6 +1,6 @@
 /**
  * 本模块提供Cookie读写接口。
- * @module cookie@1.1
+ * @module cookie/1.1/cookie
  * @category Utility
  */
 

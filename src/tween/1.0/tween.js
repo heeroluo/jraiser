@@ -1,6 +1,6 @@
 /**
  * 本模块提供补间数值变化相关接口。
- * @module tween@1.0
+ * @module tween/1.0/tween
  * @category Infrastructure
  */
 

@@ -1,6 +1,6 @@
 /**
  * 本模块提供基于UserAgent的常用环境检测。
- * @module ua@1.0
+ * @module ua/1.0/ua
  * @category Utility
  */
 

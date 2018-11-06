@@ -1,6 +1,6 @@
 /**
  * 本模块对Promise编程模式提供支持。
- * @module promise@1.2
+ * @module promise/1.2/promise
  * @category Infrastructure
  */
 

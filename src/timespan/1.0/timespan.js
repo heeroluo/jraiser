@@ -1,6 +1,6 @@
 /**
  * 本模块提供时间跨度操作。
- * @module timespan@1.0
+ * @module timespan/1.0/timespan
  * @category Utility
  */
 
