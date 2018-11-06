@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
 /**
  * 本模块提供Promise化的异步请求接口。
- * @module ajax@1.5
+ * @module ajax/1.5/ajax
  * @category Utility
  */
 

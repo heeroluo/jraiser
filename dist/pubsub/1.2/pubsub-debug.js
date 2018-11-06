@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
 /**
  * 本模块提供事件驱动机制。
- * @module pubsub@1.2
+ * @module pubsub/1.2/pubsub
  * @category Infrastructure
  */
 

@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
 /**
  * 本模块提供选择器查询接口以及包含大量DOM操作接口的节点集合类型。
- * @module dom@1.2
+ * @module dom/1.2/dom
  * @category Infrastructure
  * @includeFor {NodeList} ./dom-attr.js,
  *   ./dom-data.js,

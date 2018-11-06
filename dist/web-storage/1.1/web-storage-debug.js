@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
 /**
  * 本模块提供本地存储接口的封装（不兼容IE6/7）。
- * @module web-storage@1.1
+ * @module web-storage/1.1/web-storage
  * @category Utility
  */
 

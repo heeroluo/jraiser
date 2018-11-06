@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
 /**
  * 微型模版引擎。
- * @module tmpl@2.2
+ * @module tmpl/2.2/tmpl
  * @category Utility
  */
 

@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
 /**
  * 本模块提供最基础、最核心的接口。
- * @module base@1.2
+ * @module base/1.2/base
  * @category Infrastructure
  */
 

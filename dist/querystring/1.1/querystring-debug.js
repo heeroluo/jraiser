@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
 /**
  * 本模块提供URL参数序列化与反序列化接口。
- * @module querystring@1.1
+ * @module querystring/1.1/querystring
  * @category Utility
  */
 
