@@ -11,29 +11,33 @@ body {
 	margin: 0;
 	background: #fafafa;
 }
-ul, li {
+ul, li, h1 {
 	padding: 0;
 	margin: 0;
+}
+.boundary {
+	width: 60%;
+	margin: 0 auto;
+}
+.title {
+	font-size: 34px;
+}
+.msg {
+	margin-top: 50px;
+	font-size: 18px;
 }
 .menu {
 	position: fixed;
 	top: 50%;
 	width: 100%;
-	transform: translateY(-50%);
-}
-.menu .msg {
-	width: 60%;
-	margin: 0 auto;
-	font-size: 18px;
+	transform: translateY(-60%);
 }
 .menu li {
-	width: 60%;
 	box-sizing: border-box;
-	margin: 0 auto;
 	margin-top: 30px;
 	list-style: none;
 	border: 1px solid #ccc;
-	border-radius: 4px;
+	border-radius: 5px;
 	background: #fff;
 	font-size: 24px;
 }
@@ -43,13 +47,30 @@ ul, li {
 	color: #000;
 	text-decoration: none;
 }
+
+@media (max-width: 500px) {
+	.boundary { width: 80%; }
+	.title { font-size: 28px; }
+	.msg {
+		margin-top: 24px;
+		font-size: 16px;
+	}
+	.menu li {
+		margin-top: 24px;
+		font-size: 20px;
+	}
+	.menu a {
+		padding: 16px 12px;
+	}
+}
 </style>
 </head>
 
 <body>
 <div class="menu">
-	<p class="msg">请选择对应的版本号：</p>
-	<ul>
+	<h1 class="boundary title">JRaiser 类库文档</h1>
+	<p class="boundary msg">请选择对应的版本号：</p>
+	<ul class="boundary">
 		<li><a href="3.0/index.html">v3.0.x</a></li>
 		<li><a href="2.3/index.html">v2.3.x</a></li>
 	</ul>

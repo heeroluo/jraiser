@@ -1,82 +1,11 @@
-
 <!DOCTYPE HTML>
 <html lang="zh-hans">
 <head>
 <meta charset="utf-8" />
-<title>JRaiser Modular Javascript Foundation Library</title>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,shrink-to-fit=no" />
-<meta name="format-detection" content="telephone=no,email=no" />
-<meta name="keywords" content="javascript,jraiser,bowljs,modular,library,cmd,amd,loader,define,require,模块化,加载器" />
-<meta name="description" content="基于CMD规范的模块化类库，包含加载器和一些通用性强的基础模块和UI组件。此外还有配套的CLI工具，可用于构建代码和生成API文档。" />
-<link href="/jraiser/style/basic.css?1" media="all" rel="stylesheet" type="text/css" />
-<link href="/jraiser/style/home.css?2" media="all" rel="stylesheet" type="text/css" />
+<title>JRaiser</title>
 </head>
 
 <body>
-<header class="p-header">
-	<div class="g-boundary">
-		<h1 class="p-header__logo">
-			<img src="/jraiser/image/logo.png" alt="JRaiser" /><em class="p-header__logo__ver">v2.3.2</em>
-		</h1>
-		<p class="p-header__des"><img src="/jraiser/image/description.png" alt="modular javascript foundation library" /></p>
-		<nav class="p-header__nav">
-			<a href="https://github.com/heeroluo/jraiser/releases" class="p-header__nav__item" target="_blank">下载</a>
-			<a href="/jraiser/article/list/beginner/quick-start.html" class="p-header__nav__item">教程</a>
-			<a href="/jraiser/api/index.html" class="p-header__nav__item" target="_blank">API文档</a>
-		</nav>
-	</div>
-</header>
-<section class="p-section-feature g-keep-bottom js-keep-bottom">
-	<div class="g-boundary g-justify-align">
-		<div class="p-feature">
-			<h2 class="p-feature__title"><i class="iconfont feature__title__ico feature__title__ico-lib"></i>基础库</h2>
-			<p class="p-feature__des">包含Web开发中最常用的基础功能模块，通用性强。配有API文档，模块功能一目了然。</p>
-		</div>
-		<div class="p-feature">
-			<h2 class="p-feature__title"><i class="iconfont feature__title__ico feature__title__ico-mod"></i>模块化</h2>
-			<p class="p-feature__des">使用基于CMD规范的 <a href="https://github.com/heeroluo/bowljs" target="_blank">Bowl.js</a> 作为加载器，模块的封装、调用更为方便和严谨，模块间的依赖管理也变得极为简单。</p>
-		</div>
-		<div class="p-feature">
-			<h2 class="p-feature__title"><i class="iconfont feature__title__ico feature__title__ico-comp"></i>兼容性</h2>
-			<p class="p-feature__des">大部分模块兼容PC浏览器（IE 6+）和移动浏览器（iOS 6.0+、Android 4.0+）；小部分模块在IE 6/7下不可用。</p>
-		</div>
-	</div>
-</section>
-<footer class="c-footer g-keep-bottom js-keep-bottom">
-	<div class="g-boundary g-clearfix">
-		<div class="c-footer__copyright">
-			<p>Copyright &copy; 2012-2018 <a href="//mrluo.life/" target="_blank">Mr.Luo</a></p>
-			<p>Released under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT license</a></p>
-		</div>
-		<div class="c-footer__related">
-			<p>相关链接：</p>
-			<ul class="c-footer__related__list g-clearfix">
-				<li><a href="https://github.com/heeroluo/bowljs" target="_blank">Bowl.js项目</a></li>
-				<li><a href="https://github.com/heeroluo/bowljs-cli" target="_blank">Bowljs CLI项目</a></li>
-			</ul>
-		</div>
-	</div>
-</footer>
-<script>
-!function(global) {
-	var body = global.document.body;
-	function updateBottomHeight() {
-		var elts = body.querySelectorAll('.js-keep-bottom');
-		var totalHeight = 0, lastHeight;
-		for (var i = elts.length - 1; i >= 0; i--) {
-			if (lastHeight) { elts[i].style.bottom = lastHeight + 'px'; }
-			lastHeight = elts[i].offsetHeight;
-			totalHeight += lastHeight;
-		}
-		body.style.paddingBottom = totalHeight + 'px';
-	}
-	global.addEventListener('resize', updateBottomHeight, false);
-	updateBottomHeight();
-	if (/\bEdge\b/.test(global.navigator.userAgent)) {
-		setTimeout(updateBottomHeight, 0);
-	}
-}(window);
-</script>
-<div style="display: none;"><script src="//s4.cnzz.com/stat.php?id=4803075&amp;web_id=4803075"></script></div>
+<script>window.location.replace('./api/index.html');</script>
 </body>
 </html>
