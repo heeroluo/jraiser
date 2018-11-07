@@ -292,72 +292,8 @@ var NodeList = base.createClass(function(nodes) {
 	splice: arrProto.splice
 });
 
-
-function createExports(extensions, ParentNodeList) {
-	var subPrototype = {};
-	if (extensions) {
-		if (!Array.isArray(extensions)) { extensions = [extensions]; }
-		base.extend.apply(base, [subPrototype].concat(extensions));
-	}
-
-	// 为防止扩展方法相互覆盖冲突，创建独立的NodeList子类
-	var SubNodeList = base.createClass(
-		function() {},
-		subPrototype,
-		ParentNodeList || NodeList
-	);
-
-	/**
-	 * 根据选择器及上下文匹配节点。
-	 * @method $
-	 * @exports
-	 * @param {String} selector 选择器。
-	 * @param {Element|Array<Element>|ArrayLike<Element>} [context] 上下文。
-	 * @return {NodeList} 由匹配到的节点组成的NodeList对象。
-	 */
-	/**
-	 * 创建包含指定节点的NodeList对象。
-	 * @method $
-	 * @exports
-	 * @param {Element|Array<Element>|ArrayLike<Element>} nodes 指定节点。
-	 * @return {NodeList} 包含指定节点的NodeList对象。
-	 */
-	/**
-	 * 根据HTML代码创建NodeList对象。
-	 * @method $
-	 * @exports
-	 * @param {String} html HTML代码。
-	 * @param {Document} [ownerDocument] 节点所在文档，默认为当前页面的document。
-	 * @return {NodeList} 由HTML代码创建的NodeList对象。
-	 */
-	/**
-	 * 在DOMReady之后执行指定操作。
-	 * @method $
-	 * @exports
-	 * @param {Function} fn 操作函数。
-	 */
-	var $ = function(selector, context) {
-		return typeof selector === 'function' ?
-			domReady(selector) : new SubNodeList(query(selector, context));
-	};
-
-	return base.extend($, {
-		NodeList: SubNodeList,
-
-		/**
-		 * 返回一套包含扩展NodeList类的模块接口。
-		 * @method plugin
-		 * @param {Object|Array<Object>} extensions NodeList类的扩展方法。
-		 * @return {Function} 包含扩展NodeList类的模块接口。
-		 */
-		plugin: function(extensions) {
-			return createExports(extensions, this.NodeList);
-		}
-	});
-}
-
-
-module.exports = createExports([
+// 复制各模块提供的方法到NodeList类
+[
 	domData,
 	domTraversal,
 	domAttr,
@@ -366,8 +302,46 @@ module.exports = createExports([
 	domOffset,
 	domEvent,
 	domAnimation
-].map(function(module) {
-	return module.shortcuts;
-}));
+].forEach(function(module) {
+	base.extend(NodeList.prototype, module.shortcuts);
+});
+
+
+/**
+ * 根据选择器及上下文匹配节点。
+ * @method $
+ * @exports
+ * @param {String} selector 选择器。
+ * @param {Element|Array<Element>|ArrayLike<Element>} [context] 上下文。
+ * @return {NodeList} 由匹配到的节点组成的NodeList对象。
+ */
+/**
+ * 创建包含指定节点的NodeList对象。
+ * @method $
+ * @exports
+ * @param {Element|Array<Element>|ArrayLike<Element>} nodes 指定节点。
+ * @return {NodeList} 包含指定节点的NodeList对象。
+ */
+/**
+ * 根据HTML代码创建NodeList对象。
+ * @method $
+ * @exports
+ * @param {String} html HTML代码。
+ * @param {Document} [ownerDocument] 节点所在文档，默认为当前页面的document。
+ * @return {NodeList} 由HTML代码创建的NodeList对象。
+ */
+/**
+ * 在DOMReady之后执行指定操作。
+ * @method $
+ * @exports
+ * @param {Function} fn 操作函数。
+ */
+function $(selector, context) {
+	return typeof selector === 'function' ?
+		domReady(selector) : new NodeList(query(selector, context));
+}
+
+
+module.exports = $;
 
 });
