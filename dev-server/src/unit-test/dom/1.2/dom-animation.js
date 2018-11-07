@@ -26,7 +26,7 @@ QUnit.test('创建动画', function(assert) {
 
 	var $test2 = $('<div class="square" style="top: 220px;"></div>').appendTo('body');
 	$test2.animate({
-		width: 200
+		width: '+=150'
 	}, true).then(function() {
 		assert.strictEqual($test2.css('width'), '200px', '检查样式（promise）');
 	}, function() {
