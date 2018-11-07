@@ -368,10 +368,12 @@ exports.create = function(options) {
 
 
 /**
- * 移除补间任务（移除后补间promise将马上解决）。
+ * 移除补间任务。
  * @method remove
  * @param {Number} taskId 任务id。
  * @param {Boolean} [jumpToEnd=false] 是否执行补间最后一帧（跳到完成状态）。
+ *   为false时，补间promise将以拒绝状态解决；
+ *   为true时，补间promise将以满足状态解决。
  */
 exports.remove = function(taskId, jumpToEnd) {
 	var i = queueManager.findIndex(taskId);
@@ -380,7 +382,11 @@ exports.remove = function(taskId, jumpToEnd) {
 		if (jumpToEnd) {
 			runTask(task, 0);
 		} else {
-			task.oncomplete.call(theGlobal);
+			if (task.onerror) {
+				var err = new Error('Tween has been removed');
+				err.isTweenRemoval = true;
+				task.onerror.call(theGlobal, err);
+			}
 		}
 	}
 };

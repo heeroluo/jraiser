@@ -66,22 +66,23 @@ QUnit.test('创建补间', function(assert) {
 
 
 QUnit.test('移除补间', function(assert) {
+	assert.expect(2);
 	var done = assert.async();
 
 	var END_VALUE = 10;
 
-	var val1, taskId1;
+	var taskId1;
 	var tween1 = tween.create({
 		startValue: 0,
 		endValue: END_VALUE,
-		frame: function(value) {
-			val1 = value;
-		},
+		frame: function() { },
 		receiveId: function(id) {
 			taskId1 = id;
 		}
 	}).then(function() {
-		assert.strictEqual(val1 < END_VALUE, true);
+		assert.ok(false);
+	}, function(e) {
+		assert.strictEqual(e.isTweenRemoval, true);
 	});
 
 	var val2, taskId2;
