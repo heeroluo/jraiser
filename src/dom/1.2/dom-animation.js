@@ -5,6 +5,7 @@
  * @ignore
  */
 
+var base = require('../../base/1.2/base');
 var Promise = require('../../promise/1.2/promise');
 var tween = require('../../tween/1.0/tween');
 var domBase = require('./dom-base');
@@ -83,67 +84,119 @@ function fixEndStyle(endStyle, startStyle) {
 }
 
 
-// 用于记录节点正在执行的动画的任务id
-var idSpace = domData.createDataSpace({ cloneable: false });
+// 动画队列
+var AnimationQueue = base.createClass(function() {
+	// 队列数组
+	this._queue = [];
+	// 当前正在执行的动画任务id
+	this._taskId = null;
+}, {
+	add: function(executor) {
+		this._queue.push(executor);
+		this.execNext();
+	},
+
+	stop: function(clearQueue, jumpToEnd) {
+		if (clearQueue) { this._queue = []; }
+		if (this._taskId) {
+			tween.remove(this._taskId, jumpToEnd);
+			this._taskId = null;
+		}
+	},
+
+	execNext: function() {
+		var t = this;
+		// taskId不为null意味着正在执行动画
+		if (t._taskId || !this._queue.length) { return; }
+
+		var executor = this._queue.shift();
+		executor.exec(function(taskId) {
+			// 记录动画任务id，用于停止补间
+			t._taskId = taskId;
+		}).then(
+			executor.resolve,
+			executor.reject
+		)['finally'](function() {
+			t._taskId = null;
+			t.execNext();
+		});
+	}
+});
+
+
+// 用于记录节点的动画队列
+var animationSpace = domData.createDataSpace({ cloneable: false });
+
+// 动画队列数据项的key
+var ANIMATION_QUEUE_KEY = 'animationQueue';
 
 // 停止动画
-function stop(node, jumpToEnd) {
+function stop(node, clearQueue, jumpToEnd) {
 	if (!domBase.isHTMLElement(node)) { return; }
 
-	var taskId = idSpace.get(node, 'taskId');
-	if (taskId) {
-		tween.remove(taskId, jumpToEnd);
-		idSpace.clear(node);
+	var queue = animationSpace.get(node, ANIMATION_QUEUE_KEY);
+	if (queue) {
+		queue.stop(clearQueue, jumpToEnd);
+		if (clearQueue) { animationSpace.clear(node); }
 	}
 }
 
 // 开始动画
 function start(node, endStyle, options) {
-	if (!domBase.isHTMLElement(node)) { return; }
-
-	options = options || { };
-
-	// 获取节点的当前样式
-	var startStyle = getRelatedStyle(node, endStyle);
-	// 修正最终样式的样式值
-	endStyle = fixEndStyle(endStyle, startStyle);
-
-	// 停止已有的动画，防止冲突
-	stop(node);
-
-	return tween.create({
-		startValue: startStyle,
-		endValue: endStyle,
-		duration: options.duration,
-		easing: options.easing,
-		receiveId: function(id) {
-			// 记录任务id（停止动画时清除）
-			idSpace.set(node, 'taskId', id);
-		},
-		frame: function(value, key) {
-			if (rScroll.test(key)) {
-				domOffset.setScroll(node, RegExp.$1, value);
-			} else {
-				domStyle.setStyle(
-					node,
-					key,
-					rColor.test(key) ?
-						'rgb(' + value.map(function(v) {
-							// RGB只能用整数表示
-							return Math.min(255, Math.round(v));
-						}).join(', ') + ')' :
-						value
-				);
-			}
-		},
-		onprogress: function() {
-			if (options.onprogress) { options.onprogress.apply(node, arguments); }
+	return new Promise(function(resolve, reject) {
+		if (!domBase.isHTMLElement(node)) {
+			resolve();
+			return;
 		}
-	})['finally'](function() {
-		// 动画执行完成，清理任务id
-		idSpace.clear(node);
-		// 执行回调函数
-		if (options.oncomplete) { options.oncomplete.call(node); }
+
+		options = options || { };
+
+		var queue = animationSpace.get(node, ANIMATION_QUEUE_KEY);
+		if (!queue) {
+			queue = new AnimationQueue();
+			animationSpace.set(node, ANIMATION_QUEUE_KEY, queue);
+		}
+
+		queue.add({
+			resolve: resolve,
+			reject: reject,
+			exec: function(receiveId) {
+				// 获取节点的当前样式
+				var startStyle = getRelatedStyle(node, endStyle);
+				// 修正最终样式的样式值
+				endStyle = fixEndStyle(endStyle, startStyle);
+
+				return tween.create({
+					startValue: startStyle,
+					endValue: endStyle,
+					duration: options.duration,
+					easing: options.easing,
+					receiveId: receiveId,
+					frame: function(value, key) {
+						if (rScroll.test(key)) {
+							domOffset.setScroll(node, RegExp.$1, value);
+						} else {
+							domStyle.setStyle(
+								node,
+								key,
+								rColor.test(key) ?
+									'rgb(' + value.map(function(v) {
+										// RGB只能用整数表示
+										return Math.min(255, Math.round(v));
+									}).join(', ') + ')' :
+									value
+							);
+						}
+					},
+					onprogress: function() {
+						if (options.onprogress) { options.onprogress.apply(node, arguments); }
+					}
+				}).then(function() {
+					// 执行回调函数
+					if (options.oncomplete) { options.oncomplete.call(node); }
+				});
+			}
+		});
 	});
 }
 
@@ -175,13 +228,18 @@ exports.shortcuts = {
 			}
 		}
 
-		var promises = this.map(function(node) {
-			return start(node, endStyle, options);
-		});
+		var promises = Promise.all(
+			this.map(function(node) {
+				return start(node, endStyle, options);
+			})
+		);
 
 		if (returnPromise) {
-			return Promise.all(promises);
+			return promises;
 		} else {
+			// 防止控制台出现错误日志
+			promises['catch'](function() {});
+
 			return this;
 		}
 	},
@@ -190,11 +248,12 @@ exports.shortcuts = {
 	 * 停止当前所有节点的动画。
 	 * @method stop
 	 * @for NodeList
-	 * @param {Boolean} [jumpToEnd=false] 是否跳跃到最后一帧。
+	 * @param {Boolean} [clearQueue=false] 是否清理节点的动画队列。
+	 * @param {Boolean} [jumpToEnd=false] 是否跳跃到当前动画的最后一帧。
 	 * @return {NodeList} 当前节点集合。
 	 */
-	stop: function(jumpToEnd) {
-		this.forEach(function(node) { stop(node, jumpToEnd); });
+	stop: function(clearQueue, jumpToEnd) {
+		this.forEach(function(node) { stop(node, clearQueue, jumpToEnd); });
 		return this;
 	}
 };
