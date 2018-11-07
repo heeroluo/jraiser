@@ -38,7 +38,7 @@ QUnit.test('创建动画', function(assert) {
 });
 
 QUnit.test('停止动画', function(assert) {
-	var done = assert.async(1);
+	var done = assert.async(2);
 
 	var $test1 = $('<div class="square"></div>').appendTo('body');
 	$test1.animate({
