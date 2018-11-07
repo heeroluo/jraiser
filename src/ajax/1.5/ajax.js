@@ -15,7 +15,7 @@ var head = doc.head || doc.getElementsByTagName('head')[0];
 
 
 // 创建放弃请求的错误
-var CANCEL_MESSAGE = 'Cancel';
+var CANCEL_MESSAGE = 'Request cancelled';
 function createCancelError() {
 	var err = new Error(CANCEL_MESSAGE);
 	err.isAJAXCancel = true;
@@ -23,7 +23,7 @@ function createCancelError() {
 }
 
 // 创建超时的错误
-var TIMEOUT_MESSAGE = 'Timeout';
+var TIMEOUT_MESSAGE = 'Request timeout';
 function createTimeoutError() {
 	var err = new Error(TIMEOUT_MESSAGE);
 	err.isAJAXTimeout = true;
@@ -89,7 +89,7 @@ var getScript = exports.getScript = wrap(function(src, options, callbackName) {
 		// 用于保存超时检测计时器id
 		var timeoutTimer;
 		// 无法取消script节点的请求，通过这个变量控制不执行回调函数
-		var cancelled;
+		var canceled;
 
 		// 加载完成或取消后执行的操作
 		function onLoad() {
@@ -97,7 +97,7 @@ var getScript = exports.getScript = wrap(function(src, options, callbackName) {
 			if (!script) { return; }
 
 			// 加载完成后，执行清理并解决promise
-			if (cancelled || !script.readyState || /loaded|complete/.test(script.readyState)) {
+			if (canceled || !script.readyState || /loaded|complete/.test(script.readyState)) {
 				// 移除script节点
 				script[SCRIPT_ONLOAD] = null;
 				head.removeChild(script);
@@ -112,13 +112,13 @@ var getScript = exports.getScript = wrap(function(src, options, callbackName) {
 				}
 
 				// 已放弃时不应resolve
-				if (!cancelled) { resolve(); }
+				if (!canceled) { resolve(); }
 			}
 		}
 
 		function cancel(createError) {
-			if (!cancelled && script) {
-				cancelled = true;
+			if (!canceled && script) {
+				canceled = true;
 				onLoad();
 				if (createError) { reject(createError()); }
 			}
@@ -128,7 +128,7 @@ var getScript = exports.getScript = wrap(function(src, options, callbackName) {
 		if (callbackName) {
 			win[callbackName] = function() {
 				// 此处先于 SCRIPT_ONLOAD 执行
-				if (!cancelled) { resolve(base.toArray(arguments)); }
+				if (!canceled) { resolve(base.toArray(arguments)); }
 			};
 		}
 
@@ -172,12 +172,12 @@ function postScript(action, options, callbackName) {
 		// 用于保存超时检测计时器
 		var timeoutTimer;
 		// 无法取消iframe节点的请求，通过这个变量控制不执行回调函数
-		var cancelled;
+		var canceled;
 
 		// JSONP回调函数
 		if (callbackName) {
 			win[callbackName] = function() {
-				if (!cancelled) { resolve(base.toArray(arguments)); }
+				if (!canceled) { resolve(base.toArray(arguments)); }
 			};
 		}
 
@@ -204,12 +204,12 @@ function postScript(action, options, callbackName) {
 			if (callbackName) { window[callbackName] = null; }
 
 			// 已放弃时不应resolve
-			if (!cancelled) { resolve(); }
+			if (!canceled) { resolve(); }
 		}
 
 		function cancel(createError) {
-			if (!cancelled && div) {
-				cancelled = true;
+			if (!canceled && div) {
+				canceled = true;
 				iframeOnload();
 				if (createError) { reject(createError()); }
 			}
