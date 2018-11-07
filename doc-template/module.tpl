@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<title><%=current.$name%> | JRaiser 2 Javascript Library</title>
+<title><%=current.$name%> | JRaiser 3 Javascript Library</title>
 <meta name="Keywords" content="jraiser,bowljs,modular,javascript,library,api,document,前端,模块化,类库,文档" />
 <link href="../../css/basic.css" rel="stylesheet" type="text/css" />
 <link href="../../css/module.css" rel="stylesheet" type="text/css" />

@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<title>JRaiser 2 API文档</title>
+<title>JRaiser 3 API文档</title>
 <meta name="Keywords" content="jraiser,bowljs,modular,javascript,library,api,document,前端,模块化,类库,文档" />
 <link href="css/basic.css" rel="stylesheet" type="text/css" />
 <link href="css/home.css" rel="stylesheet" type="text/css" />
