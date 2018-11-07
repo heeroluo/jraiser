@@ -5,7 +5,7 @@
 
 JRaiser 包含 Web 前端开发中常用的基础功能。它基于 **CommonJS** 模块化规范编写，可应用于浏览器端（需构建为 **CMD** 模块并配合加载器使用）和 Node.js 端。
 
-JRaiser 的绝大部分模块兼容 PC 端主流浏览器（IE 6+）和移动端主流浏览器（iOS 8.0+、Android 4.0+）；小部分模块在 IE 6/7 下不可用。
+JRaiser 的绝大部分模块兼容 PC 端主流浏览器（IE 6+）和移动端主流浏览器（iOS 9.1+、Android 4.1+）；小部分模块在 IE 6/7 下不可用。
 
 
 ## 使用方法
@@ -16,7 +16,10 @@ JRaiser 的绝大部分模块兼容 PC 端主流浏览器（IE 6+）和移动端
 npm install jraiser
 ```
 
-这种方法一般用在基于 Webpack 等工具构建的项目，或 Node.js 项目。
+这种方法一般用于：
+
+- Node.js 项目。
+- 能调用 node_modules 模块的前端项目，如通过「Vue CLI」、「Create React App」等工具创建的项目。
 
 ### 使用 dist 代码
 
