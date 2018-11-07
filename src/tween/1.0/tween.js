@@ -205,11 +205,7 @@ function runStep(task, percentage, key) {
 		try {
 			task.frame.call(theGlobal, nextValue, key);
 		} catch (e) {
-			if (task.onerror) {
-				task.onerror.call(theGlobal, e);
-			} else {
-				throw e;
-			}
+			task.onerror.call(theGlobal, e);
 		}
 	}
 
@@ -225,7 +221,7 @@ function runTask(task, remaining) {
 	if (task.onprogress) {
 		task.onprogress.call(theGlobal, stepValue, percentage, remaining);
 	}
-	if (percentage >= 1 && task.oncomplete) {
+	if (percentage >= 1) {
 		task.oncomplete.call(theGlobal);
 	}
 
@@ -382,11 +378,9 @@ exports.remove = function(taskId, jumpToEnd) {
 		if (jumpToEnd) {
 			runTask(task, 0);
 		} else {
-			if (task.onerror) {
-				var err = new Error('Tween has been removed');
-				err.isTweenRemoval = true;
-				task.onerror.call(theGlobal, err);
-			}
+			var err = new Error('Tween has been removed');
+			err.isTweenRemoval = true;
+			task.onerror.call(theGlobal, err);
 		}
 	}
 };
