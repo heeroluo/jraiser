@@ -9,10 +9,10 @@ var timespan = require('../../timespan/1.0/timespan');
 
 
 /**
- * 获取存储项。
+ * 获取指定数据项的值。
  * @method get
  * @param {String} key 键名。
- * @return {String} 存储值。
+ * @return {String} 值。
  */
 var get = exports.get = function(key) {
 	// 先从sessionStorage中获取
@@ -40,10 +40,10 @@ var get = exports.get = function(key) {
 
 
 /**
- * 获取存储项并转换成JSON对象。
+ * 获取指定数据项的值并将其转换成JSON对象。
  * @method getAsJSON
  * @param {String} key 键名。
- * @return {Object} JSON对象。
+ * @return {Object} JSON对象。如果转换失败，则返回null。
  */
 exports.getAsJSON = function(key) {
 	var value = get(key);
@@ -57,7 +57,7 @@ exports.getAsJSON = function(key) {
 
 
 /**
- * 移除存储数据。
+ * 移除数据项。
  * @method remove
  * @param {String} key 键名。
  */
@@ -68,13 +68,14 @@ var remove = exports.remove = function(key) {
 
 
 /**
- * 存储数据。
+ * 写入数据项。
  * @method set
  * @param {String} key 键名。
- * @param {Any} value 键值。其中Object类型（不包括其子类）会被序列化。
+ * @param {Any} value 值。其中Object类型（不包括其子类）会被序列化。
  * @param {Date|Number|String} [expires] 过期时间。
  *   为日期类型时表示绝对时间；
  *   为数字或字符串时表示相对时间（当前时间+相对值），支持格式同timespan模块。
+ * @return {Boolean} 存储成功时返回true，否则返回false。
  */
 exports.set = function(key, value, expires) {
 	// 设置新值前先移除旧值
@@ -89,7 +90,7 @@ exports.set = function(key, value, expires) {
 		}
 
 		// 已经过期的就不用写入了
-		if (expires < new Date()) { return; }
+		if (expires < new Date()) { return true; }
 
 		var item = {
 			value: value,
@@ -100,11 +101,17 @@ exports.set = function(key, value, expires) {
 		// 但getItem和removeItem都不会
 		try {
 			localStorage.setItem(key, JSON.stringify(item));
-		} catch (e) { }
+		} catch (e) {
+			return false;
+		}
 
 	} else {
 		try {
 			sessionStorage.setItem(key, value);
-		} catch (e) { }
+		} catch (e) {
+			return false;
+		}
 	}
+
+	return true;
 };
