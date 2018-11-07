@@ -72,7 +72,7 @@ QUnit.test('停止动画', function(assert) {
 });
 
 QUnit.test('动画队列', function(assert) {
-	var done = assert.async(1);
+	var done = assert.async(3);
 
 	var $test1 = $('<div class="square"></div>').appendTo('body');
 
@@ -112,12 +112,21 @@ QUnit.test('动画队列', function(assert) {
 		oncomplete: function() { assert.ok(false); }
 	});
 	$test2.stop(true);
-	assert.ok($test2.width() < 100, '停止动画并清空队列');
+	setTimeout(function() {
+		assert.ok($test2.width() < 100, '停止动画并清空队列');
+		done();
 
-	$test2.animate({ width: 300 });
-	$test2.animate({ width: 200 });
-	$test2.stop(true, true);
-	assert.strictEqual($test2.width(), 300, '停止动画，清空队列，并跳到当前动画最后一帧');
-
-	$test2.remove();
+		$test2.animate({ width: 300 });
+		$test2.animate({ width: 200 });
+		$test2.stop(true, true);
+		setTimeout(function() {
+			assert.strictEqual(
+				$test2.width(),
+				300,
+				'停止动画，清空队列，并跳到当前动画最后一帧'
+			);
+			$test2.remove();
+			done();
+		}, 100);
+	}, 100);
 });
