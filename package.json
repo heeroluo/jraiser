@@ -6,8 +6,7 @@
     "start": "node dev-server/start",
 	"build-cmd": "npx gulp buildCMD",
 	"build-npm": "npx gulp buildNPM",
-	"doc": "npx gulp genDoc",
-	"list-pkg-files": "file_name=$(npm pack) && tar -ztf $file_name && rm $file_name"
+	"doc": "npx gulp genDoc"
   },
   "repository": {
     "type": "git",
