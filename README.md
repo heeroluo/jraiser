@@ -21,9 +21,9 @@ npm install jraiser
 - Node.js 项目。
 - 能调用 node_modules 模块的前端项目，如通过「Vue CLI」、「Create React App」等工具创建的项目。
 
-### 使用 dist 代码
+### 使用 CMD 代码
 
-拷贝 dist 目录下的代码到项目中使用（需搭配 [Bowl.js](//github.com/heeroluo/bowljs) 加载器），一般用于传统 Web 项目，也是 2.x 版本的用法。
+拷贝 dist-cmd 目录下的代码到项目中使用（需搭配 [Bowl.js](//github.com/heeroluo/bowljs) 加载器），一般用于传统 Web 项目，也是 2.x 版本的用法。
 
 ### 使用 src 代码
 
@@ -44,8 +44,11 @@ JRaiser 的模块文件都是按「**模块名/版本号/**」存放的，这意
 ### dev-server
 开发和测试服务器，通过 Express 搭建，可以通过 `npm start` 启动。
 
-### dist
-构建后的代码，包含源代码（\*-debug.js）以及通过 [Bowljs CLI](//github.com/heeroluo/bowljs-cli) 构建的代码（\*.js），需搭配 [Bowl.js](//github.com/heeroluo/bowljs) 进行加载。
+### dist-cmd
+构建为 CMD 模块的代码，包含源代码（\*-debug.js）以及通过 [Bowljs CLI](//github.com/heeroluo/bowljs-cli) 构建的代码（\*.js），需搭配 [Bowl.js](//github.com/heeroluo/bowljs) 进行加载。
+
+### dist-npm
+构建为 npm 包的代码，用于发布到 npm 平台。
 
 ### doc-template
 文档模板，用于生成 API 文档。
