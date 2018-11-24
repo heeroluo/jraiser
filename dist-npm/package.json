@@ -1,0 +1,30 @@
+{
+  "name": "jraiser",
+  "version": "3.1.0",
+  "description": "Modular JavaScript Foundation Library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/heeroluo/jraiser.git"
+  },
+  "keywords": [
+    "jraiser",
+    "modular",
+    "library",
+    "promise",
+    "ajax",
+    "tween"
+  ],
+  "author": {
+    "name": "Mr.Luo",
+    "email": "heeroluo@126.com",
+    "url": "https://mrluo.life/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/heeroluo/jraiser/issues"
+  },
+  "homepage": "https://heeroluo.github.io/jraiser/",
+  "engines": {
+    "node": ">=6.5.0"
+  }
+}
