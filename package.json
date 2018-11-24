@@ -1,10 +1,11 @@
 {
   "name": "jraiser",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Modular JavaScript Foundation Library",
   "scripts": {
     "start": "node dev-server/start",
-    "build": "npx gulp compileJS",
+	"build-cmd": "npx gulp buildCMD",
+	"build-npm": "npx gulp buildNPM",
 	"doc": "npx gulp genDoc",
 	"list-pkg-files": "file_name=$(npm pack) && tar -ztf $file_name && rm $file_name"
   },
