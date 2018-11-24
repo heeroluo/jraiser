@@ -68,8 +68,16 @@ gulp.task('copyPkgJSON', ['clearNPM'], function() {
 	fse.writeFileSync('./dist-npm/package.json', JSON.stringify(pkg, null, 2));
 });
 
+// ## 复制 README.md
+gulp.task('copyReadme', ['clearNPM'], function(cb) {
+	pump([
+		gulp.src('./README.md'),
+		gulp.dest('./dist-npm/')
+	], cb);
+});
+
 // ## 构建
-gulp.task('buildNPM', ['copyJSToNPM', 'copyPkgJSON']);
+gulp.task('buildNPM', ['copyJSToNPM', 'copyPkgJSON', 'copyReadme']);
 
 
 // # 生成文档
