@@ -17,14 +17,6 @@ var EventArg = require('./event-arg');
 module.exports = function(handlers) {
 	var __eventHandlers = {};
 
-	if (handlers) {
-		for (var e in handlers) {
-			if (handlers.hasOwnProperty(e) && handlers[e]) {
-				this.on(e, handlers[e]);
-			}
-		}
-	}
-
 	/**
 	 * 触发事件。
 	 * @method trigger
@@ -92,4 +84,12 @@ module.exports = function(handlers) {
 
 		return this;
 	};
+
+	if (handlers) {
+		for (var e in handlers) {
+			if (handlers.hasOwnProperty(e) && handlers[e]) {
+				this.on(e, handlers[e]);
+			}
+		}
+	}
 };
