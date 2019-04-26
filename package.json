@@ -1,24 +1,24 @@
 {
   "name": "jraiser",
-  "version": "3.1.3",
+  "version": "3.1.4",
   "description": "Modular JavaScript Foundation Library",
   "scripts": {
     "start": "node dev-server/start",
-	"build-cmd": "npx gulp buildCMD",
-	"build-npm": "npx gulp buildNPM",
-	"doc": "npx gulp genDoc"
+    "build-cmd": "npx gulp buildCMD",
+    "build-npm": "npx gulp buildNPM",
+    "doc": "npx gulp genDoc"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/heeroluo/jraiser.git"
   },
   "keywords": [
-	"jraiser",
+    "jraiser",
     "modular",
-	"library",
-	"promise",
-	"ajax",
-	"tween"
+    "library",
+    "promise",
+    "ajax",
+    "tween"
   ],
   "author": {
     "name": "Mr.Luo",
