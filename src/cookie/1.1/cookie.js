@@ -74,6 +74,9 @@ var get = exports.get = function(key, options) {
 
 // iOS9下设置过期不会马上生效，先设为空
 var shouldSetEmptyBeforeRemove = (function() {
+	// 兼容 Node 端（主要针对同构应用）引入
+	if (typeof document === 'undefined') { return false; }
+
 	var TEST_KEY = '__jraiser__test__cookie__';
 	document.cookie = TEST_KEY + '=1';
 	document.cookie = TEST_KEY + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
