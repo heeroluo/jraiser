@@ -4,9 +4,9 @@
   "description": "Modular JavaScript Foundation Library",
   "scripts": {
     "start": "node dev-server/start",
-    "build-cmd": "npx gulp buildCMD",
-    "build-npm": "npx gulp buildNPM",
-    "doc": "npx gulp genDoc"
+    "build-cmd": "gulp buildCMD",
+    "build-npm": "gulp buildNPM",
+    "doc": "gulp genDoc"
   },
   "repository": {
     "type": "git",
