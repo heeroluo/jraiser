@@ -35,6 +35,7 @@
 		"no-throw-literal": "error",
 		"no-useless-call": "error",
 		"no-with": "error",
+		"no-prototype-builtins": "off",
 		"prefer-promise-reject-errors": "error",
 		"wrap-iife": ["error", "inside"],
 		"no-use-before-define": "error",
