@@ -45,7 +45,7 @@
 </footer>
 
 <div style="display: none;">
-	<script src="http://s4.cnzz.com/stat.php?id=4794499&amp;web_id=4794499"></script>
+	<script src="//s4.cnzz.com/stat.php?id=4794499&amp;web_id=4794499"></script>
 </div>
 </body>
 </html>
