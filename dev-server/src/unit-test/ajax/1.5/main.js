@@ -8,7 +8,7 @@ QUnit.test('getImage', function(assert) {
 	var done = assert.async();
 
 	Promise.all([
-		ajax.getImage('./test.gif').then(function() {
+		ajax.getImage('./sample.jpg').then(function() {
 			assert.ok(true, 'Get image succeeded');
 		}),
 		ajax.getImage('./error')['catch'](function() {
