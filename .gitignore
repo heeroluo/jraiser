@@ -2,3 +2,4 @@
 dev-server/build
 node_modules
 test*.*
+.vscode
