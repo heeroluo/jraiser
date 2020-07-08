@@ -102,7 +102,7 @@ var getScript = exports.getScript = wrap(function(src, options, callbackName) {
 			// 加载完成后，执行清理并解决promise
 			if (canceled || !script.readyState || /loaded|complete/.test(script.readyState)) {
 				// 移除script节点
-				script[SCRIPT_ONLOAD] = null;
+				script[SCRIPT_ONLOAD] = script.onerror = null;
 				head.removeChild(script);
 				script = null;
 
@@ -139,7 +139,7 @@ var getScript = exports.getScript = wrap(function(src, options, callbackName) {
 		if (options.charset) { script.charset = options.charset; }
 		script.async = true;
 
-		script[SCRIPT_ONLOAD] = onLoad;
+		script[SCRIPT_ONLOAD] = script.onerror = onLoad;
 
 		script.src = src;
 		// 插入到HTML文档中

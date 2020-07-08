@@ -4,6 +4,10 @@
  * @category Infrastructure
  */
 
+// 辅助自定义属性判断
+// ES 6 中使用 Object.create(null) 创建的对象没有 hasOwnProperty 方法
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+
 
 /**
  * 把源对象的属性（own property）扩展到目标对象。
@@ -12,23 +16,21 @@
  * @param {Any*} [source] 源对象。若有同名属性，则后者覆盖前者。
  * @return {Any} 目标对象。
  */
-var extend = exports.extend = Object.assign ?
-	Object.assign :
-	function(target) {
-		if (target == null) { throw new Error('target cannot be null'); }
+var extend = exports.extend = Object.assign || function(target) {
+	if (target == null) { throw new Error('target cannot be null'); }
 
-		var i = 0, len = arguments.length, key, src;
-		while (++i < len) {
-			src = arguments[i];
-			if (src != null) {
-				for (key in src) {
-					if (src.hasOwnProperty(key)) { target[key] = src[key]; }
-				}
+	var i = 0, len = arguments.length, key, src;
+	while (++i < len) {
+		src = arguments[i];
+		if (src != null) {
+			for (key in src) {
+				if (hasOwnProperty.call(src, key)) { target[key] = src[key]; }
 			}
 		}
+	}
 
-		return target;
-	};
+	return target;
+};
 
 
 // 辅助类型判断
@@ -73,7 +75,7 @@ exports.isObject = function(value) {
 exports.isEmptyObject = function(obj) {
 	if (obj != null) {
 		for (var key in obj) {
-			if (obj.hasOwnProperty(key)) { return false; }
+			if (hasOwnProperty.call(obj, key)) { return false; }
 		}
 	}
 	return true;
@@ -93,7 +95,7 @@ exports.each = function(obj, callback) {
 		var i, len = obj.length;
 		if (len === undefined || isFunction(obj)) {
 			for (i in obj) {
-				if (obj.hasOwnProperty(i) &&
+				if (hasOwnProperty.call(obj, i) &&
 					false === callback.call(obj[i], obj[i], i)
 				) {
 					break;
@@ -210,7 +212,7 @@ exports.createClass = function(constructor, methods, Parent, parentArgs) {
 
 	if (methods) {
 		for (var m in methods) {
-			if (methods.hasOwnProperty(m)) {
+			if (hasOwnProperty.call(methods, m)) {
 				$Class.prototype[m] = methods[m];
 			}
 		}

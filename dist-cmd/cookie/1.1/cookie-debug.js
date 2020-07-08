@@ -23,6 +23,7 @@ var timespan = require('../../timespan/1.0/timespan');
  *     为日期类型时表示绝对时间；
  *     为数字或字符串时表示相对时间（当前时间+相对值），支持格式同timespan模块。
  *   @param {Boolean} [options.secure] 是否只在https连接中有效。
+ *   @param {string} [options.sameSite] 访问限制：Lax、Strict 或 None。
  *   @param {Function(value):String} [options.encode=encodeURIComponent] 编码函数。
  */
 var set = exports.set = function(key, value, options) {
@@ -41,6 +42,12 @@ var set = exports.set = function(key, value, options) {
 	if (options.path) { content += '; path=' + options.path; }
 	if (options.domain) { content += '; domain=' + options.domain; }
 	if (options.secure === true) { content += '; secure'; }
+	if (options.sameSite) {
+		var sameSite = String(options.sameSite).toLowerCase();
+		if (['lax', 'strict', 'none'].indexOf(sameSite) !== -1) {
+			content += '; samesite=' + sameSite;
+		}
+	}
 
 	document.cookie = content;
 };
