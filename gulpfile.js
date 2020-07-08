@@ -100,7 +100,7 @@ function clearDoc(cb) {
 
 function genDoc(cb) {
 	bowljsCLI.genDoc(
-		path.resolve('./dist'),
+		path.resolve('./dist-npm'),
 		path.resolve('./document.settings')
 	)
 	cb();
